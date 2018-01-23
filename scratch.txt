@@ -1,0 +1,77 @@
+Instructions
+void ADC(reg_a, reg_b); A,n | A,n | HL,n | SP,n
+void AND(reg_a) n
+BIT b,r
+CALL cc,nn | nn
+CCF
+CPL
+CP n
+DAA
+DEC n | nn
+DI
+EI
+HALT
+INC n | nn
+JP (HL) | cc,nn | nn
+JR cc,n | n
+LD (C),A | (HL+),A | (HL-),A | (HLD),A | (HLI),A | (nn),SP | A,(C) | A,(HL+)
+   A,(HL-) | A,(HLD) | A,(HLI) | A,n | HL,SP+n
+LDD (HL),A | A,(HL) | (n),A  A,(n)
+LDI (HL),A | A,(HL)
+LD n,A | n,nn | nn,n | r1,r2 | SP,HL
+NOP
+RET | cc
+RETI
+RLA
+RLCA
+RLC n
+RLn
+RRA
+RRCA
+RRC n
+RRn
+RST n
+SBC A,n SCF
+SET b,r SLA n
+SRA n
+SRL n
+STOP
+SUB n
+SWAP n
+XOR n
+LDHL SP,n
+ORn
+POP nn
+PUSH nn
+RES b,r
+
+Memory
+
+
+Registers
+  SFR
+  IO
+  PC - Inits to 0x100 and runs on start up
+  SP - 0xFFFE on start up
+
+  A,B,C,D,E,H,L,(HL)  CPU Registers 8-bit
+
+  AF=$01-GB/SGB, $FF-GBP, $11-GBC F =$B0
+  AF: 8-bit accumulator (A) and flag bits (F) carry, zero, minus, parity/overflow, half-carry (used for BCD), and an Add/Subtract flag (usually called N) also for BCD
+  BC: 16-bit data/address register or two 8-bit registers
+  DE: 16-bit data/address register or two 8-bit registers
+  HL: 16-bit accumulator/address register or two 8-bit registers
+  SP: stack pointer, 16 bits
+  PC: program counter, 16 bits
+
+Display
+    8K Video RAM
+    256x256 Display
+    20x18 Tiles visible (160x144)
+    Tiles 8x8 Pixels
+
+    Sprite
+      Max 40,
+      10 per line
+      8x8 or 16x8 size
+      60Hz Vert Sync (60FPS)
