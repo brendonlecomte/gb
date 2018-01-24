@@ -16,3 +16,18 @@ void CPU_init(CPU_t* cpu)
   cpu->registers.H = 0;
   cpu->registers.L = 0;
 }
+
+void CPU_set_flag(CPU_t* cpu, uint8_t flag)
+{
+    cpu->registers.F |= flag;
+}
+
+void CPU_clear_flag(CPU_t* cpu, uint8_t flag)
+{
+    cpu->registers.F &= ~flag;
+}
+
+bool CPU_check_flag(CPU_t* cpu, uint8_t flag)
+{
+    return (cpu->registers.F & flag) != 0;
+}

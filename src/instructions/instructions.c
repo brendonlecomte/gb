@@ -1,40 +1,51 @@
 #include "instructions.h"
 
-
 /*
-ADC A,n       - Add n + Carry flag to A.
+ADC A,n  - Add n + Carry flag to A.
 
 	n = A,B,C,D,E,H,L,(HL),#
 
 	Flags affected:
-    Z - Set if result is zero.
+        Z - Set if result is zero.
 		N - Reset.
 		H - Set if carry from bit 3.
 		C - Set if carry from bit 7
 */
 void instr_adc(CPU_t* cpu, uint8_t n)
 {
-  cpu->registers.A = cpu->registers.A + n;
+    uint16_t temp = cpu->registers.A + n + CPU_check_flag(cpu, CARRY_FLAG);
+    uint8_t hc_temp = (cpu->registers.A & 0x0F) + (n & 0x0F) + CPU_check_flag(cpu, CARRY_FLAG);
+    cpu->registers.A = (uint8_t)temp&0xFF;
+    if(temp & 0x100) CPU_set_flag(cpu, CARRY_FLAG);
+    if(hc_temp & 0x10) CPU_set_flag(cpu, HALF_CARRY_FLAG);
+    if(cpu->registers.A == 0) CPU_set_flag(cpu, ZERO_FLAG);
+    CPU_clear_flag(cpu, SUBTRACT_FLAG);
 }
 
 /*
-ADD A,n       - Add n to A.
+ADD A,n - Add n to A.
 
 	n = A,B,C,D,E,H,L,(HL),#
 
 	Flags affected:
 		Z - Set if result is zero.
 		N - Reset.
-    H - Set if carry from bit 3.
+        H - Set if carry from bit 3.
 		C - Set if carry from bit 7.
 */
-void instr_add(CPU_t* cpu, uint8_t n)
+void instr_add_A(CPU_t* cpu, uint8_t n)
 {
-  cpu->registers.A = cpu->registers.A + n;
+  uint16_t temp = cpu->registers.A + n;
+  uint8_t hc_temp = (cpu->registers.A & 0x0F) + (n & 0x0F);
+  cpu->registers.A = (uint8_t)temp;
+  if(hc_temp & 0x10) CPU_set_flag(cpu, HALF_CARRY_FLAG);
+  if(temp & 0x100) CPU_set_flag(cpu, CARRY_FLAG);
+  if(cpu->registers.A == 0) CPU_set_flag(cpu, ZERO_FLAG);
+  CPU_clear_flag(cpu, SUBTRACT_FLAG);
 }
 
 /*
-ADD HL,n      - Add n to HL.
+ADD HL,n  - Add n to HL.
 	n = BC,DE,HL
 
 	Flags affected:
@@ -43,10 +54,21 @@ ADD HL,n      - Add n to HL.
 		H - Set if carry from bit 11.
 		C - Set if carry from bit 15.
 */
-
+void instr_add_HL(CPU_t* cpu, uint16_t n)
+{
+    uint16_t hl = (cpu->registers.H<<8)+(cpu->registers.L);
+    uint32_t temp = hl + n;
+    uint16_t hc_temp = (hl&0x0FFF) + (n&0x0FFF);
+    cpu->registers.H = ((temp&0xFF00)>>8);
+    cpu->registers.L = (uint8_t)temp&0x00FF;
+    if(temp & 0x10000) CPU_set_flag(cpu, CARRY_FLAG);
+    if(hc_temp & 0x1000) CPU_set_flag(cpu, HALF_CARRY_FLAG);
+    if(cpu->registers.H == 0 && cpu->registers.L == 0) CPU_set_flag(cpu, ZERO_FLAG);
+    CPU_clear_flag(cpu, SUBTRACT_FLAG);
+}
 
 /*
-ADD SP,n      - Add n to Stack Pointer (SP).
+ADD SP,n - Add n to Stack Pointer (SP).
 
 	n = one byte signed immediate value
 
@@ -56,10 +78,24 @@ ADD SP,n      - Add n to Stack Pointer (SP).
 		H - Set or reset according to operation.
 		C - Set or reset according to operation.
 */
+void instr_add_SP(CPU_t* cpu, uint8_t n)
+{
+    uint32_t temp = cpu->SP + n;
+    CPU_clear_flag(cpu, ZERO_FLAG);
+    CPU_clear_flag(cpu, SUBTRACT_FLAG);
+
+    uint16_t hc_temp = (cpu->SP&0x0FFF) + (n);
+    cpu->SP = temp;
+    if(temp & 0x10000) CPU_set_flag(cpu, CARRY_FLAG);
+    else CPU_clear_flag(cpu, CARRY_FLAG);
+
+    if(hc_temp & 0x1000) CPU_set_flag(cpu, HALF_CARRY_FLAG);
+    else CPU_clear_flag(cpu, HALF_CARRY_FLAG);
+}
 
 
 /*
-AND n         - Logically AND n with A, result in A.
+AND n  - Logically AND n with A, result in A.
 
 	n = A,B,C,D,E,H,L,(HL),#
 
@@ -69,12 +105,19 @@ AND n         - Logically AND n with A, result in A.
 		H - Set.
 		C - Reset.
 */
-
+void instr_and(CPU_t* cpu, uint8_t n)
+{
+    cpu->registers.A = cpu->registers.A & n;
+    if(cpu->registers.A == 0) CPU_set_flag(cpu, ZERO_FLAG);
+    CPU_clear_flag(cpu, SUBTRACT_FLAG);
+    CPU_set_flag(cpu, HALF_CARRY_FLAG);
+    CPU_clear_flag(cpu, CARRY_FLAG);
+}
 
 
 
 /*
-BIT b,r       - Test bit b in register r.
+BIT b,r  - Test bit b in register r.
 
 	b = 0-7, r = A,B,C,D,E,H,L,(HL)
 
@@ -84,6 +127,12 @@ BIT b,r       - Test bit b in register r.
 		H - Set.
 		C - Not affected.
 */
+void instr_bit(CPU_t* cpu, uint8_t b, uint8_t r)
+{
+    if(0x01<<b & r) CPU_set_flag(cpu, ZERO_FLAG);
+    CPU_clear_flag(cpu, SUBTRACT_FLAG);
+    CPU_set_flag(cpu, HALF_CARRY_FLAG);
+}
 
 
 /*
@@ -95,6 +144,7 @@ CALL n        - Push address of next instruction onto
 		None
 */
 
+
 /*CALL cc,n     - Call address n if following condition is true:
 	cc = NZ, Call if Z flag is reset.
 	cc = Z,  Call if Z flag is set.
@@ -104,6 +154,7 @@ CALL n        - Push address of next instruction onto
 	Flags affected:
 		None
 */
+
 
 /*
 CCF           - Complement carry flag.
@@ -206,6 +257,7 @@ INC n         - Increment register n.
 		H - Set if carry from bit 3.
 		C - Not affected.
 */
+
 /*
 INC nn        - Increment register nn.
 	n = BC,DE,HL,SP
@@ -213,6 +265,7 @@ INC nn        - Increment register nn.
 	Flags affected:
 		None
 */
+
 /*
 JP n          - Jump to address n.
 
@@ -220,6 +273,7 @@ JP n          - Jump to address n.
 	Flags affected:
 		None
 */
+
 /*
 JP cc,n       - Jump to address n if following condition
 		is true:

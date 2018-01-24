@@ -2,7 +2,7 @@
 #define CPU_H
 
 #include <stdint.h>
-
+#include <stdbool.h>
 
 /*
 Bit 4 represents the carry flag.  It is set when a carry from bit 7 is produced in arithmetical instructions.  Otherwise it is cleared.
@@ -17,7 +17,6 @@ Bit 7 represents the zero flag.  It is set when the instruction results in a val
 #define ZERO_FLAG       (0x80)
 
 typedef struct {
-
   /*
     SP - Stack Pointer
     PC - Progam Counter
@@ -34,5 +33,7 @@ typedef struct {
 } CPU_t;
 
 void CPU_init(CPU_t* cpu);
-
+void CPU_set_flag(CPU_t* cpu, uint8_t flag);
+void CPU_clear_flag(CPU_t* cpu, uint8_t flag);
+bool CPU_check_flag(CPU_t* cpu, uint8_t flag);
 #endif //CPU_H
