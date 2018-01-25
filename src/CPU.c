@@ -1,6 +1,9 @@
 #include "CPU.h"
 
 
+CPU_t _cpu;
+CPU_t *cpu = &_cpu;
+
 void CPU_init(CPU_t* cpu)
 {
   cpu->PC = 0x100;

@@ -32,6 +32,8 @@ typedef struct {
 
 } CPU_t;
 
+extern CPU_t *cpu;
+
 void CPU_init(CPU_t* cpu);
 void CPU_set_flag(CPU_t* cpu, uint8_t flag);
 void CPU_clear_flag(CPU_t* cpu, uint8_t flag);
