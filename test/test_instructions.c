@@ -217,3 +217,28 @@ TEST(Instructions, bit)
     TEST_ASSERT_EQUAL(1, CPU_check_flag(&cpu, HALF_CARRY_FLAG));
     TEST_ASSERT_EQUAL(0, CPU_check_flag(&cpu, CARRY_FLAG));
 }
+
+TEST(Instructions, ccf)
+{
+    CPU_t cpu;
+    CPU_init(&cpu);
+    CPU_set_flag(&cpu, CARRY_FLAG);
+    instr_ccf(&cpu);
+    TEST_ASSERT_EQUAL(0, CPU_check_flag(&cpu, CARRY_FLAG));
+
+    CPU_init(&cpu);
+    CPU_clear_flag(&cpu, CARRY_FLAG);
+    instr_ccf(&cpu);
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(&cpu, CARRY_FLAG));
+}
+
+TEST(Instructions, cpl)
+{
+    CPU_t cpu;
+    CPU_init(&cpu);
+    *cpu.A = 0x55;
+    instr_cpl(&cpu);
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(&cpu, SUBTRACT_FLAG));
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(&cpu, HALF_CARRY_FLAG));
+    TEST_ASSERT_EQUAL(0xAA, *cpu.A);
+}
