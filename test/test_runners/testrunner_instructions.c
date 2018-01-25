@@ -9,4 +9,6 @@ TEST_GROUP_RUNNER(Instructions)
   RUN_TEST_CASE(Instructions, add_SP);
   RUN_TEST_CASE(Instructions, and);
   RUN_TEST_CASE(Instructions, bit);
+  RUN_TEST_CASE(Instructions, ccf);
+  RUN_TEST_CASE(Instructions, cpl);
 }
