@@ -11,7 +11,7 @@ ADC A,n  - Add n + Carry flag to A.
 		H - Set if carry from bit 3.
 		C - Set if carry from bit 7
 */
-void instr_adc(CPU_t* cpu, uint8_t n)
+void instr_adc(CPU_t *cpu, uint8_t n)
 {
     uint16_t temp = cpu->registers.A + n + CPU_check_flag(cpu, CARRY_FLAG);
     uint8_t hc_temp = (cpu->registers.A & 0x0F) + (n & 0x0F) + CPU_check_flag(cpu, CARRY_FLAG);
@@ -33,7 +33,7 @@ ADD A,n - Add n to A.
         H - Set if carry from bit 3.
 		C - Set if carry from bit 7.
 */
-void instr_add_A(CPU_t* cpu, uint8_t n)
+void instr_add_A(CPU_t *cpu, uint8_t n)
 {
   uint16_t temp = cpu->registers.A + n;
   uint8_t hc_temp = (cpu->registers.A & 0x0F) + (n & 0x0F);
@@ -54,7 +54,7 @@ ADD HL,n  - Add n to HL.
 		H - Set if carry from bit 11.
 		C - Set if carry from bit 15.
 */
-void instr_add_HL(CPU_t* cpu, uint16_t n)
+void instr_add_HL(CPU_t *cpu, uint16_t n)
 {
     uint16_t hl = (cpu->registers.H<<8)+(cpu->registers.L);
     uint32_t temp = hl + n;
@@ -78,7 +78,7 @@ ADD SP,n - Add n to Stack Pointer (SP).
 		H - Set or reset according to operation.
 		C - Set or reset according to operation.
 */
-void instr_add_SP(CPU_t* cpu, uint8_t n)
+void instr_add_SP(CPU_t *cpu, uint8_t n)
 {
     uint32_t temp = cpu->SP + n;
     CPU_clear_flag(cpu, ZERO_FLAG);
@@ -105,7 +105,7 @@ AND n  - Logically AND n with A, result in A.
 		H - Set.
 		C - Reset.
 */
-void instr_and(CPU_t* cpu, uint8_t n)
+void instr_and(CPU_t *cpu, uint8_t n)
 {
     cpu->registers.A = cpu->registers.A & n;
     if(cpu->registers.A == 0) CPU_set_flag(cpu, ZERO_FLAG);
@@ -127,9 +127,9 @@ BIT b,r  - Test bit b in register r.
 		H - Set.
 		C - Not affected.
 */
-void instr_bit(CPU_t* cpu, uint8_t b, uint8_t r)
+void instr_bit(CPU_t *cpu, uint8_t b, uint8_t r)
 {
-    if(0x01<<b & r) CPU_set_flag(cpu, ZERO_FLAG);
+    if(!(0x01<<b & r)) CPU_set_flag(cpu, ZERO_FLAG);
     CPU_clear_flag(cpu, SUBTRACT_FLAG);
     CPU_set_flag(cpu, HALF_CARRY_FLAG);
 }
@@ -143,6 +143,7 @@ CALL n        - Push address of next instruction onto
 	Flags affected:
 		None
 */
+/* mem[SP] = PC+1; SP++; PC = n;*/
 
 
 /*CALL cc,n     - Call address n if following condition is true:
@@ -167,6 +168,17 @@ CCF           - Complement carry flag.
 		H - Reset.
 		C - Complemented.
 */
+void instr_ccf(CPU_t *cpu)
+{
+    if(CPU_check_flag(cpu, CARRY_FLAG))
+    {
+        CPU_clear_flag(cpu, CARRY_FLAG);
+    }
+    else
+    {
+        CPU_set_flag(cpu, CARRY_FLAG);
+    }
+}
 
 /*
 CP n          - Compare A with n.
@@ -192,6 +204,12 @@ CPL           - Complement A register. (Flip all bits.)
 		H - Set.
 		C - Not affected.
 */
+void instr_cpl(CPU_t *cpu)
+{
+    *cpu->A = ~*cpu->A;
+    CPU_set_flag(cpu, SUBTRACT_FLAG);
+    CPU_set_flag(cpu, HALF_CARRY_FLAG);
+}
 
 /*
 DAA           - Decimal adjust register A.
@@ -234,6 +252,10 @@ DI            - Disable interrupts.
 	Flags affected:
 		None
 */
+// void instr_DI(CPU_t *cpu)
+// {
+//     cpu.interrupts = 0;
+// }
 
 /*
 EI            - Enable interrupts.
@@ -245,6 +267,11 @@ EI            - Enable interrupts.
 	Flags affected:
 		None
 */
+// void instr_EI(CPU_t *cpu)
+// {
+//     cpu.interrupts = 1;
+// }
+
 
 /*
 INC n         - Increment register n.
@@ -265,6 +292,10 @@ INC nn        - Increment register nn.
 	Flags affected:
 		None
 */
+void instr_inc_BC(CPU_t *cpu)
+{
+    cpu->SP = cpu->SP;
+}
 
 /*
 JP n          - Jump to address n.
