@@ -752,70 +752,102 @@ void XOR_A(void) {}
 //0xB...
 // OR B
 // 1  4
+void OR_B(void) {}
 // OR C
 // 1  4
+void OR_C(void) {}
 // OR D
 // 1  4
+void OR_D(void) {}
 // OR E
 // 1  4
+void OR_E(void) {}
 // OR H
 // 1  4
+void OR_H(void) {}
 // OR L
 // 1  4
+void OR_L(void) {}
 // OR (HL)
 // 1  8
+void OR_HLm(void) {}
 // OR A
 // 1  4
+void OR_A(void) {}
 // CP B
 // 1  4
+void CP_B(void) {}
 // CP C
 // 1  4
+void CP_C(void) {}
 // CP D
 // 1  4
+void CP_D(void) {}
 // CP E
 // 1  4
+void CP_E(void) {}
 // CP H
 // 1  4
+void CP_H(void) {}
 // CP L
 // 1  4
+void CP_L(void) {}
 // CP (HL)
 // 1  8
+void CP_HLm(void) {}
 // CP A
 // 1  4
+void CP_A(void) {}
 
 //0xC...
 // RET NZ
 // 1  20/8
+void RET_NZ(void) {}
 // POP BC
 // 1  12
+void POP_BC(void) {}
 // JP NZ,a16
 // 3  16/12
+void JP_NZ_a16(void) {}
 // JP a16
 // 3  16
+void JP_a16(void) {}
 // CALL NZ,a16
 // 3  24/12
+void CALL_NZ_a16(void) {}
 // PUSH BC
 // 1  16
+void PUSH_BC(void) {}
 // ADD A,d8
 // 2  8
+void ADD_A_d8(void) {}
 // RST 00H
 // 1  16
+void RST_00H(void) {}
 // RET Z
 // 1  20/8
+void RET_Z(void) {}
 // RET
 // 1  16
+void RET(void) {}
 // JP Z,a16
 // 3  16/12
+void JP_Z_a16(void) {}
 // PREFIX CB
 // 1  4
+void PREFIX_CB(void) {}
 // CALL Z,a16
 // 3  24/12
+void CALL_Z_a16(void) {}
 // CALL a16
 // 3  24
+void CALL_a16(void) {}
 // ADC A,d8
 // 2  8
+void ADC_A_d8(void) {}
 // RST 08H
 // 1  16
+void RST_08H(void) {}
 
 // 0xD...
 // RET NC
@@ -897,6 +929,8 @@ void XOR_A(void) {}
 // RST 38H
 // 1  16
 
+
+void no_op(void) {}
 
 void(*op_codes[256]) = {
     //0x0...
@@ -1097,8 +1131,40 @@ void(*op_codes[256]) = {
     XOR_A
 
     //0xB..
+    OR_B,
+    OR_C,
+    OR_D,
+    OR_E,
+    OR_H,
+    OR_L,
+    OR_HLm,
+    OR_A,
+    CP_B,
+    CP_C,
+    CP_D,
+    CP_E,
+    CP_H,
+    CP_L,
+    CP_HLm,
+    CP_A,
 
     //0xC..
+    RET_NZ,
+    POP_BC,
+    JP_NZ_a16,
+    JP_a16,
+    CALL_NZ_a16,
+    PUSH_BC,
+    ADD_A_d8,
+    RST_00H,
+    RET_Z,
+    RET,
+    JP_Z_a16,
+    PREFIX_CB,
+    CALL_Z_a16,
+    CALL_a16,
+    ADC_A_d8,
+    RST_08H,
 
     //0xD..
 
