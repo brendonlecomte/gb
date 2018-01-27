@@ -38,6 +38,8 @@ typedef struct {
 
   uint8_t *A, *B, *C, *D, *E, *F, *H, *L;
   uint16_t AF, BC, DE, HL;
+
+  uint8_t interrupts;
   /*
   Timing
   */

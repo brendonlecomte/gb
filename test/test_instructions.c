@@ -239,6 +239,22 @@ TEST(Instructions, cpl) {
   TEST_ASSERT_EQUAL(0xAA, *gb_cpu->A);
 }
 
+TEST(Instructions, dec_nn) {
+  gb_cpu->BC = 0x0055;
+  instr_dec_nn(&gb_cpu->BC);
+  TEST_ASSERT_EQUAL(0x0054, gb_cpu->BC);
+}
+
+TEST(Instructions, di) {
+  instr_di();
+  TEST_ASSERT_EQUAL(0, gb_cpu->interrupts);
+}
+
+TEST(Instructions, ei) {
+  instr_ei();
+  TEST_ASSERT_EQUAL(1, gb_cpu->interrupts);
+}
+
 TEST(Instructions, inc) {
     *gb_cpu->A = 0x00;
     instr_inc_n(gb_cpu->A);
@@ -251,49 +267,134 @@ TEST(Instructions, inc_nn) {
 }
 
 TEST(Instructions, jp) {
-  cpu.PC = 0;
-  instr_jp(gb_cpu, 0xAA55);
-  TEST_ASSERT_EQUAL(0xAA55, cpu.PC);
+  gb_cpu->PC = 0;
+  instr_jp(0xAA55);
+  TEST_ASSERT_EQUAL(0xAA55, gb_cpu->PC);
 }
 
 TEST(Instructions, jp_hl) {
   memory->memory[0xAA55] = 0xBB;
-  cpu.registers.H = 0xAA;
-  cpu.registers.L = 0x55;
-  cpu.PC = 0;
-  instr_jp_hl(gb_cpu);
-  TEST_ASSERT_EQUAL(0xBB00, cpu.PC);
+  gb_cpu->HL = 0xAA55;
+  gb_cpu->PC = 0;
+  instr_jp_hl();
+  TEST_ASSERT_EQUAL(0xBB00, gb_cpu->PC);
 }
 
 TEST(Instructions, jr) {
-  cpu.PC = 0;
-  instr_jr(gb_cpu, 0x55);
-  TEST_ASSERT_EQUAL(0x55, cpu.PC);
+  gb_cpu->PC = 0;
+  instr_jr(0x55);
+  TEST_ASSERT_EQUAL(0x0055, gb_cpu->PC);
+}
+//
+// TEST(Instructions, load_an) {
+//   instr_load_an(gb_cpu, 0x55);
+//   TEST_ASSERT_EQUAL(0x55, cpu.registers.A);
+// }
+
+TEST(Instructions, load_ab) {
+  *gb_cpu->A = 0x55;
+  *gb_cpu->B = 0xAA;
+  instr_load_ab(gb_cpu->A, gb_cpu->B);
+  TEST_ASSERT_EQUAL(0xAA, *gb_cpu->B);
 }
 
-TEST(Instructions, load_an) {
-  instr_load_an(gb_cpu, 0x55);
-  TEST_ASSERT_EQUAL(0x55, cpu.registers.A);
-}
-
-TEST(Instructions, load_na) {
-  cpu.registers.A = 0x55;
-  instr_load_na(gb_cpu, gb_cpu->registers.B);
-  TEST_ASSERT_EQUAL(0x55, cpu.registers.B);
+TEST(Instructions, load_ab16) {
+  gb_cpu->BC = 0x55CC;
+  gb_cpu->DE = 0xAABB;
+  instr_load_ab16(&gb_cpu->BC, &gb_cpu->DE);
+  TEST_ASSERT_EQUAL(0xAABB, gb_cpu->BC);
 }
 
 TEST(Instructions, srl) {
-  cpu.registers.A = 0x01;
-  instr_srl(gb_cpu, cpu.registers.A);
+  *gb_cpu->A = 0x01;
+  instr_srl(*gb_cpu->A);
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
 
-  cpu.registers.A = 0x00;
-  instr_srl(gb_cpu, cpu.registers.A);
+  *gb_cpu->A = 0x00;
+  instr_srl(*gb_cpu->A);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 }
 
+TEST(Instructions, or){
+  *gb_cpu->A = 0x55;
+  instr_or(gb_cpu->A, 0xAA);
+  TEST_ASSERT_EQUAL(0xFF, *gb_cpu->A);
+}
+
+TEST(Instructions, push) {
+  uint16_t x;
+  instr_push(x);
+  TEST_ASSERT_EQUAL(0xFFFF, gb_cpu->SP);
+}
+
+TEST(Instructions, pop) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions, res) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions, ret) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions,  rl) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions,  rlc) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions,  rr) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions,  rrc) {
+  uint16_t x;
+  instr_pop(&x);
+  TEST_ASSERT_EQUAL(0xFFFF, x);
+}
+
+TEST(Instructions, rst) {
+  gb_cpu->PC = 0x1234;
+  instr_rst(0x3003);
+  TEST_ASSERT_EQUAL(0x3003, gb_cpu->PC);
+}
+
+TEST(Instructions, sbc) {
+  *gb_cpu->A = 0x55;
+  instr_sbc(gb_cpu->A, 0x33);
+  TEST_ASSERT_EQUAL(0x22, *gb_cpu->A);
+}
+
+TEST(Instructions, sub) {
+  *gb_cpu->A = 0x55;
+  instr_sub_n(gb_cpu->A, 0x33);
+  TEST_ASSERT_EQUAL(0x22, *gb_cpu->A);
+}
+
+TEST(Instructions, swap) {
+  uint8_t x = 0xA5;
+  instr_swap(&x);
+  TEST_ASSERT_EQUAL(0x5A, x);
+}
+
 TEST(Instructions, xor) {
-  cpu.registers.A = 0x55;
-  instr_xor(gb_cpu, 0x55);
-  TEST_ASSERT_EQUAL(0x00, cpu.registers.A);
+  *gb_cpu->A = 0x55;
+  instr_xor(gb_cpu->A, 0x55);
+  TEST_ASSERT_EQUAL(0x00, *gb_cpu->A);
 }

@@ -170,11 +170,11 @@ void instr_call_n(uint16_t n) {
 // (if (CPU_check_flag(cpu, CARRY_FLAG) == 0){instr_call(cpu, n)})
 // #define CALL_C(cpu, n)
 // (if (CPU_check_flag(cpu, CARRY_FLAG) == 1){instr_call(cpu, n)})
-void instr_call_cc(CPU_t *cpu, uint16_t n) {
-  memory_write16(memory, cpu->SP, cpu->PC + 1);
-  cpu->SP -= 1; // inc SP
-  cpu->PC = n;
-}
+// void instr_call_cc(CPU_t *cpu, uint16_t n) {
+//   memory_write16(memory, cpu->SP, cpu->PC + 1);
+//   cpu->SP -= 1; // inc SP
+//   cpu->PC = n;
+// }
 
 /*
 CCF           - Complement carry flag.
@@ -262,34 +262,31 @@ DEC nn        - Decrement register nn.
         Flags affected:
                 None
 */
+void instr_dec_nn(uint16_t *nn){
+  *nn = *nn - 1;
+}
 
 /*
 DI            - Disable interrupts.
-
-        Flags affected:
-                None
+        Flags affected: None
 */
-// TODO: Implement
-// void instr_DI(CPU_t *cpu)
-// {
-//     cpu.interrupts = 0;
-// }
+void instr_di(void)
+{
+   gb_cpu->interrupts = 0;
+}
 
 /*
 EI            - Enable interrupts.
-
         This instruction enables the interrupts but not immediately.
         Interrupts are enabled after the instruction after EI is
         executed.
 
-        Flags affected:
-                None
+        Flags affected: None
 */
-// TODO: Implement
-// void instr_EI(CPU_t *cpu)
-// {
-//     cpu.interrupts = 1;
-// }
+void instr_ei(void)
+{
+  gb_cpu->interrupts = 1;
+}
 
 /*
 INC n         - Increment register n.
@@ -329,8 +326,8 @@ JP n          - Jump to address n.
         Flags affected:
                 None
 */
-void instr_jp(CPU_t *cpu, uint16_t addr) {
-  cpu->PC = addr; //(addr<<8) + (addr>>8); //TODO: check about LSB first
+void instr_jp(uint16_t addr) {
+  gb_cpu->PC = addr; //(addr<<8) + (addr>>8); //TODO: check about LSB first
 }
 
 /*
@@ -353,9 +350,9 @@ JP [HL]       - Jump to address contained in HL.
         Flags affected:
                 None
 */
-void instr_jp_hl(CPU_t *cpu) {
+void instr_jp_hl(void) {
   // TODO: check memory is returned in correct order
-  cpu->PC = memory_read16(memory, (cpu->registers.H << 8) + cpu->registers.L);
+  gb_cpu->PC = memory_read16(memory, gb_cpu->HL);
 }
 
 /*
@@ -365,7 +362,7 @@ JR n          - Add n to current address and jump to it.
         Flags affected:
                 None
 */
-void instr_jr(CPU_t *cpu, uint8_t n) { cpu->PC += n; }
+void instr_jr(uint8_t n) { gb_cpu->PC += n; }
 
 /*
 JR cc,n       - If following condition is true then
@@ -385,8 +382,7 @@ HALT          - Power down CPU until an interrupt occurs.
         Flags affected:
                 None
 */
-void instr_halt(CPU_t *cpu) {
-  cpu->PC = 0;
+void instr_halt(void) {
   // TODO: someting ?
 }
 
@@ -396,7 +392,7 @@ LD A,n        - Put value n into A.
         Flags affected:
                 None
 */
-void instr_load_an(CPU_t *cpu, uint8_t n) { cpu->registers.A = n; }
+// void instr_load_an(uint8_t , uint8_t n) { cpu->registers.A = n; }
 
 /*
 LD n,A        - Put value A into n.
@@ -406,7 +402,7 @@ n = A,B,C,D,E,H,L,(BC,(DE),(HL),(nnnn)
         Flags affected:
                 None
 */
-void instr_load_na(CPU_t *cpu, uint8_t *n) { *n = cpu->registers.A; }
+void instr_load_ab(uint8_t *A, uint8_t *n) { *A = *n; }
 
 /*
 LD A,[C]      - Put value at address $FF00 + register C into A.
@@ -457,6 +453,9 @@ LD n,nn       - Put value nn into n.
         nn = 16 bit immediate value
         Flags affected:    Non
 */
+void instr_load_ab16(uint16_t *A, uint16_t *B) {
+  *A = *B;
+}
 
 /*
 LD HL,[SP+n]  - Put SP + n into HL.
@@ -515,7 +514,7 @@ LDI [HL],A    - Same as LD [HLI],A.
 NOP           - No operation.
         Flags affected:     None
 */
-void instr_nop(CPU_t *cpu) {}
+void instr_nop(void) {}
 
 /*
 OR n          - Logical OR n with register A, result in A.
@@ -526,6 +525,9 @@ OR n          - Logical OR n with register A, result in A.
                 H - Reset.
                 C - Reset.
 */
+void instr_or(uint8_t *A, uint8_t n) {
+
+}
 
 /*
 POP nn        - Pop two bytes off stack into register pair nn.
@@ -533,6 +535,9 @@ POP nn        - Pop two bytes off stack into register pair nn.
         nn = AF,BC,DE,HL
         Flags affected: None
 */
+void instr_pop(uint16_t *nn) {
+
+}
 
 /*
 PUSH nn       - Push register pair nn onto stack.
@@ -540,17 +545,26 @@ PUSH nn       - Push register pair nn onto stack.
         nn = AF,BC,DE,HL
         Flags affected:    None
 */
+void instr_push(uint16_t nn) {
+
+}
 
 /*
 RES b,r       - Reset bit b in register r.
         b = 0-7, r = A,B,C,D,E,H,L,(HL)
         Flags affected:    None
 */
+void instr_res(uint8_t b, uint8_t *r) {
+
+}
 
 /*
 RET           - Pop two bytes from stack & jump to that address.
         Flags affected:   None
 */
+void instr_ret(void) {
+
+}
 
 /*
 RET cc        - Return if following condition is true:
@@ -579,6 +593,9 @@ RL n          - Rotate n left through Carry flag.
                 H - Reset.
                 C - Contains old bit 7 data.
 */
+void instr_rl(uint8_t *n) {
+
+}
 
 /*
 RLC n         - Rotate n left. Old bit 7 to Carry flag.
@@ -589,6 +606,9 @@ RLC n         - Rotate n left. Old bit 7 to Carry flag.
                 H - Reset.
                 C - Contains old bit 7 data.
 */
+void instr_rlc(uint8_t *n) {
+
+}
 
 /*
 RR n          - Rotate n right through Carry flag.
@@ -599,6 +619,9 @@ RR n          - Rotate n right through Carry flag.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
+void instr_rr(uint8_t *n) {
+
+}
 
 /*
 RRC n         - Rotate n right. Old bit 0 to Carry flag.
@@ -609,6 +632,9 @@ RRC n         - Rotate n right. Old bit 0 to Carry flag.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
+void instr_rrc(uint8_t *n) {
+
+}
 
 /*
 RST n         - Push present address onto stack.
@@ -616,6 +642,9 @@ RST n         - Push present address onto stack.
         n = $00,$08,$10,$18,$20,$28,$30,$38
         Flags affected: none
 */
+void instr_rst(uint8_t n) {
+
+}
 
 /*
 SBC A,n       - Subtract n + Carry flag from A.
@@ -626,6 +655,9 @@ SBC A,n       - Subtract n + Carry flag from A.
                 H - Set if no borrow from bit 4.
                 C - Set if no borrow.
 */
+void instr_sbc(uint8_t *A, uint8_t n) {
+
+}
 
 /*
 SCF           - Set Carry flag.
@@ -635,7 +667,7 @@ SCF           - Set Carry flag.
                 H - Reset.
                 C - Set.
 */
-void instr_scf(CPU_t *cpu) { CPU_set_flag(CARRY_FLAG); }
+void instr_scf(void) { CPU_set_flag(CARRY_FLAG); }
 
 /*
 SET b,r       - Set bit b in register r.
@@ -653,7 +685,7 @@ SLA n         - Shift n left into Carry. LSBit of n set to 0.
                 H - Reset.
                 C - Contains old bit 7 data.
 */
-void instr_sla(CPU_t *cpu, uint8_t n) {
+void instr_sla(uint8_t n) {
   uint8_t t = n << 1;
   if (t == 0)
     CPU_set_flag(ZERO_FLAG);
@@ -674,7 +706,7 @@ SRA n         - Shift n right into Carry. MSBit doesn't change.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
-void instr_sra(CPU_t *cpu, uint8_t n) {
+void instr_sra(uint8_t n) {
 
   uint8_t t = n >> 1;
   t |= (n & 0x80); // ensure MSB is 0
@@ -697,7 +729,7 @@ SRL n         - Shift n right into Carry. MSBit of n set to 0.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
-void instr_srl(CPU_t *cpu, uint8_t n) {
+void instr_srl(uint8_t n) {
   uint8_t t = n >> 1;
   t &= 0x7F; // ensure MSB is 0
   if (t == 0)
@@ -714,7 +746,9 @@ void instr_srl(CPU_t *cpu, uint8_t n) {
 STOP          - ???
         Flags affected:    ?
 */
-// TODO: check if i need this?
+void instr_stop(void) {
+    // assert(0);
+}
 
 /*
 SUB n         - Subtract n from A.
@@ -725,6 +759,9 @@ SUB n         - Subtract n from A.
                 H - Set if no borrow from bit 4.
                 C - Set if no borrow.
 */
+void instr_sub_n(uint8_t *A, uint8_t n) {
+
+}
 
 /*
 SWAP n        - Swap upper & lower bits of n.
@@ -735,6 +772,17 @@ SWAP n        - Swap upper & lower bits of n.
                 H - Reset.
                 C - Reset.
 */
+void instr_swap(uint8_t *n) {
+  uint8_t low, high;
+  low = *n;
+  high = *n;
+  *n = low<<4 | high>>4;
+  if (*n == 0)
+    CPU_set_flag(ZERO_FLAG);
+  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  CPU_clear_flag(CARRY_FLAG);
+}
 
 /*
 XOR n         - Logical exclusive OR n with
@@ -746,9 +794,9 @@ XOR n         - Logical exclusive OR n with
                 H - Reset.
                 C - Reset.
 */
-void instr_xor(CPU_t *cpu, uint8_t n) {
-  cpu->registers.A ^= n;
-  if (cpu->registers.A == 0)
+void instr_xor(uint8_t *A, uint8_t n) {
+  *A ^= n;
+  if (*A == 0)
     CPU_set_flag(ZERO_FLAG);
   CPU_clear_flag(SUBTRACT_FLAG);
   CPU_clear_flag(HALF_CARRY_FLAG);
