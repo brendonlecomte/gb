@@ -206,7 +206,6 @@ TEST(Instructions, bit) {
 }
 
 TEST(Instructions, call_n) {
-
   memory_init(memory);
   CPU_init(gb_cpu);
   gb_cpu->PC = 0;
@@ -237,6 +236,20 @@ TEST(Instructions, cpl) {
   TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(0xAA, *gb_cpu->A);
+}
+
+TEST(Instructions, daa) {
+  TEST_ASSERT_EQUAL(0,1);
+}
+
+TEST(Instructions, cp) {
+  TEST_ASSERT_EQUAL(0,1);
+}
+
+TEST(Instructions, dec_n) {
+    uint8_t x = 0xAA;
+    instr_dec_n(&x);
+    TEST_ASSERT_EQUAL(2,0);
 }
 
 TEST(Instructions, dec_nn) {
@@ -301,7 +314,7 @@ TEST(Instructions, load_ab) {
 TEST(Instructions, load_ab16) {
   gb_cpu->BC = 0x55CC;
   gb_cpu->DE = 0xAABB;
-  instr_load_ab16(&gb_cpu->BC, &gb_cpu->DE);
+  instr_load_ab16(&gb_cpu->BC, gb_cpu->DE);
   TEST_ASSERT_EQUAL(0xAABB, gb_cpu->BC);
 }
 
@@ -322,69 +335,113 @@ TEST(Instructions, or){
 }
 
 TEST(Instructions, push) {
-  uint16_t x;
+  uint16_t x = 0x1234;
   instr_push(x);
-  TEST_ASSERT_EQUAL(0xFFFF, gb_cpu->SP);
+  TEST_ASSERT_EQUAL(0xFFFC, gb_cpu->SP);
+  TEST_ASSERT_EQUAL(0x1234, CPU_stack_pop());
 }
 
 TEST(Instructions, pop) {
   uint16_t x;
+  CPU_stack_push(0xABCD);
   instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  TEST_ASSERT_EQUAL(0xABCD, x);
 }
 
 TEST(Instructions, res) {
-  uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  uint8_t x = 0xFF;
+  instr_res(4, &x);
+  TEST_ASSERT_EQUAL(0xEF, x);
 }
 
 TEST(Instructions, ret) {
   uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  CPU_stack_push(0x1234);
+  instr_ret();
+  TEST_ASSERT_EQUAL(0x1234, gb_cpu->PC);
 }
 
 TEST(Instructions,  rl) {
-  uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  uint8_t x = 0xAA;
+  CPU_set_flag(CARRY_FLAG);
+  instr_rl(&x);
+  TEST_ASSERT_EQUAL(0x55, x);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+
+
+  x = 0x55;
+  CPU_clear_flag(CARRY_FLAG);
+  instr_rl(&x);
+  TEST_ASSERT_EQUAL(0xAA, x);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 }
 
 TEST(Instructions,  rlc) {
-  uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  uint8_t x = 0xCC;
+  CPU_clear_flag(CARRY_FLAG);
+  instr_rlc(&x);
+  TEST_ASSERT_EQUAL(0x99, x);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+
+
+  x = 0x66;
+  CPU_set_flag(CARRY_FLAG);
+  instr_rlc(&x);
+  TEST_ASSERT_EQUAL(0xcc, x);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 }
 
 TEST(Instructions,  rr) {
-  uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  uint8_t x = 0x76;
+  CPU_clear_flag(CARRY_FLAG);
+  instr_rr(&x);
+  TEST_ASSERT_EQUAL(0x3B, x);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
+
+
+  x = 0x75;
+  CPU_set_flag(CARRY_FLAG);
+  instr_rr(&x);
+  TEST_ASSERT_EQUAL(0xBA, x);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
 }
 
 TEST(Instructions,  rrc) {
-  uint16_t x;
-  instr_pop(&x);
-  TEST_ASSERT_EQUAL(0xFFFF, x);
+  uint8_t x = 0xB8;
+  CPU_set_flag(CARRY_FLAG);
+  instr_rrc(&x);
+  TEST_ASSERT_EQUAL(0x5c, x);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
+
+
+  x = 0x4D;
+  CPU_clear_flag(CARRY_FLAG);
+  instr_rrc(&x);
+  TEST_ASSERT_EQUAL(0xA6, x);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
 }
 
 TEST(Instructions, rst) {
   gb_cpu->PC = 0x1234;
-  instr_rst(0x3003);
-  TEST_ASSERT_EQUAL(0x3003, gb_cpu->PC);
+  instr_rst(0x08);
+  TEST_ASSERT_EQUAL(0x0008, gb_cpu->PC);
+  TEST_ASSERT_EQUAL(0x1234, CPU_stack_pop());
 }
 
 TEST(Instructions, sbc) {
-  *gb_cpu->A = 0x55;
-  instr_sbc(gb_cpu->A, 0x33);
-  TEST_ASSERT_EQUAL(0x22, *gb_cpu->A);
+  *gb_cpu->A = 0x50;
+  CPU_set_flag(CARRY_FLAG);
+  instr_sbc(gb_cpu->A, 0x10);
+  TEST_ASSERT_EQUAL(0x3F, *gb_cpu->A);
+  TEST_ASSERT_EQUAL(2, CPU_check_flag(HALF_CARRY_FLAG));
 }
 
 TEST(Instructions, sub) {
-  *gb_cpu->A = 0x55;
-  instr_sub_n(gb_cpu->A, 0x33);
-  TEST_ASSERT_EQUAL(0x22, *gb_cpu->A);
+  *gb_cpu->A = 0x50;
+  CPU_set_flag(CARRY_FLAG);
+  instr_sub_n(gb_cpu->A, 0x10);
+  TEST_ASSERT_EQUAL(0x40, *gb_cpu->A);
+  TEST_ASSERT_EQUAL(2, CPU_check_flag(HALF_CARRY_FLAG));
 }
 
 TEST(Instructions, swap) {

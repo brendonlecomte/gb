@@ -208,7 +208,12 @@ CP n          - Compare A with n.
                 H - Set if no borrow from bit 4.
                 C - Set for no borrow. (Set if A < n.)
 */
-// TODO: Implement
+void instr_cp(uint8_t A, uint8_t n) {
+  if(A == 0) CPU_set_flag(ZERO_FLAG);
+  CPU_set_flag(SUBTRACT_FLAG);
+  //CPU_clear_flag(HALF_CARRY_FLAG);
+  if(A < n) CPU_set_flag(CARRY_FLAG);
+}
 
 /*
 CPL           - Complement A register. (Flip all bits.)
@@ -239,7 +244,15 @@ DAA           - Decimal adjust register A.
                 H - Reset.
                 C - Set of reset according to operation.
 */
-// TODO: Implement
+void instr_daa(uint8_t *A) {
+  uint16_t t = *A;
+  if(t&0x000F > 9 || CPU_check_flag(HALF_CARRY_FLAG)) t += 0x06;
+  if(t>>4 & 0x000F > 9 || CPU_check_flag(CARRY_FLAG)) t += 0x60;
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(t&0x100) CPU_set_flag(CARRY_FLAG);
+  *A = t;
+  if(*A == 0) CPU_set_flag(ZERO_FLAG);
+}
 
 /*
 DEC n         - Decrement register n.
@@ -252,7 +265,13 @@ DEC n         - Decrement register n.
                 H - Set if no borrow from bit 4.
                 C - Not affected.
 */
-// TODO: Implement
+void instr_dec_n(uint8_t *reg) {
+  uint8_t t = *reg -1;
+  *reg = t;
+  if(*reg == 0) CPU_set_flag(ZERO_FLAG);
+  CPU_set_flag(SUBTRACT_FLAG);
+  CPU_set_flag(HALF_CARRY_FLAG);
+}
 
 /*
 DEC nn        - Decrement register nn.
@@ -453,8 +472,8 @@ LD n,nn       - Put value nn into n.
         nn = 16 bit immediate value
         Flags affected:    Non
 */
-void instr_load_ab16(uint16_t *A, uint16_t *B) {
-  *A = *B;
+void instr_load_ab16(uint16_t *A, uint16_t B) {
+  *A = B;
 }
 
 /*
@@ -526,7 +545,8 @@ OR n          - Logical OR n with register A, result in A.
                 C - Reset.
 */
 void instr_or(uint8_t *A, uint8_t n) {
-
+  uint8_t t = *A;
+  *A = t | n;
 }
 
 /*
@@ -536,7 +556,7 @@ POP nn        - Pop two bytes off stack into register pair nn.
         Flags affected: None
 */
 void instr_pop(uint16_t *nn) {
-
+  *nn = CPU_stack_pop();
 }
 
 /*
@@ -546,7 +566,7 @@ PUSH nn       - Push register pair nn onto stack.
         Flags affected:    None
 */
 void instr_push(uint16_t nn) {
-
+  CPU_stack_push(nn);
 }
 
 /*
@@ -555,7 +575,8 @@ RES b,r       - Reset bit b in register r.
         Flags affected:    None
 */
 void instr_res(uint8_t b, uint8_t *r) {
-
+  uint8_t x = *r;
+  *r = x & ~(0x01 << b);
 }
 
 /*
@@ -563,7 +584,8 @@ RET           - Pop two bytes from stack & jump to that address.
         Flags affected:   None
 */
 void instr_ret(void) {
-
+  uint16_t t = CPU_stack_pop();
+  gb_cpu->PC = t;
 }
 
 /*
@@ -594,7 +616,15 @@ RL n          - Rotate n left through Carry flag.
                 C - Contains old bit 7 data.
 */
 void instr_rl(uint8_t *n) {
-
+  uint8_t c = *n>>7;
+  uint8_t x = *n << 1;
+  x = x + CPU_check_flag(CARRY_FLAG);
+  if(x == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(c) CPU_set_flag(CARRY_FLAG);
+  else CPU_clear_flag(CARRY_FLAG);
+  *n = x;
 }
 
 /*
@@ -607,7 +637,14 @@ RLC n         - Rotate n left. Old bit 7 to Carry flag.
                 C - Contains old bit 7 data.
 */
 void instr_rlc(uint8_t *n) {
-
+  uint8_t c = *n>>7;
+  uint8_t x = *n << 1;
+  *n = x + c;
+  if(x == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(c) CPU_set_flag(CARRY_FLAG);
+  else CPU_clear_flag(CARRY_FLAG);
 }
 
 /*
@@ -620,7 +657,15 @@ RR n          - Rotate n right through Carry flag.
                 C - Contains old bit 0 data.
 */
 void instr_rr(uint8_t *n) {
-
+  uint8_t c = *n & 0x01;
+  uint8_t x = *n >> 1;
+  x = x | CPU_check_flag(CARRY_FLAG)<<7;
+  if(x == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(c) CPU_set_flag(CARRY_FLAG);
+  else CPU_clear_flag(CARRY_FLAG);
+  *n = x;
 }
 
 /*
@@ -633,7 +678,14 @@ RRC n         - Rotate n right. Old bit 0 to Carry flag.
                 C - Contains old bit 0 data.
 */
 void instr_rrc(uint8_t *n) {
-
+  uint8_t c = *n & 0x01;
+  uint8_t x = *n >> 1;
+  *n = x | c<<7;
+  if(x == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(c) CPU_set_flag(CARRY_FLAG);
+  else CPU_clear_flag(CARRY_FLAG);
 }
 
 /*
@@ -643,7 +695,8 @@ RST n         - Push present address onto stack.
         Flags affected: none
 */
 void instr_rst(uint8_t n) {
-
+  CPU_stack_push(gb_cpu->PC);
+  gb_cpu->PC = 0 + n;
 }
 
 /*
@@ -656,7 +709,14 @@ SBC A,n       - Subtract n + Carry flag from A.
                 C - Set if no borrow.
 */
 void instr_sbc(uint8_t *A, uint8_t n) {
-
+  uint16_t t = *A;
+  t = t + ~n;
+  t = t + !CPU_check_flag(CARRY_FLAG);
+  *A = (uint8_t)t;
+  if(t == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_set_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG); //TODO: HC flag is wrong...
+  if(!(t&0x100)) CPU_set_flag(CARRY_FLAG);
 }
 
 /*
@@ -674,7 +734,7 @@ SET b,r       - Set bit b in register r.
         b = 0-7, r = A,B,C,D,E,H,L,(HL)
         Flags affected        None
 */
-void instr_set_b(CPU_t *cpu, uint8_t b, uint8_t *r) { *r |= 0x01 << b; }
+void instr_set_b(uint8_t b, uint8_t *r) { *r |= 0x01 << b; }
 
 /*
 SLA n         - Shift n left into Carry. LSBit of n set to 0.
@@ -743,8 +803,7 @@ void instr_srl(uint8_t n) {
 }
 
 /*
-STOP          - ???
-        Flags affected:    ?
+STOP          - ??? affected:    ?
 */
 void instr_stop(void) {
     // assert(0);
@@ -760,7 +819,14 @@ SUB n         - Subtract n from A.
                 C - Set if no borrow.
 */
 void instr_sub_n(uint8_t *A, uint8_t n) {
-
+  uint16_t t = *A;
+  t = t + ~n;
+  t = t + 1;
+  *A = (uint8_t)t;
+  if(t == 0) CPU_clear_flag(ZERO_FLAG);
+  CPU_set_flag(SUBTRACT_FLAG);
+  CPU_clear_flag(HALF_CARRY_FLAG);
+  if(!(t&0x100)) CPU_set_flag(CARRY_FLAG);
 }
 
 /*
