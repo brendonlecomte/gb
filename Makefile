@@ -20,14 +20,15 @@ CFLAGS += -Wno-unknown-pragmas
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
-CFLAGS += -Werror
+# CFLAGS += -Werror
 
 TARGET_BASE1=all_tests
 TARGET1 = $(TARGET_BASE1).out
 
 SRC_FILES=src/instructions/instructions.c \
 					src/cpu.c\
-					src/memory.c
+					src/memory.c\
+					src/op_codes.c
 
 TEST_FILES=\
   $(UNITY_ROOT)/src/unity.c \
