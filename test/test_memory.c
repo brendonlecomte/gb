@@ -18,17 +18,20 @@ TEST_TEAR_DOWN(Memory)
 
 TEST(Memory, init)
 {
+    TEST_ASSERT_EQUAL(0xCF, test_mem.cart[0]);
     TEST_ASSERT_EQUAL(0xFF, test_mem.cart[3]);
 }
 
 TEST(Memory, read8)
 {
-    TEST_ASSERT_EQUAL(0xF8, memory_read8(&test_mem, 7));
+    memory_write8(&test_mem, 7, 0xCC);
+    TEST_ASSERT_EQUAL(0xCC, memory_read8(&test_mem, 7));
 }
 
 TEST(Memory, read16)
 {
-    TEST_ASSERT_EQUAL(0x7CFF, memory_read16(&test_mem, 2));
+    memory_write16(&test_mem, 2, 0x55AA);
+    TEST_ASSERT_EQUAL(0x55AA, memory_read16(&test_mem, 2));
 }
 
 

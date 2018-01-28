@@ -132,8 +132,8 @@ BIT b,r  - Test bit b in register r.
                 H - Set.
                 C - Not affected.
 */
-void instr_bit(uint8_t *b, uint8_t *r) {
-  if (!(0x01 << *b & *r))
+void instr_bit(uint8_t b, uint8_t *r) {
+  if (((0x01 << b) & *r) == 0)
     CPU_set_flag(ZERO_FLAG);
   CPU_clear_flag(SUBTRACT_FLAG);
   CPU_set_flag(HALF_CARRY_FLAG);
@@ -381,7 +381,9 @@ JR n          - Add n to current address and jump to it.
         Flags affected:
                 None
 */
-void instr_jr(uint8_t n) { gb_cpu->PC += n; }
+void instr_jr(uint8_t n) {
+  gb_cpu->PC += n;
+}
 
 /*
 JR cc,n       - If following condition is true then

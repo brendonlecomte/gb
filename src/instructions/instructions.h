@@ -9,7 +9,7 @@ void instr_add(uint8_t* A, uint8_t n);
 void instr_add_HL(uint16_t* hl, uint16_t n);
 void instr_add_SP(uint16_t *sp, uint8_t n);
 void instr_and(uint8_t *A, uint8_t n);
-void instr_bit(uint8_t *b, uint8_t *r);
+void instr_bit(uint8_t b, uint8_t *r);
 void instr_call_n(uint16_t n);
 void instr_call_cc(CPU_t *cpu, uint16_t n);
 void instr_ccf(void);
