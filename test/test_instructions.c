@@ -297,6 +297,10 @@ TEST(Instructions, jr) {
   gb_cpu->PC = 0;
   instr_jr(0x55);
   TEST_ASSERT_EQUAL(0x0055, gb_cpu->PC);
+
+  gb_cpu->PC = 0x000C;
+  instr_jr(0xFB);
+  TEST_ASSERT_EQUAL(0x0007, gb_cpu->PC);
 }
 //
 // TEST(Instructions, load_an) {
@@ -309,6 +313,10 @@ TEST(Instructions, load_ab) {
   *gb_cpu->B = 0xAA;
   instr_load_ab(gb_cpu->A, gb_cpu->B);
   TEST_ASSERT_EQUAL(0xAA, *gb_cpu->B);
+
+  *gb_cpu->C = 0x55;
+  instr_load_ab(gb_cpu->C, 0x11);
+  TEST_ASSERT_EQUAL(0x11, *gb_cpu->C);
 }
 
 TEST(Instructions, load_ab16) {

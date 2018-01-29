@@ -5,7 +5,7 @@ CPU_t _cpu;
 CPU_t *gb_cpu = &_cpu;
 
 void CPU_init(CPU_t *cpu) {
-  cpu->PC = 0x0000; 
+  cpu->PC = 0x0000;
   cpu->SP = 0xFFFE;
 
   // Register AF set to 0x01 for GB

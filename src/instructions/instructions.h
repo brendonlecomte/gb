@@ -14,7 +14,7 @@ void instr_call_n(uint16_t n);
 void instr_call_cc(CPU_t *cpu, uint16_t n);
 void instr_ccf(void);
 void instr_daa(uint8_t *A);
-void instr_cp(uint8_t A, uint8_t n);
+void instr_cp(uint8_t *A, uint8_t n);
 void instr_cpl(uint8_t *A);
 
 void instr_inc_n(uint8_t *reg);
@@ -31,7 +31,7 @@ void instr_jr(uint8_t n);
 void instr_halt(void);
 void instr_set_b(uint8_t b, uint8_t *r);
 // void instr_load_an(CPU_t *cpu, uint8_t n);
-void instr_load_ab(uint8_t *A, uint8_t *n);
+void instr_load_ab(uint8_t *A, uint8_t n);
 void instr_load_ab16(uint16_t *A, uint16_t B);
 void instr_nop(void);
 void instr_scf(void);

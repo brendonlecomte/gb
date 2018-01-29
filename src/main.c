@@ -6,7 +6,7 @@
 
 int main(int argc, const char * argv[])
 {
-  uint8_t exit;
+  uint8_t exit = 1;
   printf("GB emulator...\n");
   CPU_init(gb_cpu);
   memory_init(memory);
@@ -14,13 +14,13 @@ int main(int argc, const char * argv[])
   {
     //fetch
     uint8_t op = memory_read8(memory, gb_cpu->PC);  //read OP code
-    printf("OP @ %d: %d\n", gb_cpu->PC, op);
+    printf("0x%04X:0x%02X::", gb_cpu->PC, op);
     gb_cpu->PC += 1; //inc pc
 
     //execute
     op_codes[op]();
-    printf("test\n");
-    scanf("%d", &exit);
+    if(gb_cpu->PC > 0x10 )
+    {scanf("%d", &exit);}
     if(exit == 0) break;
 
   }

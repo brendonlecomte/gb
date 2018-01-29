@@ -208,11 +208,11 @@ CP n          - Compare A with n.
                 H - Set if no borrow from bit 4.
                 C - Set for no borrow. (Set if A < n.)
 */
-void instr_cp(uint8_t A, uint8_t n) {
-  if(A == 0) CPU_set_flag(ZERO_FLAG);
+void instr_cp(uint8_t *A, uint8_t n) {
+  if(*A == 0) CPU_set_flag(ZERO_FLAG);
   CPU_set_flag(SUBTRACT_FLAG);
   //CPU_clear_flag(HALF_CARRY_FLAG);
-  if(A < n) CPU_set_flag(CARRY_FLAG);
+  if(*A < n) CPU_set_flag(CARRY_FLAG);
 }
 
 /*
@@ -382,7 +382,13 @@ JR n          - Add n to current address and jump to it.
                 None
 */
 void instr_jr(uint8_t n) {
-  gb_cpu->PC += n;
+  if(n&0x80)
+  {
+    uint8_t t = ~(n);
+    gb_cpu->PC -= t;
+  }
+  else
+    gb_cpu->PC += n;
 }
 
 /*
@@ -423,7 +429,7 @@ n = A,B,C,D,E,H,L,(BC,(DE),(HL),(nnnn)
         Flags affected:
                 None
 */
-void instr_load_ab(uint8_t *A, uint8_t *n) { *A = *n; }
+void instr_load_ab(uint8_t *A, uint8_t n) { *A = n; }
 
 /*
 LD A,[C]      - Put value at address $FF00 + register C into A.

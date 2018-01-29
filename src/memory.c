@@ -9,10 +9,15 @@ const uint32_t boot[64] = {
       // 0xCB7C20FB,
       0xFB207CCB,
 
+      // 0x2126FF0E,
+      0x0EFF2621,
 
-      0x2126FF0E,
-      0x113E8032,
-      0xE20C3EF3,
+      // 0x113E8032,
+      0X32803E11,
+
+      // 0xE20C3EF3,
+      0XF33E0CE2,
+
       0x773EFCE0,
       0x47110401,
       0x2110801A,
