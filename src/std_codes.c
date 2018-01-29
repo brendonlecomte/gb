@@ -93,7 +93,8 @@ void DEC_BC(void) { printf(" %s\n", __func__);
 
 // 0x0C INC C
 // 1 4
-void INC_C(void) { printf(" %s\n", __func__);
+void INC_C(void) {
+  printf(" %s\n", __func__);
   instr_inc_n(gb_cpu->C);
   gb_cpu->cycles += 4;
 }
@@ -906,9 +907,9 @@ void JP_Z_a16(void) { printf(" %s\n", __func__); }
 void PREFIX_CB(void) {
   uint8_t op = memory_read8(memory, gb_cpu->PC);
   gb_cpu->PC += 1;
+  gb_cpu->cycles += 4;
   printf(" %s::", __func__);
   prefix_cb[op]();
-
 }
 // CALL Z,a16
 // 3  24/12
@@ -977,7 +978,7 @@ void LD_Cm_A(void) {
     uint16_t addr = *gb_cpu->C + 0xFF00;
     memory_write8(memory, addr, *gb_cpu->A);
     printf(" %s: 0x%04X <- 0x%02X\n", __func__, addr, *gb_cpu->A);
-    gb_cpu->PC += 2;
+    gb_cpu->PC += 1;
 }
 // PUSH HL
 // 1  16
