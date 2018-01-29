@@ -164,20 +164,19 @@ TEST(Instructions, add_HL) {
 }
 
 TEST(Instructions, and) {
-
   CPU_init(gb_cpu);
-  *cpu.A = 0x55;
-  instr_and(cpu.A, 0x55);
-  TEST_ASSERT_EQUAL(0x55, cpu.A);
+  *gb_cpu->A = 0x55;
+  instr_and(gb_cpu->A, 0x55);
+  TEST_ASSERT_EQUAL(0x55, *gb_cpu->A);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 
   CPU_init(gb_cpu);
-  *cpu.A = 0xAA;
-  instr_and(cpu.A, 0x55);
-  TEST_ASSERT_EQUAL(0x00, cpu.A);
+  *gb_cpu->A = 0xAA;
+  instr_and(gb_cpu->A, 0x55);
+  TEST_ASSERT_EQUAL(0x00, *gb_cpu->A);
   TEST_ASSERT_EQUAL(1, CPU_check_flag(ZERO_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
