@@ -13,17 +13,17 @@ void CPU_init(CPU_t *cpu) {
   cpu->BC = 0;
   cpu->HL = 0;
 
-  cpu->A = &cpu->AF;
+  cpu->A = (uint8_t*)&cpu->AF;
   cpu->F = cpu->A + 1;
   *cpu->F = 0x01;
 
-  cpu->B = &cpu->BC;
+  cpu->B = (uint8_t*)&cpu->BC;
   cpu->C = cpu->B + 1;
 
-  cpu->D = &cpu->DE;
+  cpu->D = (uint8_t*)&cpu->DE;
   cpu->E = cpu->D + 1;
 
-  cpu->H = &cpu->HL;
+  cpu->H = (uint8_t*)&cpu->HL;
   cpu->L = cpu->H + 1;
 }
 

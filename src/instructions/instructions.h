@@ -30,7 +30,6 @@ void instr_jp_hl(void);
 void instr_jr(uint8_t n);
 void instr_halt(void);
 void instr_set_b(uint8_t b, uint8_t *r);
-// void instr_load_an(CPU_t *cpu, uint8_t n);
 void instr_load_ab(uint8_t *A, uint8_t n);
 void instr_load_ab16(uint16_t *A, uint16_t B);
 void instr_nop(void);

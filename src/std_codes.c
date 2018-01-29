@@ -805,32 +805,32 @@ void XOR_A(void) { printf(" %s\n", __func__); }
 // OR B
 // 1  4
 void OR_B(void) {
-    instr_or(gb_cpu->A, gb_cpu->B);
+    instr_or(gb_cpu->A, *gb_cpu->B);
     printf(" %s\n", __func__);
 }
 // OR C
 // 1  4
 void OR_C(void) {
-    instr_or(gb_cpu->A, gb_cpu->C);
+    instr_or(gb_cpu->A, *gb_cpu->C);
     printf(" %s\n", __func__); }
 // OR D
 // 1  4
 void OR_D(void) { printf(" %s\n", __func__);
-instr_or(gb_cpu->A, gb_cpu->D);
+instr_or(gb_cpu->A, *gb_cpu->D);
  }
 // OR E
 // 1  4
 void OR_E(void) { printf(" %s\n", __func__);
-instr_or(gb_cpu->A, gb_cpu->E);
+instr_or(gb_cpu->A, *gb_cpu->E);
 }
 // OR H
 // 1  4
 void OR_H(void) { printf(" %s\n", __func__);
-instr_or(gb_cpu->A, gb_cpu->H);
+instr_or(gb_cpu->A, *gb_cpu->H);
 }
 // OR L
 // 1  4
-void OR_L(void) { printf(" %s\n", __func__); instr_or(gb_cpu->A, gb_cpu->L);}
+void OR_L(void) { printf(" %s\n", __func__); instr_or(gb_cpu->A, *gb_cpu->L);}
 // OR (HL)
 // 1  8
 void OR_HLm(void) { printf(" %s\n", __func__);
@@ -838,26 +838,26 @@ void OR_HLm(void) { printf(" %s\n", __func__);
 }
 // OR A
 // 1  4
-void OR_A(void) { printf(" %s\n", __func__); instr_or(gb_cpu->A, gb_cpu->A);}
+void OR_A(void) { printf(" %s\n", __func__); instr_or(gb_cpu->A, *gb_cpu->A);}
 // CP B
 // 1  4
 void CP_B(void) { printf(" %s\n", __func__);
-instr_cp(gb_cpu->A, gb_cpu->B);}
+instr_cp(gb_cpu->A, *gb_cpu->B);}
 // CP C
 // 1  4
-void CP_C(void) { printf(" %s\n", __func__);instr_cp(gb_cpu->A, gb_cpu->C); }
+void CP_C(void) { printf(" %s\n", __func__);instr_cp(gb_cpu->A, *gb_cpu->C); }
 // CP D
 // 1  4
-void CP_D(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, gb_cpu->D);}
+void CP_D(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, *gb_cpu->D);}
 // CP E
 // 1  4
-void CP_E(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, gb_cpu->E);}
+void CP_E(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, *gb_cpu->E);}
 // CP H
 // 1  4
-void CP_H(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, gb_cpu->H);}
+void CP_H(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, *gb_cpu->H);}
 // CP L
 // 1  4
-void CP_L(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, gb_cpu->L);}
+void CP_L(void) { printf(" %s\n", __func__); instr_cp(gb_cpu->A, *gb_cpu->L);}
 // CP (HL)
 // 1  8
 void CP_HLm(void) { printf(" %s\n", __func__);
@@ -865,7 +865,7 @@ void CP_HLm(void) { printf(" %s\n", __func__);
 }
 // CP A
 // 1  4
-void CP_A(void) { printf(" %s\n", __func__);instr_cp(gb_cpu->A, gb_cpu->A);}
+void CP_A(void) { printf(" %s\n", __func__);instr_cp(gb_cpu->A, *gb_cpu->A);}
 
 //0xC...
 // RET NZ
@@ -1041,7 +1041,7 @@ void LD_SP_HL(void) { printf(" %s\n", __func__); }
 void LD_A_a16(void) { printf(" %s\n", __func__); }
 // EI
 // 1  4
-void EI(void) { printf(" %s\n", __func__); instr_ei(); gp_cpu->cycles += 4;}
+void EI(void) { printf(" %s\n", __func__); instr_ei(); gb_cpu->cycles += 4;}
 // CP d8
 // 2  8
 void CP_d8(void) { printf(" %s\n", __func__); }
@@ -1050,7 +1050,7 @@ void CP_d8(void) { printf(" %s\n", __func__); }
 void RST_38H(void) { printf(" %s\n", __func__); gb_cpu->PC = 0x0038; gb_cpu->cycles += 16;}
 
 
-void no_op(void) { printf(" Unimplemented func!\n", __func__); exit(0); }
+void no_op(void) { printf(" Unimplemented func!\n");  }
 
 
 void(*op_codes[256])(void) = {

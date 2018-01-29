@@ -246,8 +246,8 @@ DAA           - Decimal adjust register A.
 */
 void instr_daa(uint8_t *A) {
   uint16_t t = *A;
-  if(t&0x000F > 9 || CPU_check_flag(HALF_CARRY_FLAG)) t += 0x06;
-  if(t>>4 & 0x000F > 9 || CPU_check_flag(CARRY_FLAG)) t += 0x60;
+  if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG)) t += 0x06;
+  if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG)) t += 0x60;
   CPU_clear_flag(HALF_CARRY_FLAG);
   if(t&0x100) CPU_set_flag(CARRY_FLAG);
   *A = t;
