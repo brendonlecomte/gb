@@ -4,38 +4,42 @@
 #include "op_codes.h"
 #include <stdio.h>
 
-void RLC_B(void) { printf("Called %s\n", __func__); }
-void RLC_C(void) { printf("Called %s\n", __func__); }
-void RLC_D(void) { printf("Called %s\n", __func__); }
-void RLC_E(void) { printf("Called %s\n", __func__); }
-void RLC_H(void) { printf("Called %s\n", __func__); }
-void RLC_L(void) { printf("Called %s\n", __func__); }
+void RLC_B(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->B); gb_cpu->cycles += 4;}
+void RLC_C(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->C); gb_cpu->cycles += 4;}
+void RLC_D(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->D); gb_cpu->cycles += 4;}
+void RLC_E(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->E); gb_cpu->cycles += 4;}
+void RLC_H(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->H); gb_cpu->cycles += 4;}
+void RLC_L(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->L); gb_cpu->cycles += 4;}
 void RLC_HLm(void) { printf("Called %s\n", __func__); }
-void RLC_A(void) { printf("Called %s\n", __func__); }
-void RRC_B(void) { printf("Called %s\n", __func__); }
-void RRC_C(void) { printf("Called %s\n", __func__); }
-void RRC_D(void) { printf("Called %s\n", __func__); }
-void RRC_E(void) { printf("Called %s\n", __func__); }
-void RRC_H(void) { printf("Called %s\n", __func__); }
-void RRC_L(void) { printf("Called %s\n", __func__); }
+void RLC_A(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->A); gb_cpu->cycles += 4;}
+
+void RRC_B(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->B); gb_cpu->cycles += 4;}
+void RRC_C(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->C); gb_cpu->cycles += 4;}
+void RRC_D(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->D); gb_cpu->cycles += 4;}
+void RRC_E(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->E); gb_cpu->cycles += 4;}
+void RRC_H(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->H); gb_cpu->cycles += 4;}
+void RRC_L(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->L); gb_cpu->cycles += 4;}
 void RRC_HLm(void) { printf("Called %s\n", __func__); }
-void RRC_A(void) { printf("Called %s\n", __func__); }
-void RL_B(void) { printf("Called %s\n", __func__); }
-void RL_C(void) { printf("Called %s\n", __func__); }
-void RL_D(void) { printf("Called %s\n", __func__); }
-void RL_E(void) { printf("Called %s\n", __func__); }
-void RL_H(void) { printf("Called %s\n", __func__); }
-void RL_L(void) { printf("Called %s\n", __func__); }
+void RRC_A(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->A); gb_cpu->cycles += 4;}
+
+void RL_B(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->B); gb_cpu->cycles += 4;}
+void RL_C(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->C); gb_cpu->cycles += 4;}
+void RL_D(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->D); gb_cpu->cycles += 4;}
+void RL_E(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->E); gb_cpu->cycles += 4;}
+void RL_H(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->H); gb_cpu->cycles += 4;}
+void RL_L(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->L); gb_cpu->cycles += 4;}
 void RL_HLm(void) { printf("Called %s\n", __func__); }
-void RL_A(void) { printf("Called %s\n", __func__); }
-void RR_B(void) { printf("Called %s\n", __func__); }
-void RR_C(void) { printf("Called %s\n", __func__); }
-void RR_D(void) { printf("Called %s\n", __func__); }
-void RR_E(void) { printf("Called %s\n", __func__); }
-void RR_H(void) { printf("Called %s\n", __func__); }
-void RR_L(void) { printf("Called %s\n", __func__); }
+void RL_A(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->A); gb_cpu->cycles += 4;}
+
+void RR_B(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->B); gb_cpu->cycles += 4;}
+void RR_C(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->C); gb_cpu->cycles += 4;}
+void RR_D(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->D); gb_cpu->cycles += 4;}
+void RR_E(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->E); gb_cpu->cycles += 4;}
+void RR_H(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->H); gb_cpu->cycles += 4;}
+void RR_L(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->L); gb_cpu->cycles += 4;}
 void RR_HLm(void) { printf("Called %s\n", __func__); }
-void RR_A(void) { printf("Called %s\n", __func__); }
+void RR_A(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->A); gb_cpu->cycles += 4;}
+
 void SLA_B(void) { printf("Called %s\n", __func__); }
 void SLA_C(void) { printf("Called %s\n", __func__); }
 void SLA_D(void) { printf("Called %s\n", __func__); }
