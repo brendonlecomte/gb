@@ -133,6 +133,7 @@ BIT b,r  - Test bit b in register r.
                 C - Not affected.
 */
 void instr_bit(uint8_t b, uint8_t *r) {
+  CPU_clear_flag(ZERO_FLAG);
   if (((0x01 << b) & *r) == 0)
     CPU_set_flag(ZERO_FLAG);
   CPU_clear_flag(SUBTRACT_FLAG);
@@ -148,8 +149,9 @@ CALL n        - Push address of next instruction onto
                 None
 */
 void instr_call_n(uint16_t n) {
+  *gb_cpu->HL = n;
   CPU_stack_push(gb_cpu->PC+1);
-  gb_cpu->PC = n;
+  gb_cpu->PC = gb_cpu->HL;
 }
 
 /*CALL cc,n     - Call address n if following condition is true:

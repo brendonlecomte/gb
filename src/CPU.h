@@ -22,6 +22,11 @@ cleared.
 #define SUBTRACT_FLAG (0x40)
 #define ZERO_FLAG (0x80)
 
+typedef union reg_u{
+ uint16_t  _16;
+ uint8_t   _8[2];
+} reg_t;
+
 typedef struct {
   /*
     SP - Stack Pointer
@@ -33,11 +38,14 @@ typedef struct {
     8Bit Registers in the CPU
   */
   struct {
-    uint8_t A, B, C, D, E, F, H, L;
+       reg_t AF;
+       reg_t BC;
+       reg_t DE;
+       reg_t HL;
   } registers;
 
   uint8_t *A, *B, *C, *D, *E, *F, *H, *L;
-  uint16_t AF, BC, DE, HL;
+  uint16_t *AF, *BC, *DE, *HL;
 
   uint8_t interrupts;
   /*

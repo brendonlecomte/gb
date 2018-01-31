@@ -12,9 +12,10 @@ void RLC_H(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->H); gb_cpu
 void RLC_L(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->L); gb_cpu->cycles += 4;}
 void RLC_HLm(void) {
     printf("Called %s\n", __func__);
-    uint8_t val = memory_read8(memory, gb_cpu->HL);
+    uint8_t val = memory_read8(memory, *gb_cpu->HL);
     instr_rlc(&val);
-    memory_write8(memory, gb_cpu->HL, val) gb_cpu->cycles += 12;
+    memory_write8(memory, *gb_cpu->HL, val);
+    gb_cpu->cycles += 12;
 }
 void RLC_A(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->A); gb_cpu->cycles += 4;}
 

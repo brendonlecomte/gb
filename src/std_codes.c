@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "op_codes.h"
 #include <stdio.h>
+#include <assert.h>
 
 // 0x00 NOP
 // 1 4
@@ -15,7 +16,7 @@ void NOP(void) {
 // 3 12
 void LD_BC_d16(void) {
   printf(" %s\n", __func__);
-  instr_load_ab16(&gb_cpu->BC, memory_read16(memory, gb_cpu->PC));
+  instr_load_ab16(gb_cpu->BC, memory_read16(memory, gb_cpu->PC));
   gb_cpu->PC += 2;
   gb_cpu->cycles += 12;
 }
@@ -24,8 +25,8 @@ void LD_BC_d16(void) {
 // 1 8
 void LD_mBC_A(void) {
   uint8_t val = *gb_cpu->A;
-  memory_write8(memory, gb_cpu->BC, val);
-  printf(" %s: (0x%04X) <- 0x%02X\n", __func__, gb_cpu->BC, val);
+  memory_write8(memory, *gb_cpu->BC, val);
+  printf(" %s: (0x%04X) <- 0x%02X\n", __func__, *gb_cpu->BC, val);
   gb_cpu->cycles += 8;
 }
 
@@ -33,7 +34,7 @@ void LD_mBC_A(void) {
 // 1 8
 void INC_BC(void) {
   printf(" %s\n", __func__);
-  instr_inc_nn(&gb_cpu->BC);
+  instr_inc_nn(gb_cpu->BC);
   gb_cpu->cycles += 8;
 }
 
@@ -84,7 +85,7 @@ void LD_a16_SP(void) {
 // 1 8
 void ADD_HL_BC(void) {
   printf(" %s\n", __func__);
-  instr_add_HL(&gb_cpu->HL, gb_cpu->BC);
+  instr_add_HL(gb_cpu->HL, *gb_cpu->BC);
   gb_cpu->cycles += 4;
 }
 
@@ -92,7 +93,7 @@ void ADD_HL_BC(void) {
 // 1 8
 void LD_A_BC(void) {
   printf(" %s\n", __func__);
-  instr_load_ab(gb_cpu->A, memory_read8(memory, gb_cpu->BC));
+  instr_load_ab(gb_cpu->A, memory_read8(memory, *gb_cpu->BC));
   gb_cpu->cycles += 8;
 }
 
@@ -100,7 +101,7 @@ void LD_A_BC(void) {
 // 1 8
 void DEC_BC(void) {
   printf(" %s\n", __func__);
-  instr_dec_nn(&gb_cpu->BC);
+  instr_dec_nn(gb_cpu->BC);
   gb_cpu->cycles += 8;
 }
 
@@ -148,7 +149,7 @@ void STOP(void) {
 // 0x11 NAME
 void LD_DE_d16(void) {
   printf(" %s\n", __func__);
-  instr_load_ab16(&gb_cpu->DE, memory_read16(memory, gb_cpu->PC));
+  instr_load_ab16(gb_cpu->DE, memory_read16(memory, gb_cpu->PC));
   gb_cpu->PC += 2;
   gb_cpu->cycles += 12;
 }
@@ -156,7 +157,7 @@ void LD_DE_d16(void) {
 // 0x12 LD (DE) A
 void LD_DE_A(void) {
   printf(" %s\n", __func__);
-
+  assert(0);
   gb_cpu->cycles += 8;
 }
 
@@ -164,6 +165,7 @@ void LD_DE_A(void) {
 // 1 8
 void INC_DE(void) {
   printf(" %s\n", __func__);
+  instr_inc_nn(gb_cpu->DE);
   gb_cpu->cycles += 8;
 }
 
@@ -187,6 +189,9 @@ void DEC_D(void) {
 // 2 8
 void LD_D_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 8;
 }
 
@@ -194,6 +199,7 @@ void LD_D_d8(void) {
 // 1 4
 void RLA(void) {
   printf(" %s\n", __func__);
+  instr_rl(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
@@ -201,13 +207,16 @@ void RLA(void) {
 // 2 12
 void JR_r8(void) {
   printf(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  gb_cpu->PC += 1;
+  instr_jr(val);
   gb_cpu->cycles += 12;
 }
 
 // 0x19 ADD HL, DE
 // 1 8
 void ADD_HL_DE(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 8;
 }
 
@@ -215,6 +224,7 @@ void ADD_HL_DE(void) {
 // 1 8
 void LD_A_DE(void) {
   printf(" %s\n", __func__);
+  instr_load_ab(gb_cpu->A, *gb_cpu->DE);
   gb_cpu->cycles += 8;
 }
 
@@ -222,7 +232,7 @@ void LD_A_DE(void) {
 // 1 8
 void DEC_DE(void) {
   printf(" %s\n", __func__);
-  instr_dec_nn(&gb_cpu->DE);
+  instr_dec_nn(gb_cpu->DE);
   gb_cpu->cycles += 8;
 }
 
@@ -246,13 +256,16 @@ void DEC_E(void) {
 // 1 4
 void LD_E_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
 // 0x1F RRA
 // 1 4
 void RRA(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -260,23 +273,24 @@ void RRA(void) {
 // JR NZ,r8
 // 2  12/8
 void JR_NZ_r8(void) {
-  if (CPU_check_flag(ZERO_FLAG) == 0) {
+
+  if (CPU_check_flag(ZERO_FLAG) == 1) {
     uint8_t val = memory_read8(memory, gb_cpu->PC);
+
     instr_jr(val);
     printf(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
     gb_cpu->cycles += 12;
   } else {
     printf(" %s: JR, no jump\n", __func__);
     gb_cpu->cycles += 8;
-    gb_cpu->PC += 1;
   }
 }
 
 // LD HL,d16
 // 3  12
 void LD_HL_d16(void) {
-  instr_load_ab16(&gb_cpu->HL, memory_read16(memory, gb_cpu->PC));
-  printf(" %s: load HL w/ 0x%04X\n", __func__, gb_cpu->HL);
+  instr_load_ab16(gb_cpu->HL, memory_read16(memory, gb_cpu->PC));
+  printf(" %s: load HL w/ 0x%04X\n", __func__, *gb_cpu->HL);
   gb_cpu->PC += 2;
   gb_cpu->cycles += 12;
 }
@@ -285,14 +299,16 @@ void LD_HL_d16(void) {
 // 1  8
 void LD_HLp_A(void) {
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->A);
+  *gb_cpu->HL += 1;
+  gb_cpu->cycles += 8;
 }
 
 // INC HL
 // 1  8
 void INC_HL(void) {
   printf(" %s\n", __func__);
-  instr_inc_nn(&gb_cpu->HL);
+  instr_inc_nn(gb_cpu->HL);
   gb_cpu->cycles += 8;
 }
 
@@ -316,13 +332,16 @@ void DEC_H(void) {
 // 2  8
 void LD_H_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
 // DAA
 // 1  4
 void DAA(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -330,20 +349,23 @@ void DAA(void) {
 // 2  12/8
 void JR_Z_r8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
 // ADD HL,HL
 // 1  8
 void ADD_HL_HL(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
 // LD A,(HL+)
 // 1  8
 void LD_A_HLp(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -351,7 +373,7 @@ void LD_A_HLp(void) {
 // 1  8
 void DEC_HL(void) {
   printf(" %s\n", __func__);
-  instr_dec_nn(&gb_cpu->HL);
+  instr_dec_nn(gb_cpu->HL);
   gb_cpu->cycles += 4;
 }
 
@@ -375,6 +397,9 @@ void DEC_L(void) {
 // 2  8
 void LD_L_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
@@ -382,6 +407,7 @@ void LD_L_d8(void) {
 // 1  4
 void CPL(void) {
   printf(" %s\n", __func__);
+  instr_cpl(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
@@ -390,6 +416,9 @@ void CPL(void) {
 // 2  12/8
 void JR_NC_r8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
@@ -398,16 +427,15 @@ void JR_NC_r8(void) {
 void LD_SP_d16(void) {
   uint16_t x = memory_read16(memory, gb_cpu->PC);
   gb_cpu->SP = x;
-
-  printf(" %s:  SP = %04X from %d\n", __func__, gb_cpu->SP, gb_cpu->PC);
+  printf(" %s:  SP = %04X from %d\n", __func__, x, gb_cpu->PC);
   gb_cpu->PC += 2;
 }
 
 // LD (HL-),A
 // 1  8
 void LD_HLs_A(void) {
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->A);
-  gb_cpu->HL -= 1;
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->A);
+  *gb_cpu->HL -= 1;
   printf(" %s\n", __func__);
 }
 
@@ -423,9 +451,9 @@ void INC_SP(void) {
 // 1  12
 void INC_aHL(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   val += 1;
-  memory_write8(memory, gb_cpu->HL, val);
+  memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 12;
 }
 
@@ -433,9 +461,9 @@ void INC_aHL(void) {
 // 1  12
 void DEC_aHL(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   val -= 1;
-  memory_write8(memory, gb_cpu->HL, val);
+  memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 12;
 }
 
@@ -443,13 +471,16 @@ void DEC_aHL(void) {
 // 2  12
 void LD_mHL_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
 // SCF
 // 1  4
 void SCF(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -457,20 +488,23 @@ void SCF(void) {
 // 2  12/8
 void JR_C_r8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
 // ADD HL,SP
 // 1  8
 void ADD_HL_SP(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
 // LD A,(HL-)
 // 1  8
 void LD_A_HLs(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -567,7 +601,7 @@ void LD_B_L(void) {
 // LD B,(HL)
 // 1  8
 void LD_B_HLm(void) {
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->B, val);
   printf(" %s\n", __func__);
   gb_cpu->cycles += 4;
@@ -633,7 +667,7 @@ void LD_C_L(void) {
 // 1  8
 void LD_C_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->C, val);
   gb_cpu->cycles += 8;
 }
@@ -699,7 +733,7 @@ void LD_D_L(void) {
 // 1  8
 void LD_D_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->D, val);
   gb_cpu->cycles += 8;
 }
@@ -757,7 +791,7 @@ void LD_E_L(void) {
 // 1  8
 void LD_E_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->E, val);
   gb_cpu->cycles += 8;
 }
@@ -818,7 +852,7 @@ void LD_H_L(void) {
 // 1  8
 void LD_H_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->H, val);
   gb_cpu->cycles += 8;
 }
@@ -875,7 +909,7 @@ void LD_L_L(void) {
 // 1  8
 void LD_L_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->L, val);
   gb_cpu->cycles += 8;
 }
@@ -892,55 +926,55 @@ void LD_L_A(void) {
 // 1  8
 void LD_HLm_B(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->B);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->B);
   gb_cpu->cycles += 8;
 }
 // LD (HL),C
 // 1  8
 void LD_HLm_C(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->C);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->C);
   gb_cpu->cycles += 4;
 }
 // LD (HL),D
 // 1  8
 void LD_HLm_D(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->D);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->D);
   gb_cpu->cycles += 4;
 }
 // LD (HL),E
 // 1  8
 void LD_HLm_E(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->E);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->E);
   gb_cpu->cycles += 4;
 }
 // LD (HL),H
 // 1  8
 void LD_HLm_H(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->H);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->H);
   gb_cpu->cycles += 4;
 }
 // LD (HL),L
 // 1  8
 void LD_HLm_L(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->L);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->L);
   gb_cpu->cycles += 4;
 }
 // HALT
 // 1  4
 void HALT(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // LD (HL),A
 // 1  8
 void LD_HLm_A(void) {
   printf(" %s\n", __func__);
-  memory_write8(memory, gb_cpu->HL, *gb_cpu->A);
+  memory_write8(memory, *gb_cpu->HL, *gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 // LD A,B
@@ -989,7 +1023,7 @@ void LD_A_L(void) {
 // 1  8
 void LD_A_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
@@ -1048,7 +1082,7 @@ void ADD_A_L(void) {
 // 1  8
 void ADD_A_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_add(gb_cpu->A, val);
   gb_cpu->cycles += 4;
 }
@@ -1105,7 +1139,7 @@ void ADC_A_L(void) {
 // 1  8
 void ADC_A_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_adc(gb_cpu->A, val);
   gb_cpu->cycles += 4;
 }
@@ -1164,7 +1198,7 @@ void SUB_L(void) {
 // 1  8
 void SUB_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_sub_n(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
@@ -1221,8 +1255,8 @@ void SBC_A_L(void) {
 // 1  8
 void SBC_A_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
-  instr_sbc(gb_cpu->A, *gb_cpu->B);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  instr_sbc(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
 // SBC A,A
@@ -1280,7 +1314,7 @@ void AND_L(void) {
 // 1  8
 void AND_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_and(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
@@ -1337,7 +1371,8 @@ void XOR_L(void) {
 // 1  8
 void XOR_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  instr_xor(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
 // XOR A
@@ -1395,10 +1430,9 @@ void OR_L(void) {
 // 1  8
 void OR_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_or(gb_cpu->A, val);
   gb_cpu->cycles += 4;
-  // TODO
 }
 // OR A
 // 1  4
@@ -1453,7 +1487,7 @@ void CP_L(void) {
 // 1  8
 void CP_HLm(void) {
   printf(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, gb_cpu->HL);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_cp(gb_cpu->A, val);
   gb_cpu->cycles += 4;
 }
@@ -1470,68 +1504,80 @@ void CP_A(void) {
 // 1  20/8
 void RET_NZ(void) {
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  if(!CPU_check_flag(ZERO_FLAG)){
+      instr_ret();
+      gb_cpu->cycles += 20;
+  }
+  else{
+  gb_cpu->cycles += 8;
+  }
+
 }
 // POP BC
 // 1  12
 void POP_BC(void) {
   printf(" %s\n", __func__);
-  gb_cpu->BC = CPU_stack_pop();
+  *gb_cpu->BC = CPU_stack_pop();
   gb_cpu->cycles += 12;
 }
 // JP NZ,a16
 // 3  16/12
 void JP_NZ_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // JP a16
 // 3  16
 void JP_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // CALL NZ,a16
 // 3  24/12
 void CALL_NZ_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // PUSH BC
 // 1  16
 void PUSH_BC(void) {
   printf(" %s\n", __func__);
-  CPU_stack_push(gb_cpu->BC);
+  CPU_stack_push(*gb_cpu->BC);
   gb_cpu->cycles += 16;
 }
 // ADD A,d8
 // 2  8
 void ADD_A_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 // RST 00H
 // 1  16
 void RST_00H(void) {
   printf(" %s\n", __func__);
+  instr_rst(0x00);
   gb_cpu->cycles += 4;
 }
 // RET Z
 // 1  20/8
 void RET_Z(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // RET
 // 1  16
 void RET(void) {
+  instr_ret();
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 16;
 }
 // JP Z,a16
 // 3  16/12
 void JP_Z_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // PREFIX CB
@@ -1546,26 +1592,33 @@ void PREFIX_CB(void) {
 // CALL Z,a16
 // 3  24/12
 void CALL_Z_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // CALL a16
 // 3  24
 void CALL_a16(void) {
-  printf(" %s\n", __func__);
+
+  uint16_t addr = memory_read16(memory, gb_cpu->PC);
+  gb_cpu->PC += 2;
+  instr_call_n(addr);
+  printf(" %s PC <- 0x%04X\n", __func__,addr);
   gb_cpu->cycles += 4;
 }
 // ADC A,d8
 // 2  8
 void ADC_A_d8(void) {
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  gb_cpu->PC += 1;
+  instr_adc(gb_cpu->A, val);
+  gb_cpu->cycles += 8;
 }
 // RST 08H
 // 1  16
 void RST_08H(void) {
   printf(" %s\n", __func__);
-  gb_cpu->PC = 0x0008;
+  instr_rst(0x08);
   gb_cpu->cycles += 16;
 }
 
@@ -1573,83 +1626,97 @@ void RST_08H(void) {
 // RET NC
 // 1  20/8
 void RET_NC(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // POP DE
 // 1  12
 void POP_DE(void) {
   printf(" %s\n", __func__);
-  gb_cpu->DE = CPU_stack_pop();
+  *gb_cpu->DE = CPU_stack_pop();
   gb_cpu->cycles += 12;
 }
 // JP NC,a16
 // 3  16/12
 void JP_NC_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // CALL NC,a16
 // 3  24/12
 void CALL_NC_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // PUSH DE
 // 1  16
 void PUSH_DE(void) {
   printf(" %s\n", __func__);
-  CPU_stack_push(gb_cpu->DE);
+  CPU_stack_push(*gb_cpu->DE);
   gb_cpu->cycles += 16;
 }
 // SUB d8
 // 2  8
 void SUB_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 // RST 10H
 // 1  16
 void RST_10H(void) {
   printf(" %s\n", __func__);
-  gb_cpu->PC = 0x0010;
+  instr_rst(0x10);
   gb_cpu->cycles += 16;
 }
 // RET C
 // 1  20/8
 void RET_C(void) {
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  if(CPU_check_flag(CARRY_FLAG)){
+      instr_ret();
+      gb_cpu->cycles += 20;
+  }
+  else {
+      gb_cpu->cycles += 8;
+  }
+
 }
 // RETI
 // 1  16
 void RETI(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // JP C,a16
 // 3  16/12
 void JP_C_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // CALL C,a16
 // 3  24/12
 void CALL_C_a16(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
+  assert(0);
 }
 // SBC A,d8
 // 2  8
 void SBC_A_d8(void) {
   printf(" %s\n", __func__);
+  // uint8_t val = memory_read8(memory, gb_cpu->PC);
+  assert(0);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 // RST 18H
 // 1  16
 void RST_18H(void) {
   printf(" %s\n", __func__);
-  gb_cpu->PC = 0x0018;
+  instr_rst(0x18);
   gb_cpu->cycles += 16;
 }
 
@@ -1668,7 +1735,7 @@ void LDH_a8_A(void) {
 // 1  12
 void POP_HL(void) {
   printf(" %s\n", __func__);
-  gb_cpu->HL = CPU_stack_pop();
+  *gb_cpu->HL = CPU_stack_pop();
   gb_cpu->cycles += 12;
 }
 // LD (C),A
@@ -1683,14 +1750,17 @@ void LD_Cm_A(void) {
 // 1  16
 void PUSH_HL(void) {
   printf(" %s\n", __func__);
-  CPU_stack_push(gb_cpu->HL);
+  CPU_stack_push(*gb_cpu->HL);
   gb_cpu->cycles += 16;
 }
 // AND d8
 // 2  8
 void AND_d8(void) {
   printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  gb_cpu->PC += 1;
+  instr_and(gb_cpu->A, val);
+  gb_cpu->cycles += 8;
 }
 // RST 20H
 // 1  16
@@ -1703,31 +1773,41 @@ void RST_20H(void) {
 // 2  16
 void ADD_SP_r8(void) {
   printf(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_add_SP(&gb_cpu->SP, val);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 // JP (HL)
 // 1  4
 void JP_HLm(void) {
-  printf(" %s\n", __func__);
+  printf(" %s\n", __func__);assert(0);
   gb_cpu->cycles += 4;
 }
 // LD (a16),A
 // 3  16
 void LD_a16_A(void) {
-  printf(" %s\n", __func__);
-  gb_cpu->cycles += 4;
+
+  uint16_t addr = memory_read16(memory, gb_cpu->PC);
+  memory_write8(memory, addr, *gb_cpu->A);
+  printf(" %s (0x%04X) <- A\n", __func__, addr);
+  gb_cpu->cycles += 16;
+  gb_cpu->PC += 2;
 }
 // XOR d8
 // 2  8
 void XOR_d8(void) {
   printf(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_xor(gb_cpu->A, val);
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 // RST 28H
 // 1  16
 void RST_28H(void) {
   printf(" %s\n", __func__);
-  gb_cpu->PC = 0x0028;
+  instr_rst(0x28);
   gb_cpu->cycles += 16;
 }
 
@@ -1746,7 +1826,7 @@ void LDH_A_a8(void) {
 // 1  12
 void POP_AF(void) {
   printf(" %s\n", __func__);
-  gb_cpu->AF = CPU_stack_pop();
+  *gb_cpu->AF = CPU_stack_pop();
   gb_cpu->cycles += 12;
 }
 // LD A,(C)
@@ -1768,7 +1848,7 @@ void DI(void) {
 // 1  16
 void PUSH_AF(void) {
   printf(" %s\n", __func__);
-  CPU_stack_push(gb_cpu->AF);
+  CPU_stack_push(*gb_cpu->AF);
   gb_cpu->cycles += 16;
 }
 // OR d8
@@ -1790,18 +1870,18 @@ void RST_30H(void) {
 // LD HL,SP+r8
 // 2  12
 void LD_HL_SPr8(void) {
-  uint16_t val = gb_cpu->SP + memory_read8(memory, gb_cpu->PC);
+  uint16_t val = *gb_cpu->DE + memory_read8(memory, gb_cpu->PC);
   gb_cpu->PC += 1;
-  instr_load_ab16(&gb_cpu->HL, val);
+  instr_load_ab16(gb_cpu->HL, val);
   printf(" %s: HL <- 0x%04X\n", __func__, val);
   gb_cpu->cycles += 12;
 }
 // LD SP,HL
 // 1  8
 void LD_SP_HL(void) {
-  uint16_t val = gb_cpu->SP;
+  uint16_t val = *gb_cpu->DE;
   gb_cpu->PC += 1;
-  instr_load_ab16(&gb_cpu->HL, val);
+  instr_load_ab16(gb_cpu->HL, val);
   printf(" %s: HL <- 0x%04X\n", __func__, val);
   gb_cpu->cycles += 8;
 }
@@ -1827,7 +1907,7 @@ void EI(void) {
 void CP_d8(void) {
   uint8_t d8 = memory_read8(memory, gb_cpu->PC);
   instr_cp(gb_cpu->A, d8);
-  printf(" %s: A ? 0x%02X\n", __func__, d8);
+  printf(" %s: A ?= 0x%02X\n", __func__, d8);
   gb_cpu->cycles += 8;
   gb_cpu->PC += 1;
 }
@@ -1839,7 +1919,7 @@ void RST_38H(void) {
   gb_cpu->cycles += 16;
 }
 
-void no_op(void) { printf(" Unimplemented func!\n"); }
+void no_op(void) { printf(" Unimplemented func!\n"); assert(0);}
 
 void (*op_codes[256])(void) = {
     // 0x0...
