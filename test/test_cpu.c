@@ -19,7 +19,7 @@ TEST(processor, init) {
   TEST_ASSERT_EQUAL(*cpu->C, 0);
   TEST_ASSERT_EQUAL(*cpu->D, 0);
   TEST_ASSERT_EQUAL(*cpu->E, 0);
-  TEST_ASSERT_EQUAL(*cpu->F, 0x01);
+  TEST_ASSERT_EQUAL(*cpu->F, 0);
   TEST_ASSERT_EQUAL(*cpu->H, 0);
   TEST_ASSERT_EQUAL(*cpu->L, 0);
 
@@ -29,19 +29,19 @@ TEST(processor, init) {
 
 TEST(processor, ptrs)
 {
-    *cpu->AF = 0xAA55;
+    *cpu->AF = 0x55AA;
     TEST_ASSERT_EQUAL(0xAA, *cpu->F);
     TEST_ASSERT_EQUAL(0x55, *cpu->A);
 
-    *cpu->BC = 0xAA55;
+    *cpu->BC = 0x55AA;
     TEST_ASSERT_EQUAL(0xAA, *cpu->C);
     TEST_ASSERT_EQUAL(0x55, *cpu->B);
 
-    *cpu->DE = 0xAA55;
+    *cpu->DE = 0x55AA;
     TEST_ASSERT_EQUAL(0xAA, *cpu->E);
     TEST_ASSERT_EQUAL(0x55, *cpu->D);
 
-    *cpu->HL = 0xAA55;
+    *cpu->HL = 0x55AA;
     TEST_ASSERT_EQUAL(0xAA, *cpu->L);
     TEST_ASSERT_EQUAL(0x55, *cpu->H);
 }

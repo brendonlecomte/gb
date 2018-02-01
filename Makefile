@@ -44,8 +44,10 @@ TEST_FILES=\
   test/test_instructions.c \
   test/test_cpu.c \
   test/test_memory.c \
+  test/test_boot.c \
   test/test_runners/testrunner_instructions.c \
   test/test_runners/testrunner_cpu.c \
+  test/test_runners/testrunner_boot.c \
   test/test_runners/testrunner_memory.c \
   test/test_runners/all_tests.c
 INC_DIRS=-Isrc \

@@ -4,6 +4,7 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
+
 TEST_GROUP(Instructions);
 
 TEST_SETUP(Instructions) {
@@ -12,8 +13,6 @@ TEST_SETUP(Instructions) {
 }
 
 TEST_TEAR_DOWN(Instructions) {}
-
-CPU_t cpu;
 
 TEST(Instructions, adc) {
   // Register A + #
@@ -109,58 +108,59 @@ TEST(Instructions, add_SP) {
 
   // addition
   CPU_init(gb_cpu);
-  cpu.SP = 0x00;
-  instr_add_SP(&cpu.SP, n);
+  gb_cpu->SP = 0x00;
+  instr_add_SP(&gb_cpu->SP, n);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(0xAA, cpu.SP);
+  TEST_ASSERT_EQUAL(0xAA, gb_cpu->SP);
 
   CPU_init(gb_cpu);
-  cpu.SP = 0xFFFF;
+  gb_cpu->SP = 0xFFFF;
   n = 0x01;
-  instr_add_SP(&cpu.SP, n);
+  instr_add_SP(&gb_cpu->SP, n);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(0x00, cpu.SP);
+  TEST_ASSERT_EQUAL(0x00, gb_cpu->SP);
 }
 
 TEST(Instructions, add_HL) {
-  uint16_t n = 0x55AA;
+  uint16_t n;
 
   // addition
-  CPU_init(gb_cpu);
+  n = 0x55AA;
   CPU_set_flag(SUBTRACT_FLAG);
-  instr_add_HL(cpu.HL, n);
+  *gb_cpu->HL = 0x00;
+  instr_add_HL(gb_cpu->HL, n);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(0x55AA, *cpu.HL);
+  TEST_ASSERT_EQUAL(0x55AA, *gb_cpu->HL);
 
   // Carry + HC + Zero
   n = 0x0001;
   CPU_init(gb_cpu);
   CPU_set_flag(SUBTRACT_FLAG);
-  *cpu.HL = 0xFFFF;
-  instr_add_HL(cpu.HL, n);
+  *gb_cpu->HL = 0xFFFF;
+  instr_add_HL(gb_cpu->HL, n);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(0x0000, *cpu.HL);
+  TEST_ASSERT_EQUAL(0x0000, *gb_cpu->HL);
 
   // HC
   n = 0x0800;
   CPU_init(gb_cpu);
   CPU_set_flag(SUBTRACT_FLAG);
-  *cpu.HL = 0x0800;
-  instr_add_HL(cpu.HL, n);
+  *gb_cpu->HL = 0x0800;
+  instr_add_HL(gb_cpu->HL, n);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(0x1000, *cpu.HL);
+  TEST_ASSERT_EQUAL(0x1000, *gb_cpu->HL);
 }
 
 TEST(Instructions, and) {
@@ -313,7 +313,7 @@ TEST(Instructions, jr) {
 //
 // TEST(Instructions, load_an) {
 //   instr_load_an(gb_cpu, 0x55);
-//   TEST_ASSERT_EQUAL(0x55, cpu.registers.A);
+//   TEST_ASSERT_EQUAL(0x55, gb_cpu->registers.A);
 // }
 
 TEST(Instructions, load_ab) {

@@ -151,7 +151,7 @@ CALL n        - Push address of next instruction onto
 void instr_call_n(uint16_t n) {
   *gb_cpu->HL = n;
   CPU_stack_push(gb_cpu->PC+1);
-  gb_cpu->PC = gb_cpu->HL;
+  gb_cpu->PC = *gb_cpu->HL;
 }
 
 /*CALL cc,n     - Call address n if following condition is true:
@@ -373,7 +373,7 @@ JP [HL]       - Jump to address contained in HL.
 */
 void instr_jp_hl(void) {
   // TODO: check memory is returned in correct order
-  gb_cpu->PC = memory_read16(memory, gb_cpu->HL);
+  gb_cpu->PC = memory_read16(memory, *gb_cpu->HL);
 }
 
 /*

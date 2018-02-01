@@ -4,448 +4,448 @@
 #include "op_codes.h"
 #include <stdio.h>
 
-void RLC_B(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->B); gb_cpu->cycles += 4;}
-void RLC_C(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->C); gb_cpu->cycles += 4;}
-void RLC_D(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->D); gb_cpu->cycles += 4;}
-void RLC_E(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->E); gb_cpu->cycles += 4;}
-void RLC_H(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->H); gb_cpu->cycles += 4;}
-void RLC_L(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->L); gb_cpu->cycles += 4;}
+void RLC_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->B); gb_cpu->cycles += 4;}
+void RLC_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->C); gb_cpu->cycles += 4;}
+void RLC_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->D); gb_cpu->cycles += 4;}
+void RLC_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->E); gb_cpu->cycles += 4;}
+void RLC_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->H); gb_cpu->cycles += 4;}
+void RLC_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->L); gb_cpu->cycles += 4;}
 void RLC_HLm(void) {
-    printf("Called %s\n", __func__);
+    DEBUG_PRINTF("Called %s\n", __func__);
     uint8_t val = memory_read8(memory, *gb_cpu->HL);
     instr_rlc(&val);
     memory_write8(memory, *gb_cpu->HL, val);
     gb_cpu->cycles += 12;
 }
-void RLC_A(void) { printf("Called %s\n", __func__); instr_rlc(gb_cpu->A); gb_cpu->cycles += 4;}
+void RLC_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rlc(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void RRC_B(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->B); gb_cpu->cycles += 4;}
-void RRC_C(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->C); gb_cpu->cycles += 4;}
-void RRC_D(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->D); gb_cpu->cycles += 4;}
-void RRC_E(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->E); gb_cpu->cycles += 4;}
-void RRC_H(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->H); gb_cpu->cycles += 4;}
-void RRC_L(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->L); gb_cpu->cycles += 4;}
-void RRC_HLm(void) { printf("Called %s\n", __func__); }
-void RRC_A(void) { printf("Called %s\n", __func__); instr_rrc(gb_cpu->A); gb_cpu->cycles += 4;}
+void RRC_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->B); gb_cpu->cycles += 4;}
+void RRC_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->C); gb_cpu->cycles += 4;}
+void RRC_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->D); gb_cpu->cycles += 4;}
+void RRC_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->E); gb_cpu->cycles += 4;}
+void RRC_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->H); gb_cpu->cycles += 4;}
+void RRC_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->L); gb_cpu->cycles += 4;}
+void RRC_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RRC_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rrc(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void RL_B(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->B); gb_cpu->cycles += 4;}
-void RL_C(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->C); gb_cpu->cycles += 4;}
-void RL_D(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->D); gb_cpu->cycles += 4;}
-void RL_E(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->E); gb_cpu->cycles += 4;}
-void RL_H(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->H); gb_cpu->cycles += 4;}
-void RL_L(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->L); gb_cpu->cycles += 4;}
-void RL_HLm(void) { printf("Called %s\n", __func__); }
-void RL_A(void) { printf("Called %s\n", __func__); instr_rl(gb_cpu->A); gb_cpu->cycles += 4;}
+void RL_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->B); gb_cpu->cycles += 4;}
+void RL_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->C); gb_cpu->cycles += 4;}
+void RL_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->D); gb_cpu->cycles += 4;}
+void RL_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->E); gb_cpu->cycles += 4;}
+void RL_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->H); gb_cpu->cycles += 4;}
+void RL_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->L); gb_cpu->cycles += 4;}
+void RL_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RL_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rl(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void RR_B(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->B); gb_cpu->cycles += 4;}
-void RR_C(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->C); gb_cpu->cycles += 4;}
-void RR_D(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->D); gb_cpu->cycles += 4;}
-void RR_E(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->E); gb_cpu->cycles += 4;}
-void RR_H(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->H); gb_cpu->cycles += 4;}
-void RR_L(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->L); gb_cpu->cycles += 4;}
-void RR_HLm(void) { printf("Called %s\n", __func__); }
-void RR_A(void) { printf("Called %s\n", __func__); instr_rr(gb_cpu->A); gb_cpu->cycles += 4;}
+void RR_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->B); gb_cpu->cycles += 4;}
+void RR_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->C); gb_cpu->cycles += 4;}
+void RR_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->D); gb_cpu->cycles += 4;}
+void RR_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->E); gb_cpu->cycles += 4;}
+void RR_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->H); gb_cpu->cycles += 4;}
+void RR_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->L); gb_cpu->cycles += 4;}
+void RR_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RR_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_rr(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SLA_B(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SLA_C(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SLA_D(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SLA_E(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SLA_H(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SLA_L(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SLA_HLm(void) { printf("Called %s\n", __func__); }
-void SLA_A(void) { printf("Called %s\n", __func__); instr_sla(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SLA_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->B); gb_cpu->cycles += 4;}
+void SLA_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->C); gb_cpu->cycles += 4;}
+void SLA_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->D); gb_cpu->cycles += 4;}
+void SLA_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->E); gb_cpu->cycles += 4;}
+void SLA_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->H); gb_cpu->cycles += 4;}
+void SLA_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->L); gb_cpu->cycles += 4;}
+void SLA_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SLA_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sla(*gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SRA_B(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SRA_C(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SRA_D(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SRA_E(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SRA_H(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SRA_L(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SRA_HLm(void) { printf("Called %s\n", __func__); }
-void SRA_A(void) { printf("Called %s\n", __func__); instr_sra(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SRA_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->B); gb_cpu->cycles += 4;}
+void SRA_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->C); gb_cpu->cycles += 4;}
+void SRA_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->D); gb_cpu->cycles += 4;}
+void SRA_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->E); gb_cpu->cycles += 4;}
+void SRA_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->H); gb_cpu->cycles += 4;}
+void SRA_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->L); gb_cpu->cycles += 4;}
+void SRA_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SRA_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_sra(*gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SWAP_B(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->B); gb_cpu->cycles += 4;}
-void SWAP_C(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->C); gb_cpu->cycles += 4;}
-void SWAP_D(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->D); gb_cpu->cycles += 4;}
-void SWAP_E(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->E); gb_cpu->cycles += 4;}
-void SWAP_H(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->H); gb_cpu->cycles += 4;}
-void SWAP_L(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->L); gb_cpu->cycles += 4;}
-void SWAP_HLm(void) { printf("Called %s\n", __func__); }
-void SWAP_A(void) { printf("Called %s\n", __func__); instr_swap(gb_cpu->A); gb_cpu->cycles += 4;}
+void SWAP_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->B); gb_cpu->cycles += 4;}
+void SWAP_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->C); gb_cpu->cycles += 4;}
+void SWAP_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->D); gb_cpu->cycles += 4;}
+void SWAP_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->E); gb_cpu->cycles += 4;}
+void SWAP_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->H); gb_cpu->cycles += 4;}
+void SWAP_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->L); gb_cpu->cycles += 4;}
+void SWAP_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SWAP_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_swap(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SRL_B(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SRL_C(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SRL_D(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SRL_E(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SRL_H(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SRL_L(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SRL_HLm(void) { printf("Called %s\n", __func__); }
-void SRL_A(void) { printf("Called %s\n", __func__); instr_srl(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SRL_B(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->B); gb_cpu->cycles += 4;}
+void SRL_C(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->C); gb_cpu->cycles += 4;}
+void SRL_D(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->D); gb_cpu->cycles += 4;}
+void SRL_E(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->E); gb_cpu->cycles += 4;}
+void SRL_H(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->H); gb_cpu->cycles += 4;}
+void SRL_L(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->L); gb_cpu->cycles += 4;}
+void SRL_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SRL_A(void) { DEBUG_PRINTF("Called %s\n", __func__); instr_srl(*gb_cpu->A); gb_cpu->cycles += 4;}
 
 
 void BIT_0_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->B);
 }
 void BIT_0_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->C);
 }
 void BIT_0_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->D);
 }
 void BIT_0_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->E);
 }
 void BIT_0_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->H);
 }
 void BIT_0_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->L);
 }
-void BIT_0_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_0_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_0_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(0, gb_cpu->A);
 }
 void BIT_1_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->B);
 }
 void BIT_1_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->C);
 }
 void BIT_1_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->D);
 }
 void BIT_1_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->E);
 }
 void BIT_1_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->H);
 }
 void BIT_1_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->L);
 }
-void BIT_1_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_1_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_1_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(1, gb_cpu->A);
 }
 void BIT_2_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->B);
 }
 void BIT_2_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->C);
 }
 void BIT_2_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->D);
 }
 void BIT_2_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->E);
 }
 void BIT_2_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->H);
 }
 void BIT_2_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->L);
 }
-void BIT_2_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_2_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_2_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(2, gb_cpu->A);
 }
 void BIT_3_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->B);
 }
 void BIT_3_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->C);
 }
 void BIT_3_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->D);
 }
 void BIT_3_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->E);
 }
 void BIT_3_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->H);
 }
 void BIT_3_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->L);
 }
-void BIT_3_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_3_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_3_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(3, gb_cpu->A);
 }
 void BIT_4_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->B);
 }
 void BIT_4_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->C);
 }
 void BIT_4_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->D);
 }
 void BIT_4_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->E);
 }
 void BIT_4_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->H);
 }
 void BIT_4_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->L);
 }
-void BIT_4_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_4_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_4_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(4, gb_cpu->A);
 }
 void BIT_5_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->B);
 }
 void BIT_5_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->C);
 }
 void BIT_5_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->D);
 }
 void BIT_5_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->E);
 }
 void BIT_5_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->H);
 }
 void BIT_5_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->L);
 }
-void BIT_5_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_5_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_5_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(5, gb_cpu->A);
 }
 void BIT_6_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->B);
 }
 void BIT_6_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->C);
 }
 void BIT_6_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->D);
 }
 void BIT_6_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->E);
 }
 void BIT_6_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->H);
 }
 void BIT_6_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->L);
 }
-void BIT_6_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_6_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_6_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(6, gb_cpu->A);
 }
 void BIT_7_B(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->B);
 }
 void BIT_7_C(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->C);
 }
 void BIT_7_D(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->D);
 }
 void BIT_7_E(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->E);
 }
 
 void BIT_7_H(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s 0x80 & 0x%02X\n", __func__, *gb_cpu->H);
   instr_bit(7, gb_cpu->H);
 }
 void BIT_7_L(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->L);
 }
-void BIT_7_HLm(void) { printf("Called %s\n", __func__); }
+void BIT_7_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 void BIT_7_A(void) {
-  printf("Called %s\n", __func__);
+  DEBUG_PRINTF("Called %s\n", __func__);
   instr_bit(7, gb_cpu->A);
 }
 
-void RES_0_B(void) { printf("Called %s\n", __func__); }
-void RES_0_C(void) { printf("Called %s\n", __func__); }
-void RES_0_D(void) { printf("Called %s\n", __func__); }
-void RES_0_E(void) { printf("Called %s\n", __func__); }
-void RES_0_H(void) { printf("Called %s\n", __func__); }
-void RES_0_L(void) { printf("Called %s\n", __func__); }
-void RES_0_HLm(void) { printf("Called %s\n", __func__); }
-void RES_0_A(void) { printf("Called %s\n", __func__); }
-void RES_1_B(void) { printf("Called %s\n", __func__); }
-void RES_1_C(void) { printf("Called %s\n", __func__); }
-void RES_1_D(void) { printf("Called %s\n", __func__); }
-void RES_1_E(void) { printf("Called %s\n", __func__); }
-void RES_1_H(void) { printf("Called %s\n", __func__); }
-void RES_1_L(void) { printf("Called %s\n", __func__); }
-void RES_1_HLm(void) { printf("Called %s\n", __func__); }
-void RES_1_A(void) { printf("Called %s\n", __func__); }
-void RES_2_B(void) { printf("Called %s\n", __func__); }
-void RES_2_C(void) { printf("Called %s\n", __func__); }
-void RES_2_D(void) { printf("Called %s\n", __func__); }
-void RES_2_E(void) { printf("Called %s\n", __func__); }
-void RES_2_H(void) { printf("Called %s\n", __func__); }
-void RES_2_L(void) { printf("Called %s\n", __func__); }
-void RES_2_HLm(void) { printf("Called %s\n", __func__); }
-void RES_2_A(void) { printf("Called %s\n", __func__); }
-void RES_3_B(void) { printf("Called %s\n", __func__); }
-void RES_3_C(void) { printf("Called %s\n", __func__); }
-void RES_3_D(void) { printf("Called %s\n", __func__); }
-void RES_3_E(void) { printf("Called %s\n", __func__); }
-void RES_3_H(void) { printf("Called %s\n", __func__); }
-void RES_3_L(void) { printf("Called %s\n", __func__); }
-void RES_3_HLm(void) { printf("Called %s\n", __func__); }
-void RES_3_A(void) { printf("Called %s\n", __func__); }
-void RES_4_B(void) { printf("Called %s\n", __func__); }
-void RES_4_C(void) { printf("Called %s\n", __func__); }
-void RES_4_D(void) { printf("Called %s\n", __func__); }
-void RES_4_E(void) { printf("Called %s\n", __func__); }
-void RES_4_H(void) { printf("Called %s\n", __func__); }
-void RES_4_L(void) { printf("Called %s\n", __func__); }
-void RES_4_HLm(void) { printf("Called %s\n", __func__); }
-void RES_4_A(void) { printf("Called %s\n", __func__); }
-void RES_5_B(void) { printf("Called %s\n", __func__); }
-void RES_5_C(void) { printf("Called %s\n", __func__); }
-void RES_5_D(void) { printf("Called %s\n", __func__); }
-void RES_5_E(void) { printf("Called %s\n", __func__); }
-void RES_5_H(void) { printf("Called %s\n", __func__); }
-void RES_5_L(void) { printf("Called %s\n", __func__); }
-void RES_5_HLm(void) { printf("Called %s\n", __func__); }
-void RES_5_A(void) { printf("Called %s\n", __func__); }
-void RES_6_B(void) { printf("Called %s\n", __func__); }
-void RES_6_C(void) { printf("Called %s\n", __func__); }
-void RES_6_D(void) { printf("Called %s\n", __func__); }
-void RES_6_E(void) { printf("Called %s\n", __func__); }
-void RES_6_H(void) { printf("Called %s\n", __func__); }
-void RES_6_L(void) { printf("Called %s\n", __func__); }
-void RES_6_HLm(void) { printf("Called %s\n", __func__); }
-void RES_6_A(void) { printf("Called %s\n", __func__); }
-void RES_7_B(void) { printf("Called %s\n", __func__); }
-void RES_7_C(void) { printf("Called %s\n", __func__); }
-void RES_7_D(void) { printf("Called %s\n", __func__); }
-void RES_7_E(void) { printf("Called %s\n", __func__); }
-void RES_7_H(void) { printf("Called %s\n", __func__); }
-void RES_7_L(void) { printf("Called %s\n", __func__); }
-void RES_7_HLm(void) { printf("Called %s\n", __func__); }
-void RES_7_A(void) { printf("Called %s\n", __func__); }
+void RES_0_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_0_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_1_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_2_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_3_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_4_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_5_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_6_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void RES_7_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 
-void SET_0_B(void) { printf("Called %s\n", __func__); }
-void SET_0_C(void) { printf("Called %s\n", __func__); }
-void SET_0_D(void) { printf("Called %s\n", __func__); }
-void SET_0_E(void) { printf("Called %s\n", __func__); }
-void SET_0_H(void) { printf("Called %s\n", __func__); }
-void SET_0_L(void) { printf("Called %s\n", __func__); }
-void SET_0_HLm(void) { printf("Called %s\n", __func__); }
-void SET_0_A(void) { printf("Called %s\n", __func__); }
-void SET_1_B(void) { printf("Called %s\n", __func__); }
-void SET_1_C(void) { printf("Called %s\n", __func__); }
-void SET_1_D(void) { printf("Called %s\n", __func__); }
-void SET_1_E(void) { printf("Called %s\n", __func__); }
-void SET_1_H(void) { printf("Called %s\n", __func__); }
-void SET_1_L(void) { printf("Called %s\n", __func__); }
-void SET_1_HLm(void) { printf("Called %s\n", __func__); }
-void SET_1_A(void) { printf("Called %s\n", __func__); }
-void SET_2_B(void) { printf("Called %s\n", __func__); }
-void SET_2_C(void) { printf("Called %s\n", __func__); }
-void SET_2_D(void) { printf("Called %s\n", __func__); }
-void SET_2_E(void) { printf("Called %s\n", __func__); }
-void SET_2_H(void) { printf("Called %s\n", __func__); }
-void SET_2_L(void) { printf("Called %s\n", __func__); }
-void SET_2_HLm(void) { printf("Called %s\n", __func__); }
-void SET_2_A(void) { printf("Called %s\n", __func__); }
-void SET_3_B(void) { printf("Called %s\n", __func__); }
-void SET_3_C(void) { printf("Called %s\n", __func__); }
-void SET_3_D(void) { printf("Called %s\n", __func__); }
-void SET_3_E(void) { printf("Called %s\n", __func__); }
-void SET_3_H(void) { printf("Called %s\n", __func__); }
-void SET_3_L(void) { printf("Called %s\n", __func__); }
-void SET_3_HLm(void) { printf("Called %s\n", __func__); }
-void SET_3_A(void) { printf("Called %s\n", __func__); }
-void SET_4_B(void) { printf("Called %s\n", __func__); }
-void SET_4_C(void) { printf("Called %s\n", __func__); }
-void SET_4_D(void) { printf("Called %s\n", __func__); }
-void SET_4_E(void) { printf("Called %s\n", __func__); }
-void SET_4_H(void) { printf("Called %s\n", __func__); }
-void SET_4_L(void) { printf("Called %s\n", __func__); }
-void SET_4_HLm(void) { printf("Called %s\n", __func__); }
-void SET_4_A(void) { printf("Called %s\n", __func__); }
-void SET_5_B(void) { printf("Called %s\n", __func__); }
-void SET_5_C(void) { printf("Called %s\n", __func__); }
-void SET_5_D(void) { printf("Called %s\n", __func__); }
-void SET_5_E(void) { printf("Called %s\n", __func__); }
-void SET_5_H(void) { printf("Called %s\n", __func__); }
-void SET_5_L(void) { printf("Called %s\n", __func__); }
-void SET_5_HLm(void) { printf("Called %s\n", __func__); }
-void SET_5_A(void) { printf("Called %s\n", __func__); }
-void SET_6_B(void) { printf("Called %s\n", __func__); }
-void SET_6_C(void) { printf("Called %s\n", __func__); }
-void SET_6_D(void) { printf("Called %s\n", __func__); }
-void SET_6_E(void) { printf("Called %s\n", __func__); }
-void SET_6_H(void) { printf("Called %s\n", __func__); }
-void SET_6_L(void) { printf("Called %s\n", __func__); }
-void SET_6_HLm(void) { printf("Called %s\n", __func__); }
-void SET_6_A(void) { printf("Called %s\n", __func__); }
-void SET_7_B(void) { printf("Called %s\n", __func__); }
-void SET_7_C(void) { printf("Called %s\n", __func__); }
-void SET_7_D(void) { printf("Called %s\n", __func__); }
-void SET_7_E(void) { printf("Called %s\n", __func__); }
-void SET_7_H(void) { printf("Called %s\n", __func__); }
-void SET_7_L(void) { printf("Called %s\n", __func__); }
-void SET_7_HLm(void) { printf("Called %s\n", __func__); }
-void SET_7_A(void) { printf("Called %s\n", __func__); }
+void SET_0_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_0_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_1_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_2_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_3_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_4_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_5_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_6_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_B(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_C(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_D(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_E(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_H(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_L(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_HLm(void) { DEBUG_PRINTF("Called %s\n", __func__); }
+void SET_7_A(void) { DEBUG_PRINTF("Called %s\n", __func__); }
 
 void (*prefix_cb[256])(void) = {
     RLC_B,   RLC_C,   RLC_D,   RLC_E,   RLC_H,   RLC_L,   RLC_HLm,   RLC_A,
