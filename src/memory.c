@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "cart.h"
 #include <string.h>
 
 const uint8_t boot[256] = {
@@ -159,12 +160,18 @@ void memory_init(memory_t *mem) {
   memset(mem->memory, 0, FULL_MEMORY);
   memcpy(mem->memory, boot, 256); // init the boot rom into memory_t
   mem->cart = &mem->memory[0];
+  mem->cart_header = &mem->memory[0x100];
   mem->vram = &mem->memory[0x8000];
   mem->eram = &mem->memory[0xA000];
   mem->ram = &mem->memory[0xC000];
   mem->oam = &mem->memory[0xFE00];
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
+  memset(mem->vram, 0x55, 0x8000);
+}
+
+void memory_load_cart(memory_t *mem) {
+    cart_load(&mem->memory[0], FULL_MEMORY);
 }
 
 uint8_t memory_read8(memory_t *mem, uint16_t addr) { return mem->memory[addr]; }

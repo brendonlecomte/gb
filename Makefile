@@ -31,6 +31,7 @@ SRC_FILES=src/instructions/instructions.c \
 					src/cpu.c\
 					src/memory.c\
 					src/std_codes.c\
+					src/host/cart.c\
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\
@@ -44,9 +45,11 @@ TEST_FILES=\
   test/test_instructions.c \
   test/test_cpu.c \
   test/test_memory.c \
+  test/test_cart.c \
   test/test_boot.c \
   test/test_runners/testrunner_instructions.c \
   test/test_runners/testrunner_cpu.c \
+  test/test_runners/testrunner_cart.c \
   test/test_runners/testrunner_boot.c \
   test/test_runners/testrunner_memory.c \
   test/test_runners/all_tests.c
@@ -62,10 +65,11 @@ default:
 	- ./$(TARGET1) -v
 
 run:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	gcc $(CFLAGS) $(APP_INC) $(SYMBOLS) $(APP_SRC) -DDEBUG=1 -o $(APP_TARGET)
 	- ./$(APP_TARGET) -v
 
 all: clean default run
+
 
 clean:
 	rm -f $(TARGET1)

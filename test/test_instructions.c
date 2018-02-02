@@ -16,7 +16,7 @@ TEST_TEAR_DOWN(Instructions) {}
 
 TEST(Instructions, adc) {
   // Register A + #
-  uint8_t n = 10;
+  uint8_t n = 0x0A;
   uint8_t A = 0;
 
   // Normal Add
@@ -26,7 +26,7 @@ TEST(Instructions, adc) {
   TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
   TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
-  TEST_ASSERT_EQUAL(11, A);
+  TEST_ASSERT_EQUAL(0x0B, A);
 
   // Z Flag
   A = 0;
@@ -257,7 +257,17 @@ TEST(Instructions, cp) {
 TEST(Instructions, dec_n) {
     uint8_t x = 0xAA;
     instr_dec_n(&x);
-    TEST_ASSERT_EQUAL(2,0);
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
+    TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+    TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
+    TEST_ASSERT_EQUAL(0xA9, x);
+
+    x = 0xA0;
+    instr_dec_n(&x);
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
+    TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
+    TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
+    TEST_ASSERT_EQUAL(0x9F, x);
 }
 
 TEST(Instructions, dec_nn) {
@@ -448,7 +458,12 @@ TEST(Instructions, sbc) {
   CPU_set_flag(CARRY_FLAG);
   instr_sbc(gb_cpu->A, 0x10);
   TEST_ASSERT_EQUAL(0x3F, *gb_cpu->A);
-  TEST_ASSERT_EQUAL(2, CPU_check_flag(HALF_CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+
+  // *gb_cpu->A = 0x08;
+  // instr_sbc(gb_cpu->A, 0x10);
+  // TEST_ASSERT_EQUAL(gb_cpu->A);
+  // TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
 }
 
 TEST(Instructions, sub) {

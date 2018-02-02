@@ -24,8 +24,7 @@ void CPU_init(CPU_t *cpu) {
   cpu->E = (uint8_t*)&cpu->registers.DE._8[0];
   cpu->L = (uint8_t*)&cpu->registers.HL._8[0];
 
-  // Register AF set to 0x01 for GB
-  *cpu->AF = 0x0100;
+  *cpu->AF = 0x0000;
   *cpu->BC = 0;
   *cpu->DE = 0;
   *cpu->HL = 0;
@@ -42,9 +41,20 @@ uint16_t CPU_stack_pop(void) {
   return t;
 }
 
-void CPU_set_flag(uint8_t flag) { *_cpu.F = *_cpu.F | flag; }
+void CPU_set_flag(const uint8_t flg) {
+    static uint8_t f;
+    f = *_cpu.F;
+    f = f | flg;
+    *_cpu.F = f;
+}
 
-void CPU_clear_flag(uint8_t flag) { *_cpu.F = *_cpu.F & ~flag; }
+void CPU_clear_flag(const uint8_t flg) {
+    static uint8_t f;
+    f = *_cpu.F;
+    f  &= ~flg;
+    *_cpu.F = f;
+}
 
-bool CPU_check_flag(uint8_t flag) { return ((*_cpu.F & flag) == flag);
+bool CPU_check_flag(uint8_t flg) {
+    return ((*_cpu.F & flg) == flg);
 }
