@@ -35,7 +35,8 @@ SRC_FILES=src/instructions/instructions.c \
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\
-				src/main.c
+				src/main.c \
+				src/emulator.c
 APP_INC=-Isrc \
 				-Isrc/instructions
 
@@ -65,7 +66,7 @@ default:
 	- ./$(TARGET1) -v
 
 run:
-	gcc $(CFLAGS) $(APP_INC) $(SYMBOLS) $(APP_SRC) -DDEBUG=1 -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 	- ./$(APP_TARGET) -v
 
 all: clean default run
