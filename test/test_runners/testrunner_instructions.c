@@ -11,8 +11,11 @@ TEST_GROUP_RUNNER(Instructions) {
   RUN_TEST_CASE(Instructions, call_n);
   RUN_TEST_CASE(Instructions, ccf);
   RUN_TEST_CASE(Instructions, cpl);
+  RUN_TEST_CASE(Instructions, daa);
+  RUN_TEST_CASE(Instructions, cp);
   RUN_TEST_CASE(Instructions, inc)
   RUN_TEST_CASE(Instructions, inc_nn);
+  RUN_TEST_CASE(Instructions, dec_n);
   RUN_TEST_CASE(Instructions, dec_nn);
   RUN_TEST_CASE(Instructions, di);
   RUN_TEST_CASE(Instructions, ei);

@@ -3,18 +3,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "memory_locations.h"
 
-#define CART_SIZE (0x8000)
-#define SRAM_SIZE (0x2000)
-#define IO_SIZE (0x100)
-#define VRAM_SIZE (0x2000)
-#define OAM_SIZE (0x100)
-#define WRAM_SIZE (0x2000)
-#define HRAM_SIZE (0x80)
-#define FULL_MEMORY (0xFFFF)
 
 typedef struct {
   uint8_t *cart;
+  uint8_t *cart_header;
   uint8_t *vram;
   uint8_t *eram;
   uint8_t *ram;

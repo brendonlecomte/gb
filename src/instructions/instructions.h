@@ -9,14 +9,16 @@ void instr_add(uint8_t* A, uint8_t n);
 void instr_add_HL(uint16_t* hl, uint16_t n);
 void instr_add_SP(uint16_t *sp, uint8_t n);
 void instr_and(uint8_t *A, uint8_t n);
-void instr_bit(uint8_t *b, uint8_t *r);
+void instr_bit(uint8_t b, uint8_t *r);
 void instr_call_n(uint16_t n);
 void instr_call_cc(CPU_t *cpu, uint16_t n);
 void instr_ccf(void);
-
+void instr_daa(uint8_t *A);
+void instr_cp(uint8_t *A, uint8_t n);
 void instr_cpl(uint8_t *A);
 
 void instr_inc_n(uint8_t *reg);
+void instr_dec_n(uint8_t *reg);
 void instr_inc_nn(uint16_t *reg);
 void instr_dec_nn(uint16_t *nn);
 void instr_di(void);
@@ -27,10 +29,9 @@ void instr_jp( uint16_t addr);
 void instr_jp_hl(void);
 void instr_jr(uint8_t n);
 void instr_halt(void);
-
-// void instr_load_an(CPU_t *cpu, uint8_t n);
-void instr_load_ab(uint8_t *A, uint8_t *n);
-void instr_load_ab16(uint16_t *A, uint16_t *B);
+void instr_set_b(uint8_t b, uint8_t *r);
+void instr_load_ab(uint8_t *A, uint8_t n);
+void instr_load_ab16(uint16_t *A, uint16_t B);
 void instr_nop(void);
 void instr_scf(void);
 void instr_sla(uint8_t n);

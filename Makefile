@@ -25,10 +25,20 @@ CFLAGS += -Wold-style-definition
 TARGET_BASE1=all_tests
 TARGET1 = $(TARGET_BASE1).out
 
+APP_TARGET=gb.out
+
 SRC_FILES=src/instructions/instructions.c \
 					src/cpu.c\
 					src/memory.c\
-					src/op_codes.c
+					src/std_codes.c\
+					src/host/cart.c\
+					src/prefix_codes.c
+
+APP_SRC=$(SRC_FILES)\
+				src/main.c \
+				src/emulator.c
+APP_INC=-Isrc \
+				-Isrc/instructions
 
 TEST_FILES=\
   $(UNITY_ROOT)/src/unity.c \
@@ -36,8 +46,12 @@ TEST_FILES=\
   test/test_instructions.c \
   test/test_cpu.c \
   test/test_memory.c \
+  test/test_cart.c \
+  test/test_boot.c \
   test/test_runners/testrunner_instructions.c \
   test/test_runners/testrunner_cpu.c \
+  test/test_runners/testrunner_cart.c \
+  test/test_runners/testrunner_boot.c \
   test/test_runners/testrunner_memory.c \
   test/test_runners/all_tests.c
 INC_DIRS=-Isrc \
@@ -51,10 +65,16 @@ default:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES) $(TEST_FILES) -o $(TARGET1)
 	- ./$(TARGET1) -v
 
-all: clean default
+run:
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	- ./$(APP_TARGET) -v
+
+all: clean default run
+
 
 clean:
 	rm -f $(TARGET1)
+	rm -f $(APP_TARGET)
 
 ci: CFLAGS += -Werror
 ci: default
