@@ -1,6 +1,31 @@
 #include "instructions.h"
 #include "memory.h"
 
+
+uint8_t add_4bit(uint8_t a, uint8_t b, uint8_t *c)
+{
+    uint8_t res = a + b; // + (*c);
+    *c = (res&0x10);
+    printf("%d\n",res);
+    return res;
+}
+
+uint8_t sub_4bit(uint8_t a, uint8_t b, uint8_t *c)
+{
+    return add_4bit(a, ~b, c);
+}
+
+uint8_t add_8bit(uint8_t a, uint8_t b, uint8_t *c, uint8_t *hc)
+{
+    printf("%d + %d = ?\n",a, b);
+    uint8_t low = add_4bit(a, b, c);
+    printf("%d + %d = ?\n",a, low);
+    *hc = *c; //store hc
+    uint8_t high = add_4bit(a>>4, b>>4, hc);
+    uint8_t res =  high<<4 + low;
+    return res;
+}
+
 /*
 ADC A,n  - Add n + Carry flag to A.
 
@@ -8,14 +33,13 @@ ADC A,n  - Add n + Carry flag to A.
 
         Flags affected:
         Z - Set if result is zero.
-                N - Reset.
-                H - Set if carry from bit 3.
-                C - Set if carry from bit 7
+        N - Reset.
+        H - Set if carry from bit 3.
+        C - Set if carry from bit 7
 */
 void instr_adc(uint8_t* A, uint8_t n) {
   uint16_t temp = *A + n + CPU_check_flag(CARRY_FLAG);
-  uint8_t hc_temp =
-      (*A & 0x0F) + (n & 0x0F) + CPU_check_flag(CARRY_FLAG);
+  uint8_t hc_temp = (*A & 0x0F) + (n & 0x0F) + CPU_check_flag(CARRY_FLAG);
   *A = (uint8_t)temp & 0xFF;
   if (temp & 0x100)
     CPU_set_flag(CARRY_FLAG);
@@ -36,7 +60,8 @@ ADD A,n - Add n to A.
                 C - Set if carry from bit 7.
 */
 void instr_add(uint8_t *A, uint8_t n) {
-    uint16_t temp = 0xFF&*A + n;
+    uint16_t temp = *A;
+    temp += n;
     uint8_t hc_temp = (*A & 0xF) + (n & 0xF);
     *A = (uint8_t)temp;
     if (hc_temp & 0x10){
@@ -62,14 +87,16 @@ ADD HL,n  - Add n to HL.
                 C - Set if carry from bit 15.
 */
 void instr_add_HL(uint16_t *hl, uint16_t n) {
-  uint32_t temp = *hl + n;
-  uint16_t hc_temp = (*hl & 0x0FFF) + (n & 0x0FFF);
-  *hl = temp&0xFFFF;
-  if (temp & 0x10000)
-    CPU_set_flag(CARRY_FLAG);
-  if (hc_temp & 0x1000)
-    CPU_set_flag(HALF_CARRY_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
+    uint32_t temp = *hl + n;
+    uint16_t hc_temp = (*hl & 0x0FFF) + (n & 0x0FFF);
+    *hl = temp&0xFFFF;
+    if (temp & 0x10000) {
+        CPU_set_flag(CARRY_FLAG);
+    }
+    if (hc_temp & 0x1000) {
+        CPU_set_flag(HALF_CARRY_FLAG);
+    }
+    CPU_clear_flag(SUBTRACT_FLAG);
 }
 
 /*
@@ -133,9 +160,10 @@ BIT b,r  - Test bit b in register r.
                 C - Not affected.
 */
 void instr_bit(uint8_t b, uint8_t *r) {
-  CPU_clear_flag(ZERO_FLAG);
   if (((0x01 << b) & *r) == 0)
     CPU_set_flag(ZERO_FLAG);
+  else
+    CPU_clear_flag(ZERO_FLAG);
   CPU_clear_flag(SUBTRACT_FLAG);
   CPU_set_flag(HALF_CARRY_FLAG);
 }
@@ -248,12 +276,16 @@ DAA           - Decimal adjust register A.
 */
 void instr_daa(uint8_t *A) {
   uint16_t t = *A;
-  if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG)) t += 0x06;
-  if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG)) t += 0x60;
+  if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG))
+    t += 0x06;
+  if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG))
+    t += 0x60;
   CPU_clear_flag(HALF_CARRY_FLAG);
-  if(t&0x100) CPU_set_flag(CARRY_FLAG);
+  if(t&0x100)
+    CPU_set_flag(CARRY_FLAG);
   *A = t;
-  if(*A == 0) CPU_set_flag(ZERO_FLAG);
+  if(*A == 0)
+    CPU_set_flag(ZERO_FLAG);
 }
 
 /*
@@ -269,10 +301,11 @@ DEC n         - Decrement register n.
 */
 void instr_dec_n(uint8_t *reg) {
   uint8_t t = *reg -1;
+  if(*reg&0x0F == 0) CPU_set_flag(HALF_CARRY_FLAG);
   *reg = t;
   if(*reg == 0) CPU_set_flag(ZERO_FLAG);
   CPU_set_flag(SUBTRACT_FLAG);
-  CPU_set_flag(HALF_CARRY_FLAG);
+
 }
 
 /*
@@ -722,11 +755,12 @@ void instr_sbc(uint8_t *A, uint8_t n) {
   uint16_t t = *A;
   t = t + ~n;
   t = t + !CPU_check_flag(CARRY_FLAG);
-  *A = (uint8_t)t;
   if(t == 0) CPU_clear_flag(ZERO_FLAG);
   CPU_set_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG); //TODO: HC flag is wrong...
+  // if(n + !CPU_check_flag(CARRY_FLAG) > *A)
+    // CPU_set_flag(HALF_CARRY_FLAG); //TODO: HC flag is wrong...
   if(!(t&0x100)) CPU_set_flag(CARRY_FLAG);
+  *A = (uint8_t)t;
 }
 
 /*
