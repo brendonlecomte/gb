@@ -275,7 +275,7 @@ void RRA(void) {
 // JR NZ,r8
 // 2  12/8
 void JR_NZ_r8(void) {
-  if (CPU_check_flag(ZERO_FLAG) != ZERO_FLAG) {
+  if (CPU_check_flag(ZERO_FLAG) == 0) {
     uint8_t val = memory_read8(memory, gb_cpu->PC);
     instr_jr(val);
     gb_cpu->PC -= 1;
@@ -1708,8 +1708,10 @@ void RET_C(void) {
 // RETI
 // 1  16
 void RETI(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  gb_cpu->PC = CPU_stack_pop();
+  gb_cpu->ime = 1;
+  gb_cpu->cycles += 16;
 }
 // JP C,a16
 // 3  16/12

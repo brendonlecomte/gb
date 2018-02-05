@@ -13,5 +13,6 @@ int main(int argc, const char * argv[])
     emu_execute();
     scanf("%d\n", &exit);
   }
+  emu_end();
   return 0;
 }

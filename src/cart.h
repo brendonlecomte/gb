@@ -35,7 +35,7 @@ enum {
 } cart_type_e;
 
 
-struct cart_s {
+typedef struct cart_s {
     uint8_t entry[0x04]; // 0x100-103
     uint8_t logo[0x30];  //0x104 - 0x133
     uint8_t title[0x0F]; // 0x134 - 0x143
@@ -50,12 +50,8 @@ struct cart_s {
     uint8_t version; //0x14D
     uint8_t header_checksum;
     uint16_t checksum; //0x14E - 0x14F
-};
+} cart_t;
 
-typedef union {
-    uint8_t memory[0x50];
-    struct cart_s  cart;
-}cart_t;
 
 
 void cart_load(uint8_t *mem, uint16_t size);

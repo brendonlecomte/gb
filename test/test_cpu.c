@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "memory.h"
 #include "unity.h"
 #include "unity_fixture.h"
 
@@ -9,6 +10,7 @@ CPU_t *cpu;
 TEST_SETUP(processor) {
   cpu = gb_cpu;
   CPU_init(gb_cpu);
+  memory_init(memory);
 }
 
 TEST_TEAR_DOWN(processor) {}
@@ -73,50 +75,16 @@ TEST(processor, flags)
     TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
 }
 
-TEST(processor, write8)
-{
-  *cpu->AF = 0x5500;
-  TEST_ASSERT_EQUAL(0x5500, *cpu->AF);
-  // CPU_write_B(0x55);
-  // TEST_ASSERT_EQUAL(0x0055, CPU_read_BC());
-  // CPU_write_C(0xAA);
-  // TEST_ASSERT_EQUAL(0xAA55, CPU_read_BC());
- }
 
-TEST(processor, read8)
-{
-    // CPU_write_D(0xCC);
-    // TEST_ASSERT_EQUAL(0xCC, CPU_read_D());
-    // TEST_ASSERT_EQUAL(0x00, CPU_read_E());
-}
-
-TEST(processor, write16)
-{
-
-    // CPU_write_DE(0x5AA5);
-    // TEST_ASSERT_EQUAL(0x5AA5, CPU_read_DE());
-
-    // CPU_write_BC(0x5AA5);
-    // TEST_ASSERT_EQUAL(0x5AA5, CPU_read_BC());
-}
-
-TEST(processor, read16)
-{
-    // CPU_write_HL(0xCC12);
-    // TEST_ASSERT_EQUAL(0x12, CPU_read_H());
-    // TEST_ASSERT_EQUAL(0xCC, CPU_read_L());
-}
-
-TEST(processor, pop)
+TEST(processor, poppush)
 {
     CPU_stack_push(0xCC12);
     TEST_ASSERT_EQUAL(0xFFFC, cpu->SP);
-    // TEST_ASSERT_EQUAL(0xCC12, CPU_stack_pop());
+    TEST_ASSERT_EQUAL(0xCC12, CPU_stack_pop());
 }
 
-TEST(processor, push)
-{
-    // CPU_write_HL(0xCC12);
-    // TEST_ASSERT_EQUAL(0x12, CPU_read_H());
-    // TEST_ASSERT_EQUAL(0xCC, CPU_read_L());
+TEST(processor, ints) {
+  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  CPU_set_interrupt(cpu, INT_V_BLANK);
+  TEST_ASSERT_EQUAL(0x01, memory->memory[0xFF0F]);
 }

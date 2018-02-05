@@ -25,7 +25,7 @@ TEST(Cart, header) {
   mem[0] = 0;
   cart_load(mem, 0x4000);
   cart_t *cart = (cart_t *)&mem[0x100];
-  TEST_ASSERT_EQUAL_STRING("TETRIS", cart->cart.title);
-  TEST_ASSERT_EQUAL(0x0A, cart->cart.header_checksum);
-  TEST_ASSERT_EQUAL(0xBF16, cart->cart.checksum);
+  TEST_ASSERT_EQUAL_STRING("TETRIS", cart->title);
+  TEST_ASSERT_EQUAL(0x0A, cart->header_checksum);
+  TEST_ASSERT_EQUAL(0xBF16, cart->checksum);
 }

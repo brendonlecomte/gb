@@ -28,6 +28,24 @@ cleared.
 #define SUBTRACT_FLAG  (0x40)
 #define ZERO_FLAG  (0x80)
 
+typedef enum {
+   INT_UNUSED,
+   INT_JOYPAD=4,
+   INT_SERIAL=3,
+   INT_TMR =2 ,
+   INT_LCD_STAT = 1,
+   INT_V_BLANK = 0
+} interrupts_t;
+
+typedef struct {
+  uint8_t unused:3,
+    joypad:1,
+    serial:1,
+    tmr:1,
+    lcd_stat:1,
+    v_blank:1;
+} int_reg_t;
+
 typedef union reg_u {
     uint16_t  _16;
     uint8_t   _8[2];
@@ -53,7 +71,9 @@ typedef struct {
   uint8_t *A, *B, *C, *D, *E, *F, *H, *L;
   uint16_t *AF, *BC, *DE, *HL;
 
-  uint8_t interrupts;
+  bool ime; //master interrupt, cpu controlled
+  int_reg_t *interrupt_flags;
+  int_reg_t *interrupt_enable;
   /*
   Timing
   */
@@ -63,6 +83,8 @@ typedef struct {
 extern CPU_t *gb_cpu;
 
 void CPU_init(CPU_t *cpu);
+void CPU_handle_interrupt(CPU_t *cpu);
+void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt);
 void CPU_set_flag(const uint8_t flag);
 void CPU_clear_flag(const uint8_t flag);
 bool CPU_check_flag(const uint8_t flag);

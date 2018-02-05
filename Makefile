@@ -37,6 +37,7 @@ SRC_FILES=src/instructions/instructions.c \
 					src/std_codes.c\
 					src/host/cart.c\
 					src/emulator.c\
+					src/ppu.c\
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\

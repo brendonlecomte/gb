@@ -157,7 +157,7 @@ static memory_t _memory;
 memory_t *memory = &_memory;
 
 void memory_init(memory_t *mem) {
-  memset(mem->memory, 0, FULL_MEMORY);
+  memset(mem->memory, 0x00, FULL_MEMORY);
   // memcpy(mem->memory, boot, 256); // init the boot rom into memory_t
   mem->cart = &mem->memory[0];
   mem->cart_header = &mem->memory[0x100];
@@ -167,7 +167,7 @@ void memory_init(memory_t *mem) {
   mem->oam = &mem->memory[0xFE00];
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
-  memset(mem->vram, 0x55, 0x8000);
+  memset(mem->vram, 0x55, 0x2000);
 }
 
 void memory_load_cart(memory_t *mem) {

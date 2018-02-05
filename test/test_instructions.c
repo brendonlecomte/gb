@@ -278,12 +278,12 @@ TEST(Instructions, dec_nn) {
 
 TEST(Instructions, di) {
   instr_di();
-  TEST_ASSERT_EQUAL(0, gb_cpu->interrupts);
+  TEST_ASSERT_EQUAL(0, gb_cpu->ime);
 }
 
 TEST(Instructions, ei) {
   instr_ei();
-  TEST_ASSERT_EQUAL(1, gb_cpu->interrupts);
+  TEST_ASSERT_EQUAL(1, gb_cpu->ime);
 }
 
 TEST(Instructions, inc) {

@@ -14,16 +14,17 @@
 
 
 //DISPLAY REGISTERs
+#define STAT (0xFF41)
 #define SCY (0xFF42)
 #define SCX (0xFF43)
-#define LY (0xFF44)
-#define LYC (0xFF45)
+#define LY (0xFF44) //current output line (R)
+#define LYC (0xFF45) //Compare against LY
 #define WY (0xFF4A)
 #define WX (0xFF4B)
 
-#define BGP (0xFF47)
-#define OBP0 (0xFF48)
-#define OBP1 (0xFF49)
+#define BGP (0xFF47) //background palette
+#define OBP0 (0xFF48) //alt palette
+#define OBP1 (0xFF49) //alt palette 2
 
 //CGB only
 #define BCPS (0xFF68)

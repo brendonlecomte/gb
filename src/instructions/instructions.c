@@ -1,31 +1,6 @@
 #include "instructions.h"
 #include "memory.h"
 
-
-uint8_t add_4bit(uint8_t a, uint8_t b, uint8_t *c)
-{
-    uint8_t res = a + b; // + (*c);
-    *c = (res&0x10);
-    printf("%d\n",res);
-    return res;
-}
-
-uint8_t sub_4bit(uint8_t a, uint8_t b, uint8_t *c)
-{
-    return add_4bit(a, ~b, c);
-}
-
-uint8_t add_8bit(uint8_t a, uint8_t b, uint8_t *c, uint8_t *hc)
-{
-    printf("%d + %d = ?\n",a, b);
-    uint8_t low = add_4bit(a, b, c);
-    printf("%d + %d = ?\n",a, low);
-    *hc = *c; //store hc
-    uint8_t high = add_4bit(a>>4, b>>4, hc);
-    uint8_t res =  high<<4 + low;
-    return res;
-}
-
 /*
 ADC A,n  - Add n + Carry flag to A.
 
@@ -301,7 +276,7 @@ DEC n         - Decrement register n.
 */
 void instr_dec_n(uint8_t *reg) {
   uint8_t t = *reg -1;
-  if(*reg&0x0F == 0) CPU_set_flag(HALF_CARRY_FLAG);
+  if((*reg&0x0F) == 0) CPU_set_flag(HALF_CARRY_FLAG);
   *reg = t;
   if(*reg == 0) CPU_set_flag(ZERO_FLAG);
   CPU_set_flag(SUBTRACT_FLAG);
@@ -326,7 +301,7 @@ DI            - Disable interrupts.
 */
 void instr_di(void)
 {
-   gb_cpu->interrupts = 0;
+   gb_cpu->ime = 0;
 }
 
 /*
@@ -339,7 +314,8 @@ EI            - Enable interrupts.
 */
 void instr_ei(void)
 {
-  gb_cpu->interrupts = 1;
+  //TODO: this need to occur an instruction later....
+  gb_cpu->ime = 1;
 }
 
 /*
