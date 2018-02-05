@@ -421,6 +421,7 @@ void instr_jr(uint8_t n) {
   {
     uint8_t t = ~(n);
     gb_cpu->PC -= t;
+    gb_cpu->PC += 1;
   }
   else
     gb_cpu->PC += n;

@@ -4,4 +4,5 @@
 TEST_GROUP_RUNNER(Cart)
 {
   RUN_TEST_CASE(Cart, load);
+  RUN_TEST_CASE(Cart, header);
  }

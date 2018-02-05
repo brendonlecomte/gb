@@ -256,16 +256,18 @@ void DEC_E(void) {
 // 1 4
 void LD_E_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
-  gb_cpu->PC += 1;
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  // gb_cpu->PC += 1;
+  instr_load_ab(gb_cpu->E, val);
   gb_cpu->cycles += 4;
 }
 
 // 0x1F RRA
 // 1 4
 void RRA(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
+  DEBUG_PRINTF(" %s\n", __func__);
+  // instr_rr
+  assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -273,15 +275,15 @@ void RRA(void) {
 // JR NZ,r8
 // 2  12/8
 void JR_NZ_r8(void) {
-
-  if (CPU_check_flag(ZERO_FLAG) == 0) {
+  if (CPU_check_flag(ZERO_FLAG) != ZERO_FLAG) {
     uint8_t val = memory_read8(memory, gb_cpu->PC);
-      gb_cpu->PC += 1;
     instr_jr(val);
+    gb_cpu->PC -= 1;
     DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
     gb_cpu->cycles += 12;
   } else {
     DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
+    gb_cpu->PC += 1;
     gb_cpu->cycles += 8;
   }
 }
@@ -350,12 +352,13 @@ void DAA(void) {
 void JR_Z_r8(void) {
     if (CPU_check_flag(ZERO_FLAG) != 0) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
-        gb_cpu->PC += 1;
+
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
+      gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -422,12 +425,13 @@ void CPL(void) {
 void JR_NC_r8(void) {
     if (CPU_check_flag(CARRY_FLAG) == 0) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
-        gb_cpu->PC += 1;
+
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
+              gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -499,12 +503,13 @@ void SCF(void) {
 void JR_C_r8(void) {
     if (CPU_check_flag(ZERO_FLAG) != 0) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
-        gb_cpu->PC += 1;
+
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
+      gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -1850,8 +1855,10 @@ void POP_AF(void) {
 void LD_A_Cm(void) {
   uint16_t addr = 0xFF00 + *gb_cpu->C;
   uint8_t val = memory_read8(memory, addr);
+  instr_load_ab(gb_cpu->A, val);
   DEBUG_PRINTF(" %s: 0x%04X - 0x%02X\n", __func__, addr, val);
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
+  gb_cpu->PC += 1;
 }
 // DI
 // 1  4

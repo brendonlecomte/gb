@@ -27,15 +27,21 @@ TARGET1 = $(TARGET_BASE1).out
 
 APP_TARGET=gb.out
 
+HOST_SRC=src/gpu/test.c
+
+HOST_APP=gpu.o
+
 SRC_FILES=src/instructions/instructions.c \
 					src/cpu.c\
 					src/memory.c\
 					src/std_codes.c\
 					src/host/cart.c\
+					src/emulator.c\
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\
-				src/main.c
+				src/main.c \
+
 APP_INC=-Isrc \
 				-Isrc/instructions
 
@@ -53,6 +59,8 @@ TEST_FILES=\
   test/test_runners/testrunner_boot.c \
   test/test_runners/testrunner_memory.c \
   test/test_runners/all_tests.c
+
+
 INC_DIRS=-Isrc \
          -Isrc/instructions \
          -I$(UNITY_ROOT)/src \
@@ -65,8 +73,12 @@ default:
 	- ./$(TARGET1) -v
 
 run:
-	gcc $(CFLAGS) $(APP_INC) $(SYMBOLS) $(APP_SRC) -DDEBUG=1 -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 	- ./$(APP_TARGET) -v
+
+sdl:
+	gcc $(HOST_SRC) -lSDL2 -o $(HOST_APP)
+	- ./$(HOST_APP)
 
 all: clean default run
 

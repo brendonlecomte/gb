@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "emulator.h"
 #include "instructions.h"
 #include "memory.h"
 #include "op_codes.h"
@@ -21,11 +22,7 @@ TEST(Boot, zero_vram) {
     TEST_ASSERT_EQUAL(0xFF, memory->memory[0x9000]); //test new state
     for(;;){
         //fetch
-        uint8_t op = memory_read8(memory, gb_cpu->PC);  //read OP code
-        gb_cpu->PC += 1; //inc pc
-
-        //execute
-        op_codes[op]();
+        emu_execute();
         if(gb_cpu->PC == 0x001d) //Run untill fter the first sub
         {
             break;
@@ -42,11 +39,7 @@ TEST(Boot, audio) {
     gb_cpu->PC = 0x000C;
     for(;;){
         //fetch
-        uint8_t op = memory_read8(memory, gb_cpu->PC);  //read OP code
-        gb_cpu->PC += 1; //inc pc
-
-        //execute
-        op_codes[op]();
+        emu_execute();
         if(gb_cpu->PC == 0x0027) //Run untill fter the first sub
         {
             break;

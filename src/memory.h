@@ -22,6 +22,7 @@ typedef struct {
 extern memory_t *memory;
 
 void memory_init(memory_t *mem);
+void memory_load_cart(memory_t *mem);
 uint8_t memory_read8(memory_t *mem, uint16_t addr);
 uint16_t memory_read16(memory_t *mem, uint16_t addr);
 
