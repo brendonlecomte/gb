@@ -318,7 +318,12 @@ TEST(Instructions, jr) {
 
   gb_cpu->PC = 0x000C;
   instr_jr(0xFB);
-  TEST_ASSERT_EQUAL(0x0007, gb_cpu->PC);
+  TEST_ASSERT_EQUAL(0x0009, gb_cpu->PC);
+
+  gb_cpu->PC = 0x0216;
+  instr_jr(0xFC);
+  TEST_ASSERT_EQUAL(0x0214, gb_cpu->PC);
+
 }
 //
 // TEST(Instructions, load_an) {

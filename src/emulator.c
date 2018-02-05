@@ -6,6 +6,7 @@
 void emu_init(void) {
   CPU_init(gb_cpu);
   memory_init(memory);
+  memory_load_cart(memory);
 }
 
 void emu_execute(void) {

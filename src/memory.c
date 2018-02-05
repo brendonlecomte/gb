@@ -158,7 +158,7 @@ memory_t *memory = &_memory;
 
 void memory_init(memory_t *mem) {
   memset(mem->memory, 0, FULL_MEMORY);
-  memcpy(mem->memory, boot, 256); // init the boot rom into memory_t
+  // memcpy(mem->memory, boot, 256); // init the boot rom into memory_t
   mem->cart = &mem->memory[0];
   mem->cart_header = &mem->memory[0x100];
   mem->vram = &mem->memory[0x8000];
@@ -171,7 +171,7 @@ void memory_init(memory_t *mem) {
 }
 
 void memory_load_cart(memory_t *mem) {
-    cart_load(&mem->memory[0], FULL_MEMORY);
+    cart_load(&mem->memory[0], 0x8000);
 }
 
 uint8_t memory_read8(memory_t *mem, uint16_t addr) { return mem->memory[addr]; }
