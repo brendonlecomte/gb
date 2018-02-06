@@ -15,8 +15,9 @@ typedef struct {
   uint8_t *oam;
   uint8_t *io;
   uint8_t *hram;
-
   uint8_t memory[FULL_MEMORY];
+
+  bool inBoot;
 } memory_t;
 
 extern memory_t *memory;

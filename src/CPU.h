@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include "debug.h"
 
 /*
 Bit 4 represents the carry flag.  It is set when a carry from bit 7 is produced
@@ -17,11 +17,7 @@ addition) it is cleared. Bit 7 represents the zero flag.  It is set when the
 instruction results in a value of 0.  Otherwise (result different to 0) it is
 cleared.
 */
-#ifdef DEBUG
-#define DEBUG_PRINTF(...) printf( __VA_ARGS__)
-#else
-#define DEBUG_PRINTF(...) {}
-#endif
+
 
 #define CARRY_FLAG  (0x10)
 #define HALF_CARRY_FLAG  (0x20)
@@ -38,12 +34,7 @@ typedef enum {
 } interrupts_t;
 
 typedef struct {
-  uint8_t unused:3,
-    joypad:1,
-    serial:1,
-    tmr:1,
-    lcd_stat:1,
-    v_blank:1;
+  uint8_t v_blank:1, lcd_stat:1, tmr:1, serial:1, joypad:1, unused:3;
 } int_reg_t;
 
 typedef union reg_u {
@@ -72,8 +63,8 @@ typedef struct {
   uint16_t *AF, *BC, *DE, *HL;
 
   bool ime; //master interrupt, cpu controlled
-  int_reg_t *interrupt_flags;
-  int_reg_t *interrupt_enable;
+  int_reg_t *int_flags;
+  int_reg_t *int_enable;
   /*
   Timing
   */
@@ -83,6 +74,7 @@ typedef struct {
 extern CPU_t *gb_cpu;
 
 void CPU_init(CPU_t *cpu);
+void CPU_enable_interrupt(CPU_t *cpu, interrupts_t interrupt);
 void CPU_handle_interrupt(CPU_t *cpu);
 void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt);
 void CPU_set_flag(const uint8_t flag);

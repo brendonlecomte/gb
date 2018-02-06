@@ -1,6 +1,7 @@
 #include "emulator.h"
 #include <stdio.h>
 #include <stdint.h>
+#include "CPU.h"
 
 int main(int argc, const char * argv[])
 {
@@ -11,7 +12,7 @@ int main(int argc, const char * argv[])
   for(;;)
   {
     emu_execute();
-    scanf("%d\n", &exit);
+    if(gb_cpu->PC == 0x100) scanf("%d\n", &exit);
   }
   emu_end();
   return 0;

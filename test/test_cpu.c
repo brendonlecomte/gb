@@ -11,6 +11,7 @@ TEST_SETUP(processor) {
   cpu = gb_cpu;
   CPU_init(gb_cpu);
   memory_init(memory);
+  gb_cpu->SP = 0xFFFE;
 }
 
 TEST_TEAR_DOWN(processor) {}
@@ -87,4 +88,35 @@ TEST(processor, ints) {
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_V_BLANK);
   TEST_ASSERT_EQUAL(0x01, memory->memory[0xFF0F]);
+
+  memory->memory[0xFF0F] =0;
+  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  CPU_set_interrupt(cpu, INT_LCD_STAT);
+  TEST_ASSERT_EQUAL(0x02, memory->memory[0xFF0F]);
+
+  memory->memory[0xFF0F] =0;
+  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  CPU_set_interrupt(cpu, INT_TMR);
+  TEST_ASSERT_EQUAL(0x04, memory->memory[0xFF0F]);
+
+  memory->memory[0xFF0F] =0;
+  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  CPU_set_interrupt(cpu, INT_SERIAL);
+  TEST_ASSERT_EQUAL(0x08, memory->memory[0xFF0F]);
+
+  memory->memory[0xFF0F] =0;
+  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  CPU_set_interrupt(cpu, INT_JOYPAD);
+  TEST_ASSERT_EQUAL(0x10, memory->memory[0xFF0F]);
+}
+
+TEST(processor, handle_int) {
+    gb_cpu->PC = 0xAA55;
+    gb_cpu->ime = 1;
+    CPU_set_interrupt(cpu, INT_V_BLANK);
+    CPU_enable_interrupt(cpu, INT_V_BLANK);
+    CPU_handle_interrupt(gb_cpu);
+    TEST_ASSERT_EQUAL(0x0040, gb_cpu->PC);
+    TEST_ASSERT_EQUAL(0xFFFC, gb_cpu->SP);
+    TEST_ASSERT_EQUAL(0xAA55, CPU_stack_pop());
 }

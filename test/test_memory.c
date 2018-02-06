@@ -10,6 +10,7 @@ TEST_GROUP(Memory);
 TEST_SETUP(Memory)
 {
     memory_init(&test_mem);
+    test_mem.inBoot = false;
 }
 
 TEST_TEAR_DOWN(Memory)
@@ -45,4 +46,10 @@ TEST(Memory, write16)
 {
     memory_write16(&test_mem, 0x892, 0x55AA);
     TEST_ASSERT_EQUAL(0x55AA, memory_read16(&test_mem, 0x892));
+}
+
+TEST(Memory, inboot)
+{
+    test_mem.inBoot = true;
+    TEST_ASSERT_EQUAL(0x32, memory_read8(&test_mem, 7));
 }

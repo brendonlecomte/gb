@@ -8,4 +8,5 @@ TEST_GROUP_RUNNER(processor)
   RUN_TEST_CASE(processor, ints);
   RUN_TEST_CASE(processor, ptrs);
   RUN_TEST_CASE(processor, flags);
+  RUN_TEST_CASE(processor, handle_int);
 }

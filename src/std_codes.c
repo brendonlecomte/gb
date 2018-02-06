@@ -189,8 +189,8 @@ void DEC_D(void) {
 // 2 8
 void LD_D_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_load_ab(gb_cpu->D, val);
   gb_cpu->PC += 1;
   gb_cpu->cycles += 8;
 }
@@ -350,7 +350,7 @@ void DAA(void) {
 // JR Z,r8
 // 2  12/8
 void JR_Z_r8(void) {
-    if (CPU_check_flag(ZERO_FLAG) != 0) {
+    if (CPU_check_flag(ZERO_FLAG) == 1) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
 
       instr_jr(val);
@@ -443,6 +443,7 @@ void LD_SP_d16(void) {
   gb_cpu->SP = x;
   DEBUG_PRINTF(" %s:  SP = %04X from %d\n", __func__, x, gb_cpu->PC);
   gb_cpu->PC += 2;
+  gb_cpu->cycles += 12;
 }
 
 // LD (HL-),A
@@ -451,6 +452,7 @@ void LD_HLs_A(void) {
   memory_write8(memory, *gb_cpu->HL, *gb_cpu->A);
   *gb_cpu->HL -= 1;
   DEBUG_PRINTF(" %s\n", __func__);
+  gb_cpu->cycles += 8;
 }
 
 // INC SP
@@ -559,6 +561,7 @@ void LD_A_d8(void) {
   gb_cpu->PC += 1;
   instr_load_ab(gb_cpu->A, d8);
   DEBUG_PRINTF(" %s: A <- 0x%02X\n", __func__, d8);
+  gb_cpu->cycles += 8;
 }
 
 // CCF
@@ -1768,6 +1771,7 @@ void LD_Cm_A(void) {
   memory_write8(memory, addr, *gb_cpu->A);
   DEBUG_PRINTF(" %s: 0x%04X <- 0x%02X\n", __func__, addr, *gb_cpu->A);
   gb_cpu->PC += 1;
+  gb_cpu->cycles += 8;
 }
 // PUSH HL
 // 1  16

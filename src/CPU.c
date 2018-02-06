@@ -5,7 +5,7 @@ CPU_t _cpu;
 CPU_t *gb_cpu = &_cpu;
 
 void CPU_init(CPU_t *cpu) {
-  cpu->PC = 0x0100;
+  cpu->PC = 0x0000;
   cpu->SP = 0xFFFE;
 
   //set pointers
@@ -30,41 +30,72 @@ void CPU_init(CPU_t *cpu) {
   *cpu->HL = 0;
 
   cpu->ime = 0;
-  cpu->interrupt_flags = (int_reg_t*)&memory->memory[0xFF0F];
-  cpu->interrupt_enable = (int_reg_t*)&memory->memory[0xFFFF];
+  cpu->int_flags = (int_reg_t*)&memory->memory[0xFF0F];
+  cpu->int_enable = (int_reg_t*)&memory->memory[0xFFFF];
+}
+
+void CPU_run(CPU_t *cpu) {
+    
 }
 
 void CPU_handle_interrupt(CPU_t *cpu) {
-  CPU_stack_push(cpu->PC); // push PC, 2cycles
-  // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
-  uint16_t rst_vector;
-  //faux priority
-  if(cpu->interrupt_flags->joypad) rst_vector = 0x0060;
-  if(cpu->interrupt_flags->serial) rst_vector = 0x0058;
-  if(cpu->interrupt_flags->tmr) rst_vector = 0x0050;
-  if(cpu->interrupt_flags->lcd_stat) rst_vector = 0x0048;
-  if(cpu->interrupt_flags->v_blank) rst_vector = 0x0040;
-  cpu->PC = rst_vector;
-  cpu->cycles += 5;
+    if(cpu->ime) { //if interrupts are enabled, handle them
+      CPU_stack_push(cpu->PC); // push PC, 2cycles
+      // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
+      uint16_t rst_vector = 0xAA55;
+      //faux priority
+      if(cpu->int_flags->joypad && cpu->int_enable->joypad) rst_vector = 0x0060;
+      if(cpu->int_flags->serial && cpu->int_enable->serial) rst_vector = 0x0058;
+      if(cpu->int_flags->tmr && cpu->int_enable->tmr) rst_vector = 0x0050;
+      if(cpu->int_flags->lcd_stat && cpu->int_enable->lcd_stat) rst_vector = 0x0048;
+      if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) rst_vector = 0x0040;
+      if(rst_vector != 0xAA55)
+      {
+        cpu->PC = rst_vector;
+        cpu->cycles += 5;
+      }
+    }
+}
+
+void CPU_enable_interrupt(CPU_t *cpu, interrupts_t interrupt) {
+  switch(interrupt){
+    case INT_V_BLANK:
+      cpu->int_enable->v_blank = 1;
+      break;
+    case INT_LCD_STAT:
+      cpu->int_enable->lcd_stat = 1;
+      break;
+    case INT_TMR:
+      cpu->int_enable->tmr = 1;
+      break;
+    case INT_SERIAL:
+      cpu->int_enable->serial = 1;
+      break;
+    case INT_JOYPAD:
+      cpu->int_enable->joypad = 1;
+      break;
+    default:
+      // assert(0);
+      break;
+  }
 }
 
 void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt) {
-  cpu->ime = 0;
   switch(interrupt){
     case INT_V_BLANK:
-      cpu->interrupt_flags->v_blank = 1;
+      cpu->int_flags->v_blank = 1;
       break;
     case INT_LCD_STAT:
-      cpu->interrupt_flags->lcd_stat = 1;
+      cpu->int_flags->lcd_stat = 1;
       break;
     case INT_TMR:
-      cpu->interrupt_flags->tmr = 1;
+      cpu->int_flags->tmr = 1;
       break;
     case INT_SERIAL:
-      cpu->interrupt_flags->serial = 1;
+      cpu->int_flags->serial = 1;
       break;
     case INT_JOYPAD:
-      cpu->interrupt_flags->joypad = 1;
+      cpu->int_flags->joypad = 1;
       break;
     default:
       // assert(0);

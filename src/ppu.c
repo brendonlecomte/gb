@@ -1,5 +1,8 @@
 #include "ppu.h"
 #include "CPU.h"
+#include "memory.h"
+#include "memory_locations.h"
+#include "debug.h"
 
 typedef enum {
     PPU_IDLE,
@@ -17,7 +20,8 @@ ppu_mode_t mode;
 uint8_t clocks;
 
 void ppu_init(void) {
-
+    status_reg = (lcd_status_register_t*)&memory->memory[STAT];
+    lcd_y = &memory->memory[LY];
 }
 
 
@@ -29,20 +33,33 @@ void ppu_run(void) {
   {
     case PPU_OAM: //20 clocks
       status_reg->mode = 2;
-      if(clocks >= 20) mode = PPU_TRANSFER;
+      if(clocks >= 20) {
+          mode = PPU_TRANSFER;
+          // DEBUG_PRINTF("PIXELTRANSFER\n");
+      }
       break;
 
     case PPU_TRANSFER: //43 clocks
       status_reg->mode = 3;
-      if(clocks >= 63) mode = PPU_H_BLANK;
+      if(clocks >= 63) {
+          mode = PPU_H_BLANK;
+          // DEBUG_PRINTF("HBLANK\n");
+      }
       break;
 
     case PPU_H_BLANK: //51 clocks
       status_reg->mode = 0;
       if(clocks >= 114){
         clocks = 0; //clear clocks, line complete
-        if(*lcd_y == 144) mode = PPU_V_BLANK;
-        else mode = PPU_OAM;
+        if(*lcd_y == 144){
+            CPU_set_interrupt(gb_cpu, INT_V_BLANK);
+            mode = PPU_V_BLANK;
+            DEBUG_PRINTF("VBLANK\n");
+        }
+        else {
+            mode = PPU_OAM;
+             // DEBUG_PRINTF("OAM\n");
+        }
       }
       break;
 
@@ -55,6 +72,7 @@ void ppu_run(void) {
       mode = PPU_OAM;
       break;
   }
+  // DEBUG_PRINTF();
 }
 
 void ppu_close(void) {
