@@ -17,7 +17,7 @@ uint8_t *lcd_y;
 uint16_t *sprites[10]; //max of 10 sprites per line
 int_reg_t *interrupts;
 ppu_mode_t mode;
-uint8_t clocks;
+uint16_t clocks;
 
 void ppu_init(void) {
     status_reg = (lcd_status_register_t*)&memory->memory[STAT];
@@ -26,7 +26,6 @@ void ppu_init(void) {
 
 
 void ppu_run(void) {
-  uint8_t x, y;
   clocks += 1;
 
   switch(mode)
@@ -50,6 +49,8 @@ void ppu_run(void) {
     case PPU_H_BLANK: //51 clocks
       status_reg->mode = 0;
       if(clocks >= 114){
+        *lcd_y += 1; //line completed
+        DEBUG_PRINTF("LCDY %d\n", *lcd_y);
         clocks = 0; //clear clocks, line complete
         if(*lcd_y == 144){
             CPU_set_interrupt(gb_cpu, INT_V_BLANK);
@@ -65,6 +66,11 @@ void ppu_run(void) {
 
     case PPU_V_BLANK:
       status_reg->mode = 1;
+      if(clocks >= 1254){
+          clocks =0;
+          *lcd_y = 0; //back to top of screen
+          mode = PPU_OAM;
+      }
       break;
 
     case PPU_IDLE: //there is no idle

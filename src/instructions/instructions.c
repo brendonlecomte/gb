@@ -16,13 +16,10 @@ void instr_adc(uint8_t* A, uint8_t n) {
   uint16_t temp = *A + n + CPU_check_flag(CARRY_FLAG);
   uint8_t hc_temp = (*A & 0x0F) + (n & 0x0F) + CPU_check_flag(CARRY_FLAG);
   *A = (uint8_t)temp & 0xFF;
-  if (temp & 0x100)
-    CPU_set_flag(CARRY_FLAG);
-  if (hc_temp & 0x10)
-    CPU_set_flag(HALF_CARRY_FLAG);
-  if (temp == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_set_flag(CARRY_FLAG, (temp & 0x100));
+  CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10));
+  CPU_set_flag(ZERO_FLAG, (temp ==0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
 /*
@@ -39,16 +36,10 @@ void instr_add(uint8_t *A, uint8_t n) {
     temp += n;
     uint8_t hc_temp = (*A & 0xF) + (n & 0xF);
     *A = (uint8_t)temp;
-    if (hc_temp & 0x10){
-        CPU_set_flag(HALF_CARRY_FLAG);
-    }
-    if (temp & 0x100){
-        CPU_set_flag(CARRY_FLAG);
-    }
-    if (temp == 0){
-        CPU_set_flag(ZERO_FLAG);
-    }
-    CPU_clear_flag(SUBTRACT_FLAG);
+    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10));
+    CPU_set_flag(CARRY_FLAG, (temp & 0x100));
+    CPU_set_flag(ZERO_FLAG,(temp == 0));
+    CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
 /*
@@ -65,13 +56,9 @@ void instr_add_HL(uint16_t *hl, uint16_t n) {
     uint32_t temp = *hl + n;
     uint16_t hc_temp = (*hl & 0x0FFF) + (n & 0x0FFF);
     *hl = temp&0xFFFF;
-    if (temp & 0x10000) {
-        CPU_set_flag(CARRY_FLAG);
-    }
-    if (hc_temp & 0x1000) {
-        CPU_set_flag(HALF_CARRY_FLAG);
-    }
-    CPU_clear_flag(SUBTRACT_FLAG);
+    CPU_set_flag(CARRY_FLAG, (temp & 0x10000));
+    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000));
+    CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
 /*
@@ -87,20 +74,13 @@ ADD SP,n - Add n to Stack Pointer (SP).
 */
 void instr_add_SP(uint16_t *sp, uint8_t n) {
   uint32_t temp = *sp + n;
-  CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
+  CPU_set_flag(ZERO_FLAG, 0);
+  CPU_set_flag(SUBTRACT_FLAG, 0);
 
   uint16_t hc_temp = (*sp & 0x0FFF) + (n);
   *sp = temp;
-  if (temp & 0x10000)
-    CPU_set_flag(CARRY_FLAG);
-  else
-    CPU_clear_flag(CARRY_FLAG);
-
-  if (hc_temp & 0x1000)
-    CPU_set_flag(HALF_CARRY_FLAG);
-  else
-    CPU_clear_flag(HALF_CARRY_FLAG);
+  CPU_set_flag(CARRY_FLAG, (temp & 0x10000));
+  CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000));
 }
 
 /*
@@ -116,11 +96,10 @@ AND n  - Logically AND n with A, result in A.
 */
 void instr_and(uint8_t *A, uint8_t n) {
   *A = *A & n;
-  if (*A == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_set_flag(HALF_CARRY_FLAG);
-  CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 1);
+  CPU_set_flag(CARRY_FLAG, 0);
 }
 
 /*
@@ -135,12 +114,10 @@ BIT b,r  - Test bit b in register r.
                 C - Not affected.
 */
 void instr_bit(uint8_t b, uint8_t *r) {
-  if (((0x01 << b) & *r) == 0)
-    CPU_set_flag(ZERO_FLAG);
-  else
-    CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_set_flag(HALF_CARRY_FLAG);
+    uint8_t set = ((0x01 << b) & *r);
+  CPU_set_flag(ZERO_FLAG, (set == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG , 1);
 }
 
 /*
@@ -193,11 +170,7 @@ CCF           - Complement carry flag.
                 C - Complemented.
 */
 void instr_ccf(void) {
-  if (CPU_check_flag(CARRY_FLAG)) {
-    CPU_clear_flag(CARRY_FLAG);
-  } else {
-    CPU_set_flag(CARRY_FLAG);
-  }
+    CPU_set_flag(CARRY_FLAG, !CPU_check_flag(CARRY_FLAG));
 }
 
 /*
@@ -214,10 +187,10 @@ CP n          - Compare A with n.
                 C - Set for no borrow. (Set if A < n.)
 */
 void instr_cp(uint8_t *A, uint8_t n) {
-  if(*A == 0) CPU_set_flag(ZERO_FLAG);
-  CPU_set_flag(SUBTRACT_FLAG);
-  //CPU_clear_flag(HALF_CARRY_FLAG);
-  if(*A < n) CPU_set_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*A == n));
+  CPU_set_flag(SUBTRACT_FLAG, 1);
+  //CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (*A < n));
 }
 
 /*
@@ -232,8 +205,8 @@ CPL           - Complement A register. (Flip all bits.)
 void instr_cpl(uint8_t *A) {
   uint8_t t = ~*A;
   *A = t;
-  CPU_set_flag(SUBTRACT_FLAG);
-  CPU_set_flag(HALF_CARRY_FLAG);
+  CPU_set_flag(SUBTRACT_FLAG, 1);
+  CPU_set_flag(HALF_CARRY_FLAG, 1);
 }
 
 /*
@@ -255,12 +228,10 @@ void instr_daa(uint8_t *A) {
     t += 0x06;
   if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG))
     t += 0x60;
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(t&0x100)
-    CPU_set_flag(CARRY_FLAG);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (t&0x100));
   *A = t;
-  if(*A == 0)
-    CPU_set_flag(ZERO_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
 }
 
 /*
@@ -276,10 +247,10 @@ DEC n         - Decrement register n.
 */
 void instr_dec_n(uint8_t *reg) {
   uint8_t t = *reg -1;
-  if((*reg&0x0F) == 0) CPU_set_flag(HALF_CARRY_FLAG);
+  CPU_set_flag(HALF_CARRY_FLAG, ((*reg&0x0F) == 0));
   *reg = t;
-  if(*reg == 0) CPU_set_flag(ZERO_FLAG);
-  CPU_set_flag(SUBTRACT_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*reg == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 1);
 
 }
 
@@ -331,11 +302,9 @@ INC n         - Increment register n.
 */
 void instr_inc_n(uint8_t *reg) {
   *reg += 1;
-  if (*reg == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  if (*reg == 0)
-    CPU_set_flag(HALF_CARRY_FLAG); // TODO fix this
+  CPU_set_flag(ZERO_FLAG, (*reg == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, (*reg == 0)); // TODO fix this
 }
 
 /*
@@ -397,7 +366,7 @@ void instr_jr(uint8_t n) {
   {
     uint8_t t = ~(n);
     gb_cpu->PC -= t;
-    gb_cpu->PC += 1;
+    // gb_cpu->PC += 1;
   }
   else
     gb_cpu->PC += n;
@@ -426,14 +395,6 @@ void instr_halt(void) {
 }
 
 /*
-LD A,n        - Put value n into A.
-        n = A,B,C,D,E,H,L,(BC),(DE),(HL),(nnnn),#
-        Flags affected:
-                None
-*/
-// void instr_load_an(uint8_t , uint8_t n) { cpu->registers.A = n; }
-
-/*
 LD n,A        - Put value A into n.
 
 n = A,B,C,D,E,H,L,(BC,(DE),(HL),(nnnn)
@@ -443,48 +404,6 @@ n = A,B,C,D,E,H,L,(BC,(DE),(HL),(nnnn)
 */
 void instr_load_ab(uint8_t *A, uint8_t n) { *A = n; }
 
-/*
-LD A,[C]      - Put value at address $FF00 + register C into A.
-
-        Flags affected:
-                None
-*/
-
-/*
-LD A,[HLI]    - Put value at address HL into A. Increment HL.
-        Flags affected: None
-*/
-
-/*
-LD A,[HL+]    - Same as LD A,[HLI].
-LD A,[HL-]    - Same as LD A,[HLD].
-LD A,[HLD]    - Put value at address HL into A. Decrement HL.
-*/
-
-/*
-LD [C],A      - Put A into address $FF00 + register C.
-        Flags affected: None
-*/
-
-/*
-LD [HL+],A    - Same as LD [HLI],A.
-LD [HL-],A    - Same as LD [HLD],A.
-*/
-
-/*
-LD [HLI],A    - Put A into memory address HL. Increment HL.
-        Flags affected: None
-*/
-
-/*
-LD [HLD],A    - Put A into memory address HL. Decrement HL.
-        Flags affected:        None
-*/
-
-/*
-LD r1,r2      - Put value r2 into r1.
-        Flags affected:        None
-*/
 
 /*
 LD n,nn       - Put value nn into n.
@@ -496,58 +415,6 @@ void instr_load_ab16(uint16_t *A, uint16_t B) {
   *A = B;
 }
 
-/*
-LD HL,[SP+n]  - Put SP + n into HL.
-        n = one byte signed immediate value
-        Flags affected:
-                Z - Reset.
-                N - Reset.
-                H - Set or reset according to operation.
-                C - Set or reset according to operation.
-*/
-
-/*
-LD SP,HL      - Put HL into Stack Pointer (SP).
-        Flags affected:    None
-*/
-
-/*
-LD [n],SP     - Put Stack Pointer (SP) at address n.
-        n = two byte immediate address
-        Flags affected:    None
-*/
-
-/*
-LDD A,[HL]    - Same as LD A,[HLD].
-*/
-
-/*
-LDD [HL],A    - Same as LD [HLD],A.
-*/
-
-/*
-LDH [n],A     - Put A into memory address $FF00 + n.
-        n = one byte immediate value
-        Flags affected:     None
-*/
-
-/*
-LDH A,[n]     - Put memory address $FF00 + n into A.
-        n = one byte immediate value
-        Flags affected:    None
-*/
-
-/*
-LDHL SP,n     - Same as LD HL,[SP+n]
-*/
-
-/*
-LDI A,[HL]    - Same as LD A,[HLI].
-*/
-
-/*
-LDI [HL],A    - Same as LD [HLI],A.
-*/
 
 /*
 NOP           - No operation.
@@ -608,21 +475,6 @@ void instr_ret(void) {
   gb_cpu->PC = t;
 }
 
-/*
-RET cc        - Return if following condition is true:
-        cc = NZ, Return if Z flag is reset.
-        cc = Z,  Return if Z flag is set.
-        cc = NC, Return if C flag is reset.
-        cc = C,  Return if C flag is set.
-
-        Flags affected:  None
-*/
-
-/*
-RETI          - Pop two bytes from stack & jump to that address
-                then enable interrupts.
-        Flags affected:        None
-*/
 
 /*
 RL n          - Rotate n left through Carry flag.
@@ -639,11 +491,10 @@ void instr_rl(uint8_t *n) {
   uint8_t c = *n>>7;
   uint8_t x = *n << 1;
   x = x + CPU_check_flag(CARRY_FLAG);
-  if(x == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(c) CPU_set_flag(CARRY_FLAG);
-  else CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (x != 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, c);
   *n = x;
 }
 
@@ -660,11 +511,10 @@ void instr_rlc(uint8_t *n) {
   uint8_t c = *n>>7;
   uint8_t x = *n << 1;
   *n = x + c;
-  if(x == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(c) CPU_set_flag(CARRY_FLAG);
-  else CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (x == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, c);
 }
 
 /*
@@ -680,11 +530,10 @@ void instr_rr(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t x = *n >> 1;
   x = x | CPU_check_flag(CARRY_FLAG)<<7;
-  if(x == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(c) CPU_set_flag(CARRY_FLAG);
-  else CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (x == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, c);
   *n = x;
 }
 
@@ -701,11 +550,10 @@ void instr_rrc(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t x = *n >> 1;
   *n = x | c<<7;
-  if(x == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(c) CPU_set_flag(CARRY_FLAG);
-  else CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (x == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, c);
 }
 
 /*
@@ -732,11 +580,11 @@ void instr_sbc(uint8_t *A, uint8_t n) {
   uint16_t t = *A;
   t = t + ~n;
   t = t + !CPU_check_flag(CARRY_FLAG);
-  if(t == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_set_flag(SUBTRACT_FLAG);
+  CPU_set_flag(ZERO_FLAG,(t != 0));
+  CPU_set_flag(SUBTRACT_FLAG, 1);
   // if(n + !CPU_check_flag(CARRY_FLAG) > *A)
     // CPU_set_flag(HALF_CARRY_FLAG); //TODO: HC flag is wrong...
-  if(!(t&0x100)) CPU_set_flag(CARRY_FLAG);
+  CPU_set_flag(CARRY_FLAG, (!(t&0x100)));
   *A = (uint8_t)t;
 }
 
@@ -748,7 +596,11 @@ SCF           - Set Carry flag.
                 H - Reset.
                 C - Set.
 */
-void instr_scf(void) { CPU_set_flag(CARRY_FLAG); }
+void instr_scf(void) {
+    CPU_set_flag(CARRY_FLAG, 1);
+    CPU_set_flag(SUBTRACT_FLAG, 0);
+    CPU_set_flag(HALF_CARRY_FLAG, 0);
+ }
 
 /*
 SET b,r       - Set bit b in register r.
@@ -768,15 +620,11 @@ SLA n         - Shift n left into Carry. LSBit of n set to 0.
 */
 void instr_sla(uint8_t n) {
   uint8_t t = n << 1;
-  if (t == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if (n & 0x80)
-    CPU_set_flag(CARRY_FLAG);
-  else
-    CPU_clear_flag(CARRY_FLAG);
-}
+  CPU_set_flag(ZERO_FLAG, (t == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (n & 0x80));
+ }
 
 /*
 SRA n         - Shift n right into Carry. MSBit doesn't change.
@@ -788,17 +636,12 @@ SRA n         - Shift n right into Carry. MSBit doesn't change.
                 C - Contains old bit 0 data.
 */
 void instr_sra(uint8_t n) {
-
   uint8_t t = n >> 1;
   t |= (n & 0x80); // ensure MSB is 0
-  if (t == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if (n & 0x01)
-    CPU_set_flag(CARRY_FLAG);
-  else
-    CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (t == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (n & 0x01));
 }
 
 /*
@@ -813,14 +656,10 @@ SRL n         - Shift n right into Carry. MSBit of n set to 0.
 void instr_srl(uint8_t n) {
   uint8_t t = n >> 1;
   t &= 0x7F; // ensure MSB is 0
-  if (t == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if (n & 0x01)
-    CPU_set_flag(CARRY_FLAG);
-  else
-    CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (t == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (n & 0x01));
 }
 
 /*
@@ -844,10 +683,10 @@ void instr_sub_n(uint8_t *A, uint8_t n) {
   t = t + ~n;
   t = t + 1;
   *A = (uint8_t)t;
-  if(t == 0) CPU_clear_flag(ZERO_FLAG);
-  CPU_set_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  if(!(t&0x100)) CPU_set_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (t != 0));
+  CPU_set_flag(SUBTRACT_FLAG, 1);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (!(t&0x100)));
 }
 
 /*
@@ -864,11 +703,10 @@ void instr_swap(uint8_t *n) {
   low = *n;
   high = *n;
   *n = low<<4 | high>>4;
-  if (*n == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*n == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, 0);
 }
 
 /*
@@ -883,9 +721,8 @@ XOR n         - Logical exclusive OR n with
 */
 void instr_xor(uint8_t *A, uint8_t n) {
   *A ^= n;
-  if (*A == 0)
-    CPU_set_flag(ZERO_FLAG);
-  CPU_clear_flag(SUBTRACT_FLAG);
-  CPU_clear_flag(HALF_CARRY_FLAG);
-  CPU_clear_flag(CARRY_FLAG);
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, 0);
 }

@@ -77,9 +77,8 @@ void CPU_init(CPU_t *cpu);
 void CPU_enable_interrupt(CPU_t *cpu, interrupts_t interrupt);
 void CPU_handle_interrupt(CPU_t *cpu);
 void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt);
-void CPU_set_flag(const uint8_t flag);
-void CPU_clear_flag(const uint8_t flag);
-bool CPU_check_flag(const uint8_t flag);
+void CPU_set_flag(const uint8_t flg, uint8_t val);
+bool CPU_check_flag(const uint8_t flg);
 
 uint16_t CPU_stack_pop(void);
 void CPU_stack_push(uint16_t val);

@@ -51,28 +51,28 @@ TEST(processor, ptrs)
 
 TEST(processor, flags)
 {
-    CPU_set_flag(CARRY_FLAG);
+    CPU_set_flag(CARRY_FLAG, 1);
     TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
 
     CPU_init(gb_cpu);
     TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 
-    CPU_clear_flag(CARRY_FLAG);
+    CPU_set_flag(CARRY_FLAG, 0);
     TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 
-    CPU_set_flag(HALF_CARRY_FLAG);
+    CPU_set_flag(HALF_CARRY_FLAG, 1);
     TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
-    CPU_clear_flag(HALF_CARRY_FLAG);
+    CPU_set_flag(HALF_CARRY_FLAG, 0);
     TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
 
-    CPU_set_flag(ZERO_FLAG);
+    CPU_set_flag(ZERO_FLAG, 1);
     TEST_ASSERT_EQUAL(1, CPU_check_flag(ZERO_FLAG));
-    CPU_clear_flag(ZERO_FLAG);
+    CPU_set_flag(ZERO_FLAG, 0);
     TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
 
-    CPU_set_flag(SUBTRACT_FLAG);
+    CPU_set_flag(SUBTRACT_FLAG, 1);
     TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
-    CPU_clear_flag(SUBTRACT_FLAG);
+    CPU_set_flag(SUBTRACT_FLAG, 0);
     TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
 }
 

@@ -208,7 +208,7 @@ void RLA(void) {
 void JR_r8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
   uint8_t val = memory_read8(memory, gb_cpu->PC);
-  gb_cpu->PC += 1;
+  // gb_cpu->PC += 1;
   instr_jr(val);
   gb_cpu->cycles += 12;
 }
@@ -275,10 +275,9 @@ void RRA(void) {
 // JR NZ,r8
 // 2  12/8
 void JR_NZ_r8(void) {
-  if (CPU_check_flag(ZERO_FLAG) == 0) {
+  if (CPU_check_flag(ZERO_FLAG) != 0) {
     uint8_t val = memory_read8(memory, gb_cpu->PC);
     instr_jr(val);
-    gb_cpu->PC -= 1;
     DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
     gb_cpu->cycles += 12;
   } else {
@@ -334,16 +333,17 @@ void DEC_H(void) {
 // 2  8
 void LD_H_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_load_ab(gb_cpu->H, val);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
 }
 
 // DAA
 // 1  4
 void DAA(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
+  DEBUG_PRINTF(" %s\n", __func__);
+  assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -352,7 +352,6 @@ void DAA(void) {
 void JR_Z_r8(void) {
     if (CPU_check_flag(ZERO_FLAG) == 1) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
-
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
@@ -405,10 +404,11 @@ void DEC_L(void) {
 // 2  8
 void LD_L_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_load_ab(gb_cpu->L, val);
+  // assert(0);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
 }
 
 // CPL
@@ -431,7 +431,7 @@ void JR_NC_r8(void) {
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
-              gb_cpu->PC += 1;
+      gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -1736,7 +1736,7 @@ void SBC_A_d8(void) {
   // uint8_t val = memory_read8(memory, gb_cpu->PC);
   assert(0);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
 }
 // RST 18H
 // 1  16
@@ -1750,7 +1750,7 @@ void RST_18H(void) {
 // LDH (a8),A
 // 2  12
 void LDH_a8_A(void) {
-  uint8_t addr = 0xFF00 + memory_read8(memory, gb_cpu->PC);
+  uint16_t addr = 0xFF00 + memory_read8(memory, gb_cpu->PC);
   // uint8_t val = memory_read8(memory, addr);
   memory_write8(memory, addr, *gb_cpu->A);
   gb_cpu->PC += 1;
@@ -1770,7 +1770,7 @@ void LD_Cm_A(void) {
   uint16_t addr = *gb_cpu->C + 0xFF00;
   memory_write8(memory, addr, *gb_cpu->A);
   DEBUG_PRINTF(" %s: 0x%04X <- 0x%02X\n", __func__, addr, *gb_cpu->A);
-  gb_cpu->PC += 1;
+  // gb_cpu->PC += 1;
   gb_cpu->cycles += 8;
 }
 // PUSH HL
@@ -1803,7 +1803,7 @@ void ADD_SP_r8(void) {
   uint8_t val = memory_read8(memory, gb_cpu->PC);
   instr_add_SP(&gb_cpu->SP, val);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 16;
 }
 // JP (HL)
 // 1  4
@@ -1828,7 +1828,7 @@ void XOR_d8(void) {
   uint8_t val = memory_read8(memory, gb_cpu->PC);
   instr_xor(gb_cpu->A, val);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
 }
 // RST 28H
 // 1  16
@@ -1842,7 +1842,7 @@ void RST_28H(void) {
 // LDH A,(a8)
 // 2  12
 void LDH_A_a8(void) {
-  uint8_t addr = 0xFF00 + memory_read8(memory, gb_cpu->PC);
+  uint16_t addr = 0xFF00 + memory_read8(memory, gb_cpu->PC);
   uint8_t val = memory_read8(memory, addr);
   gb_cpu->PC += 1;
   instr_load_ab(gb_cpu->A, val);
@@ -1936,7 +1936,7 @@ void EI(void) {
 void CP_d8(void) {
   uint8_t d8 = memory_read8(memory, gb_cpu->PC);
   instr_cp(gb_cpu->A, d8);
-  DEBUG_PRINTF(" %s: A ?= 0x%02X\n", __func__, d8);
+  DEBUG_PRINTF(" %s: A(0x%02X) ?= 0x%02X\n", __func__, *gb_cpu->A, d8);
   gb_cpu->cycles += 8;
   gb_cpu->PC += 1;
 }

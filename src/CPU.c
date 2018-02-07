@@ -35,7 +35,7 @@ void CPU_init(CPU_t *cpu) {
 }
 
 void CPU_run(CPU_t *cpu) {
-    
+
 }
 
 void CPU_handle_interrupt(CPU_t *cpu) {
@@ -114,19 +114,21 @@ uint16_t CPU_stack_pop(void) {
   return t;
 }
 
-void CPU_set_flag(const uint8_t flg) {
+void CPU_set_flag(const uint8_t flg, uint8_t val)
+{
     static uint8_t f;
     f = *_cpu.F;
-    f = f | flg;
+    if(val) f = f | flg; //set
+    else f = f & ~flg; //set
     *_cpu.F = f;
 }
-
-void CPU_clear_flag(const uint8_t flg) {
-    static uint8_t f;
-    f = *_cpu.F;
-    f  &= ~flg;
-    *_cpu.F = f;
-}
+// 
+// void CPU_clear_flag(const uint8_t flg) {
+//     static uint8_t f;
+//     f = *_cpu.F;
+//     f  &= ~flg;
+//     *_cpu.F = f;
+// }
 
 bool CPU_check_flag(uint8_t flg) {
     return ((*_cpu.F & flg) == flg);
