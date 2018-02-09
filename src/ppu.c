@@ -23,7 +23,7 @@ uint8_t fake_bg[1024] = {
 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00,
 0x01, 0x00,
 
-0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,
+0x01, 0x01, 0x01, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,
 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,
 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,
 0x00, 0x01,
@@ -169,21 +169,22 @@ void ppu_close(void) {
 
 void draw_line(uint8_t line)
 {
-    uint8_t tile_row = line / 32; //get line of tile map
+    uint8_t tile_row = line / 8; //get line of tile map
     // tile_t *tile = tile_map + tile_row; //get pointer to the first tile in the row
     uint8_t line_in_tile = line % 8;
-
+    printf("row: %d\n", tile_row);
     for(int i =0; i < 32; i++) //each tile
     {
-        tile_t *t = fake_tiles[fake_bg[i]]; //tile_row + i];
+        uint8_t tile_index = fake_bg[tile_row + i]; //get tile index from background map
+        tile_t *t = fake_tiles[tile_index]; //get tile data from tile map
         for(int j = 0; j < 8; j++) //each pixel in tile row
         {
             uint8_t colour, a, b, val;
             a = t->map[line];
             b = t->map[line+1];
             val = (a>>(7-j) &0x01)<<1 | (b>>(7-j) &0x01);
-            colour = fake_palette[val];
-            lcd_set_pixel((i*8)+j, line, colour);
+            colour = fake_palette[val]; //get colour value from the palette
+            lcd_set_pixel((i*8)+j, line, 0xFF); //colour);
         }
     }
 

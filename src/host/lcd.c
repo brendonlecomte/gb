@@ -34,9 +34,9 @@ void lcd_init(void)
                                   SCREEN_WIDTH,
                                   SCREEN_HEIGHT,
                                   32,
-                                  0,
-                                  0,
-                                  0,
+                                  0, //0x000000FF, //r mask
+                                  0, //0x000000FF, //g mask
+                                  0, //0x000000FF, //b mask
                                   0);
         }
     }
