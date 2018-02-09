@@ -28,7 +28,6 @@ TARGET1 = $(TARGET_BASE1).out
 APP_TARGET=gb.out
 
 HOST_SRC=src/gpu/test.c
-
 HOST_APP=gpu.o
 
 SRC_FILES=src/instructions/instructions.c \
@@ -42,9 +41,10 @@ SRC_FILES=src/instructions/instructions.c \
 
 APP_SRC=$(SRC_FILES)\
 				src/main.c \
+				src/host/lcd.c
 
 APP_INC=-Isrc \
-				-Isrc/instructions
+		 -Isrc/instructions
 
 TEST_FILES=\
   $(UNITY_ROOT)/src/unity.c \
@@ -65,7 +65,7 @@ TEST_FILES=\
 INC_DIRS=-Isrc \
          -Isrc/instructions \
          -I$(UNITY_ROOT)/src \
-         -I$(UNITY_ROOT)/extras/fixture/src \
+         -I$(UNITY_ROOT)/extras/fixture/src
 
 SYMBOLS=
 
@@ -74,11 +74,11 @@ default:
 	- ./$(TARGET1) -v
 
 run:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 	- ./$(APP_TARGET) -v
 
 sdl:
-	gcc $(HOST_SRC) -lSDL2 -o $(HOST_APP)
+	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)
 	- ./$(HOST_APP)
 
 all: clean default run

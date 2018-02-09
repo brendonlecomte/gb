@@ -12,7 +12,7 @@ void emu_init(void) {
 }
 
 void emu_execute(void) {
-  if(gb_cpu->cycles <= 0)  //done enough "clocks"
+  if(0) //if(gb_cpu->cycles <= 0)  //done enough "clocks"
   {
       //fetch
       uint8_t op = memory_read8(memory, gb_cpu->PC);  //read OP code

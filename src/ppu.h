@@ -28,6 +28,10 @@ typedef struct {
   sprite_flags_t flags;
 } sprite_t;
 
+typedef struct {
+    uint8_t map[16]; //16 byte map
+} tile_t;
+
 void ppu_init(void);
 void ppu_run(void);
 void ppu_close(void);
