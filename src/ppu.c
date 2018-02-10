@@ -4,6 +4,7 @@
 #include "memory_locations.h"
 #include "debug.h"
 #include "lcd.h"
+#include <assert.h>
 
 uint8_t plus_tile[16] = {0xFF, 0xFF,
                         0xFF, 0xFF,
@@ -15,8 +16,21 @@ uint8_t plus_tile[16] = {0xFF, 0xFF,
                         0xFF, 0xFF,};
 uint8_t white_tile[16] = { 0x00 };
 
+uint8_t p[4] = {0,1,2,3};
+
+uint8_t *palette;
+tile_t *tiles;
+uint8_t *background;
+
 uint8_t fake_palette[4] = {0x00, 0x0F, 0xF0, 0xFF};
-tile_t *fake_tiles[2] = {white_tile, plus_tile};
+tile_t fake_tiles[2] = {{0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,
+                        0xFF, 0xFF,}, { 0x00 }};
 uint8_t fake_bg[1024] = {
 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00,
 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00,
@@ -79,7 +93,7 @@ uint8_t fake_bg[1024] = {
 0x00, 0x01};
 
 
-uint8_t background[0xFFFF] = {0x00};
+// uint8_t background[0xFFFF] = {0x00};
 
 void draw_line(uint8_t line);
 
@@ -95,13 +109,19 @@ lcd_status_register_t *status_reg;
 uint8_t *lcd_y;
 // uint16_t *sprites[10]; //max of 10 sprites per line
 int_reg_t *interrupts;
-uint8_t *tile_map = &fake_bg[0];
 ppu_mode_t mode;
 uint16_t clocks;
 
 void ppu_init(void) {
     status_reg = (lcd_status_register_t*)&memory->memory[STAT];
     lcd_y = &memory->memory[LY];
+    // background = &fake_bg[0];
+    // tiles = &fake_tiles[0];
+    // palette = &fake_palette[0];
+    background = &memory->memory[0x9800];
+    tiles = (tile_t*)&memory->memory[0x8000];
+    // palette = &memory->memory[BGP];
+    palette = &p[0];
     lcd_init();
 }
 
@@ -122,6 +142,8 @@ void ppu_run(void) {
       status_reg->mode = 3;
       if(clocks >= 63) {
           mode = PPU_H_BLANK;
+          draw_line(count);
+          count++;
       }
       break;
 
@@ -142,7 +164,9 @@ void ppu_run(void) {
 
     case PPU_V_BLANK:
       status_reg->mode = 1;
-      if(clocks >= 1254){
+      count++;
+      if(clocks >= 10){
+          lcd_refresh();
           clocks =0;
           *lcd_y = 0; //back to top of screen
           mode = PPU_OAM;
@@ -154,10 +178,6 @@ void ppu_run(void) {
       mode = PPU_OAM;
       break;
   }
-
-  draw_line(count);
-  lcd_refresh();
-  count++;
 }
 
 void ppu_close(void) {
@@ -165,26 +185,27 @@ void ppu_close(void) {
     lcd_close();
 }
 
-//BGP is palette
 
+//BGP is palette
 void draw_line(uint8_t line)
 {
     uint8_t tile_row = line / 8; //get line of tile map
-    // tile_t *tile = tile_map + tile_row; //get pointer to the first tile in the row
-    uint8_t line_in_tile = line % 8;
-    printf("row: %d\n", tile_row);
+    uint8_t line_in_tile = (line % 8) << 1;
     for(int i =0; i < 32; i++) //each tile
     {
-        uint8_t tile_index = fake_bg[tile_row + i]; //get tile index from background map
-        tile_t *t = fake_tiles[tile_index]; //get tile data from tile map
+        uint8_t tile_index = background[tile_row*32 + i]; //get tile index from background map
+        tile_t *t = &tiles[tile_index]; //get tile data from tile map
+        // if(tile_index != 0) printf("line %d, tile: 0x%02X\n", line, tile_index);
         for(int j = 0; j < 8; j++) //each pixel in tile row
         {
-            uint8_t colour, a, b, val;
-            a = t->map[line];
-            b = t->map[line+1];
+            uint8_t colour=0, a, b, val;
+            a = t->map[line_in_tile];
+            b = t->map[line_in_tile+1];
             val = (a>>(7-j) &0x01)<<1 | (b>>(7-j) &0x01);
-            colour = fake_palette[val]; //get colour value from the palette
-            lcd_set_pixel((i*8)+j, line, 0xFF); //colour);
+            colour = palette[val]; //get colour value from the palette
+
+            uint8_t x =(i*8) + j;
+            lcd_set_pixel(x, line, colour);
         }
     }
 

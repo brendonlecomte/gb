@@ -20,7 +20,7 @@ void lcd_init(void)
     else
     {
         //Create window
-        gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "Gameboy", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
             printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -34,9 +34,9 @@ void lcd_init(void)
                                   SCREEN_WIDTH,
                                   SCREEN_HEIGHT,
                                   32,
-                                  0, //0x000000FF, //r mask
-                                  0, //0x000000FF, //g mask
-                                  0, //0x000000FF, //b mask
+                                  0x00FF0000, //r mask
+                                  0x0000FF00, //g mask
+                                  0x000000FF, //b mask
                                   0);
         }
     }
@@ -50,10 +50,17 @@ void lcd_test_line(void)
     }
 }
 
+uint32_t cols[4] = {0x00FFFFFF, 0, 0, 0x00};
+
 void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour)
 {
-    uint8_t *p = &gXOut->pixels[x*4 + (y*4<<8)];
-    *p = colour;
+    uint32_t *p = &gXOut->pixels[x*4 + (y*4<<8)];
+    // uint8_t r, g, b;
+    // r = colour;
+    // g = colour;
+    // b = colour;
+    // *p = (uint32_t)r<<16 | (uint32_t)g<<8 | (uint32_t)b;
+    *p = cols[colour];
 }
 
 void lcd_refresh(void)

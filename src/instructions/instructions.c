@@ -114,7 +114,7 @@ BIT b,r  - Test bit b in register r.
                 C - Not affected.
 */
 void instr_bit(uint8_t b, uint8_t *r) {
-    uint8_t set = ((0x01 << b) & *r);
+  uint8_t set = ((0x01 << b) & *r);
   CPU_set_flag(ZERO_FLAG, (set == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG , 1);
@@ -129,9 +129,9 @@ CALL n        - Push address of next instruction onto
                 None
 */
 void instr_call_n(uint16_t n) {
-  *gb_cpu->HL = n;
+  // *gb_cpu->HL = n;
   CPU_stack_push(gb_cpu->PC+1);
-  gb_cpu->PC = *gb_cpu->HL;
+  gb_cpu->PC = n;
 }
 
 /*CALL cc,n     - Call address n if following condition is true:
@@ -472,7 +472,7 @@ RET           - Pop two bytes from stack & jump to that address.
 */
 void instr_ret(void) {
   uint16_t t = CPU_stack_pop();
-  gb_cpu->PC = t;
+  gb_cpu->PC = t-1;
 }
 
 

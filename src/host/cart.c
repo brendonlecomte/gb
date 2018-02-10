@@ -7,7 +7,7 @@
 
 void cart_load(uint8_t *mem, uint16_t size) {
     FILE *f;
-    f = fopen(CART_PATH, "rb");
+    f = fopen(HOME_CART_PATH, "rb");
     if(f){
         fread(mem, 1, size, f);
         fclose(f);
