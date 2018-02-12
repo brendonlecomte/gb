@@ -55,11 +55,6 @@ uint32_t cols[4] = {0x00FFFFFF, 0, 0, 0x00};
 void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour)
 {
     uint32_t *p = &gXOut->pixels[x*4 + (y*4<<8)];
-    // uint8_t r, g, b;
-    // r = colour;
-    // g = colour;
-    // b = colour;
-    // *p = (uint32_t)r<<16 | (uint32_t)g<<8 | (uint32_t)b;
     *p = cols[colour];
 }
 
@@ -79,6 +74,7 @@ void lcd_refresh(void)
     SDL_BlitSurface( gXOut, NULL, gScreenSurface, NULL );
     //Update the surface
     SDL_UpdateWindowSurface( gWindow );
+    // SDL_FillRect(gScreenSurface, NULL, 0x000000);
 }
 
 void lcd_close(void)
