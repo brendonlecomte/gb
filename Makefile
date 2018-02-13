@@ -40,8 +40,9 @@ SRC_FILES=src/instructions/instructions.c \
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\
-				src/main.c \
+				src/main.c\
 				src/host/lcd.c
+
 
 APP_INC=-Isrc \
 		 -Isrc/instructions
@@ -70,7 +71,7 @@ INC_DIRS=-Isrc \
 SYMBOLS=
 
 default:
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES) $(TEST_FILES) -o $(TARGET1)
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) -DUNITTEST=1 $(SYMBOLS) $(SRC_FILES) $(TEST_FILES) -o $(TARGET1)
 	- ./$(TARGET1) -v
 
 run:

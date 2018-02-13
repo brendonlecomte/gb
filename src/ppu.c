@@ -36,7 +36,9 @@ void ppu_init(void) {
     tiles = (tile_t*)&memory->memory[0x8000];
     // palette = &memory->memory[BGP];
     palette = &p[0];
+#ifndef UNITTEST
     lcd_init();
+#endif
 }
 
 uint8_t count =0;
@@ -78,7 +80,9 @@ void ppu_run(void) {
     case PPU_V_BLANK:
       status_reg->mode = 1;
       if(clocks >= 1200){
+#ifndef UNITTEST
           lcd_refresh();
+#endif
           clocks =0;
           *lcd_y = 0; //back to top of screen
           mode = PPU_OAM;
@@ -93,8 +97,9 @@ void ppu_run(void) {
 }
 
 void ppu_close(void) {
-
-    lcd_close();
+#ifndef UNITTEST
+   lcd_close();
+#endif
 }
 
 
@@ -144,7 +149,9 @@ void draw_line(uint8_t line)
             colour = palette[val]; //get colour value from the palette
 
             uint8_t x =(i*8) + j;
+#ifndef UNITTEST
             lcd_set_pixel(x+memory->memory[SCX], line, colour);
+#endif
         }
     }
 }
