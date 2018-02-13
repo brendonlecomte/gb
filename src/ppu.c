@@ -79,10 +79,8 @@ void ppu_run(void) {
 
     case PPU_V_BLANK:
       status_reg->mode = 1;
-      if(clocks >= 1200){
-#ifndef UNITTEST
+      if(clocks >= 337){
           lcd_refresh();
-#endif
           clocks =0;
           *lcd_y = 0; //back to top of screen
           mode = PPU_OAM;
@@ -102,32 +100,6 @@ void ppu_close(void) {
 #endif
 }
 
-
-/*
-line 0-144
-void draw_line(uint8_t lcd_y, uint8_t scx, uint8_t scy){
-    uint8_t bg_y = line + SCY;
-    uint8_t bg_x = SCX;
-    uint8_t tile_row = bg_y / 8; //get row of tile map
-    uint8_t tile_col = bg_x / 8; //get col of tile map
-
-    uint8_t line_in_tile = (y % 8) << 1;
-
-    for(uint8_t lcd_x = 0; lcd_x < 144; lcd_x++) //each pixel in the x dimension
-    {
-        tile_idx = bg[(tile_row*32)+ (x/8)]; //get tile
-        tile_t *t = tiles[tile_idx];
-        uint8_t pix_off = x % 8;
-        a = t->map[line_in_tile];
-        b = t->map[line_in_tile+1];
-        val = (a>>(7-pix_off) &0x01)<<1 | (b>>(7-pix_off) &0x01);
-        col = palette[val];
-        led_set_pixel(lcd_x, lcd_y, col); //use absolute line, not y (relative)
-    }
-}
-
-
-*/
 
 //BGP is palette
 void draw_line(uint8_t line)

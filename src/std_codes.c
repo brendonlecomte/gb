@@ -364,9 +364,10 @@ void JR_Z_r8(void) {
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
-      gb_cpu->PC += 1;
+
       gb_cpu->cycles += 8;
     }
+    gb_cpu->PC += 1;
 }
 
 // ADD HL,HL
@@ -379,8 +380,11 @@ void ADD_HL_HL(void) {
 // LD A,(HL+)
 // 1  8
 void LD_A_HLp(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  *gb_cpu->HL += 1;
+  instr_load_ab(gb_cpu->A, val);
+  gb_cpu->cycles += 8;
 }
 
 // DEC HL
@@ -1187,7 +1191,7 @@ void ADC_A_A(void) {
 // SUB B
 // 1  4
 void SUB_B(void) {
-  DEBUG_PRINTF(" %s\n", __func__);
+  DEBUG_PRINTF(" %s A - 0x%02X\n", __func__, *gb_cpu->B);
   instr_sub_n(gb_cpu->A, *gb_cpu->B);
   gb_cpu->cycles += 4;
 }
@@ -1568,8 +1572,17 @@ void JP_a16(void) {
 // CALL NZ,a16
 // 3  24/12
 void CALL_NZ_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  if(CPU_check_flag(ZERO_FLAG) != 1){
+    gb_cpu->cycles += 24;
+    uint16_t val = memory_read16(memory, gb_cpu->PC);
+    gb_cpu->PC += 2;
+    DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+    instr_call_n(val);
+  }
+  else {
+    DEBUG_PRINTF(" No %s\n", __func__);
+    gb_cpu->cycles += 12;
+  }
 }
 // PUSH BC
 // 1  16
@@ -1626,8 +1639,17 @@ void PREFIX_CB(void) {
 // CALL Z,a16
 // 3  24/12
 void CALL_Z_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+    if(CPU_check_flag(ZERO_FLAG) == 1){
+      gb_cpu->cycles += 24;
+      uint16_t val = memory_read16(memory, gb_cpu->PC);
+      gb_cpu->PC += 2;
+      DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+      instr_call_n(val);
+    }
+    else {
+      DEBUG_PRINTF(" No %s\n", __func__);
+      gb_cpu->cycles += 12;
+    }
 }
 // CALL a16
 // 3  24
@@ -1679,8 +1701,17 @@ void JP_NC_a16(void) {
 // CALL NC,a16
 // 3  24/12
 void CALL_NC_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+    if(CPU_check_flag(CARRY_FLAG) != 1){
+      gb_cpu->cycles += 24;
+      uint16_t val = memory_read16(memory, gb_cpu->PC);
+      gb_cpu->PC += 2;
+      DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+      instr_call_n(val);
+    }
+    else {
+      DEBUG_PRINTF(" No %s\n", __func__);
+      gb_cpu->cycles += 12;
+    }
 }
 // PUSH DE
 // 1  16
@@ -1736,9 +1767,17 @@ void JP_C_a16(void) {
 // CALL C,a16
 // 3  24/12
 void CALL_C_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
-  assert(0);
+    if(CPU_check_flag(CARRY_FLAG) == 1){
+      gb_cpu->cycles += 24;
+      uint16_t val = memory_read16(memory, gb_cpu->PC);
+      gb_cpu->PC += 2;
+      DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+      instr_call_n(val);
+    }
+    else {
+      DEBUG_PRINTF(" No %s\n", __func__);
+      gb_cpu->cycles += 12;
+    }
 }
 // SBC A,d8
 // 2  8
