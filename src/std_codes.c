@@ -1587,7 +1587,6 @@ void CALL_NZ_a16(void) {
 // PUSH BC
 // 1  16
 void PUSH_BC(void) {
-
   CPU_stack_push(*gb_cpu->BC);
   DEBUG_PRINTF(" %s SP: 0x%04X\n", __func__, gb_cpu->SP);
   gb_cpu->cycles += 16;
@@ -1596,8 +1595,8 @@ void PUSH_BC(void) {
 // 2  8
 void ADD_A_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_add(gb_cpu->A, val);
   gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
@@ -1858,7 +1857,9 @@ void ADD_SP_r8(void) {
 // JP (HL)
 // 1  4
 void JP_HLm(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
+  DEBUG_PRINTF(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  instr_jp(val);
   gb_cpu->cycles += 4;
 }
 // LD (a16),A

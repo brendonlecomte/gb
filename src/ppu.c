@@ -79,7 +79,7 @@ void ppu_run(void) {
 
     case PPU_V_BLANK:
       status_reg->mode = 1;
-      if(clocks >= 337){
+      if(clocks >= 1970){
           lcd_refresh();
           clocks =0;
           *lcd_y = 0; //back to top of screen

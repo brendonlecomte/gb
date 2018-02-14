@@ -1,5 +1,6 @@
 #include "lcd.h"
 #include <SDL2/SDL.H>
+#include "emulator.h"
 
 const int SCREEN_WIDTH = 256; //160;
 const int SCREEN_HEIGHT = 256 ;//144;
@@ -68,13 +69,16 @@ void lcd_refresh(void)
         {
             exit(1);
         }
+        if( e.type == SDL_KEYUP )
+        {
+            emu_pause();
+        }
     }
     //Fill the surface white
     //Apply the image
     SDL_BlitSurface( gXOut, NULL, gScreenSurface, NULL );
     //Update the surface
     SDL_UpdateWindowSurface( gWindow );
-    // SDL_FillRect(gScreenSurface, NULL, 0x000000);
 }
 
 void lcd_close(void)

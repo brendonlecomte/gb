@@ -15,12 +15,6 @@ int main(int argc, const char * argv[])
   for(;;)
   {
     emu_execute();
-    if(gb_cpu->PC == 0x100)
-    {
-        scanf("%d\n", &exit);
-        // step = 1;
-        if(exit == 0) break;
-    }
   }
   emu_end();
   return 0;
