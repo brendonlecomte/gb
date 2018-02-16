@@ -51,7 +51,7 @@ void lcd_test_line(void)
     }
 }
 
-uint32_t cols[4] = {0x00FFFFFF, 0, 0, 0x00};
+uint32_t cols[4] = {0x00FFFFFF, 0x00FF00, 0x0f0f0f, 0x00};
 
 void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour)
 {

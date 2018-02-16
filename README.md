@@ -10,7 +10,7 @@ hardware that fits inside the original gameboy case.
 - [x] Memory (basic no paging)
 - [x] Cartridge
 - [ ] PPU
-- [ ] SDL host screen
+- [x] SDL host screen
 - [ ] Interrupts
 - [ ] Instruction Unit tests
 - [ ] Boot rom w/ swap in/out

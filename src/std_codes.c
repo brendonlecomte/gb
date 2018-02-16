@@ -209,10 +209,11 @@ void RLA(void) {
 // 0x18 JR r8
 // 2 12
 void JR_r8(void) {
-  DEBUG_PRINTF(" %s\n", __func__);
+
   uint8_t val = memory_read8(memory, gb_cpu->PC);
-  // gb_cpu->PC += 1;
+  DEBUG_PRINTF(" %s + 0x%02X\n", __func__, val);
   instr_jr(val);
+    // gb_cpu->PC += 1;
   gb_cpu->cycles += 12;
 }
 
@@ -1525,7 +1526,8 @@ void CP_HLm(void) {
   DEBUG_PRINTF(" %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_cp(gb_cpu->A, val);
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
+  gb_cpu->PC += 1;
 }
 // CP A
 // 1  4

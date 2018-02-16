@@ -326,7 +326,7 @@ JP n          - Jump to address n.
                 None
 */
 void instr_jp(uint16_t addr) {
-  gb_cpu->PC = addr; //(addr<<8) + (addr>>8); //TODO: check about LSB first
+  gb_cpu->PC = addr;
 }
 
 /*
@@ -366,10 +366,9 @@ void instr_jr(uint8_t n) {
   {
     uint8_t t = ~(n);
     gb_cpu->PC -= t;
-    // gb_cpu->PC += 1;
   }
   else
-    gb_cpu->PC += n;
+    gb_cpu->PC += n + 1;
 }
 
 /*

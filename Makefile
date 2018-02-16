@@ -62,7 +62,6 @@ TEST_FILES=\
   test/test_runners/testrunner_memory.c \
   test/test_runners/all_tests.c
 
-
 INC_DIRS=-Isrc \
          -Isrc/instructions \
          -I$(UNITY_ROOT)/src \

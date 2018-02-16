@@ -71,7 +71,6 @@
 #define NR52 (0xFF26)
 
 //IO REGISTERS
-//sound channel 3 wave
 #define JOYP (0xFF00)
 
 //SERIAL CABLE
