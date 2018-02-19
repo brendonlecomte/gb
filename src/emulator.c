@@ -29,8 +29,7 @@ void emu_execute(void) {
 
       //execute
       op_codes[op]();
-      if(gb_cpu->PC == 0x && !stepping) stepping = true;
-
+      // if(gb_cpu->PC == 0x100 && !stepping) stepping = true;
       if(stepping) pause = false;
       DEBUG_PRINTF("PC: 0x%04X\nSP: 0x%04X\n\nAF:0x%04X\nBC:0x%04X\nDE:0x%04X\nHL:0x%04X\n", gb_cpu->PC,gb_cpu->SP,*gb_cpu->AF,*gb_cpu->BC,*gb_cpu->DE,*gb_cpu->HL);
       if(memory->memory[0xFF02] == 0x82) printf("%c\n", memory->memory[0xFF01]);

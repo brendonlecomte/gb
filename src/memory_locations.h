@@ -14,7 +14,7 @@
 
 
 //DISPLAY REGISTERs
-//#define ??? (0xFF40)
+#define LCDC (0xFF40)
 #define STAT (0xFF41)
 #define SCY (0xFF42)
 #define SCX (0xFF43)

@@ -22,16 +22,20 @@ typedef enum {
     PPU_V_BLANK
 } ppu_mode_t;
 
+lcd_control_t *control_reg;
 lcd_status_register_t *status_reg;
 uint8_t *lcd_y;
-// uint16_t *sprites[10]; //max of 10 sprites per line
+uint8_t *lcd_yc;
+
 int_reg_t *interrupts;
 ppu_mode_t mode;
 uint16_t clocks;
 
 void ppu_init(void) {
     status_reg = (lcd_status_register_t*)&memory->memory[STAT];
+    control_reg = (lcd_control_t*)&memory->memory[LCDC];
     lcd_y = &memory->memory[LY];
+    lcd_yc = &memory->memory[LYC];
     background = &memory->memory[0x9800];
     tiles = (tile_t*)&memory->memory[0x8000];
     // palette = &memory->memory[BGP];
@@ -41,33 +45,36 @@ void ppu_init(void) {
 #endif
 }
 
-uint8_t count =0;
 void ppu_run(void) {
   clocks += 1;
 
   switch(mode)
   {
-    case PPU_OAM: //20 clocks
+    case PPU_OAM:
       status_reg->mode = 2;
-      if(clocks >= 20) {
+      if(clocks >= 42) {
           mode = PPU_TRANSFER;
       }
       break;
 
-    case PPU_TRANSFER: //43 clocks
+    case PPU_TRANSFER:
       status_reg->mode = 3;
-      if(clocks >= 63) {
+
+      if(clocks >= 20) {
           mode = PPU_H_BLANK;
+          if(status_reg->h_blank_int) status_reg->h_blank_int = 1;
           draw_line(*lcd_y);
       }
       break;
 
-    case PPU_H_BLANK: //51 clocks
+    case PPU_H_BLANK:
       status_reg->mode = 0;
-      if(clocks >= 114){
+      if(clocks >= 50){
         *lcd_y += 1; //line completed
         clocks = 0; //clear clocks, line complete
-        if(*lcd_y == 144){
+        if(*lcd_y == *lcd_yc && status_reg->coincidence_int) status_reg->coincidence_flag = 1;
+        if(*lcd_y == 144) {
+            if(status_reg->v_blank_int) status_reg->v_blank_int = 1;
             CPU_set_interrupt(gb_cpu, INT_V_BLANK);
             mode = PPU_V_BLANK;
         }
@@ -79,11 +86,16 @@ void ppu_run(void) {
 
     case PPU_V_BLANK:
       status_reg->mode = 1;
-      if(clocks >= 1970){
+      if(clocks >= 1300){
+          if(control_reg->lcd_enable){
+#ifndef UNITTEST
           lcd_refresh();
+#endif
+          }
           clocks =0;
           *lcd_y = 0; //back to top of screen
           mode = PPU_OAM;
+          if(status_reg->oam_int) status_reg->oam_int = 1;
       }
       break;
 

@@ -16,7 +16,7 @@ void instr_adc(uint8_t* A, uint8_t n) {
   uint16_t temp = *A + n + CPU_check_flag(CARRY_FLAG);
   uint8_t hc_temp = (*A & 0x0F) + (n & 0x0F) + CPU_check_flag(CARRY_FLAG);
   *A = (uint8_t)temp & 0xFF;
-  CPU_set_flag(CARRY_FLAG, (temp & 0x100));
+  CPU_set_flag(CARRY_FLAG, (temp & 0x100) > 0);
   CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10));
   CPU_set_flag(ZERO_FLAG, (temp ==0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
@@ -36,7 +36,7 @@ void instr_add(uint8_t *A, uint8_t n) {
     temp += n;
     uint8_t hc_temp = (*A & 0xF) + (n & 0xF);
     *A = (uint8_t)temp;
-    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10));
+    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10) > 0);
     CPU_set_flag(CARRY_FLAG, (temp & 0x100));
     CPU_set_flag(ZERO_FLAG,(temp == 0));
     CPU_set_flag(SUBTRACT_FLAG, 0);
@@ -56,8 +56,8 @@ void instr_add_HL(uint16_t *hl, uint16_t n) {
     uint32_t temp = *hl + n;
     uint16_t hc_temp = (*hl & 0x0FFF) + (n & 0x0FFF);
     *hl = temp&0xFFFF;
-    CPU_set_flag(CARRY_FLAG, (temp & 0x10000));
-    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000));
+    CPU_set_flag(CARRY_FLAG, (temp & 0x10000) > 0);
+    CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000) > 0);
     CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
@@ -79,8 +79,8 @@ void instr_add_SP(uint16_t *sp, uint8_t n) {
 
   uint16_t hc_temp = (*sp & 0x0FFF) + (n);
   *sp = temp;
-  CPU_set_flag(CARRY_FLAG, (temp & 0x10000));
-  CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000));
+  CPU_set_flag(CARRY_FLAG, (temp & 0x10000) > 0);
+  CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000) > 0);
 }
 
 /*
@@ -129,7 +129,6 @@ CALL n        - Push address of next instruction onto
                 None
 */
 void instr_call_n(uint16_t n) {
-  // *gb_cpu->HL = n;
   CPU_stack_push(gb_cpu->PC+1);
   gb_cpu->PC = n;
 }
@@ -189,7 +188,7 @@ CP n          - Compare A with n.
 void instr_cp(uint8_t *A, uint8_t n) {
   CPU_set_flag(ZERO_FLAG, (*A == n));
   CPU_set_flag(SUBTRACT_FLAG, 1);
-  //CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, (((*A&0xf) + (n&0xf))&0x10));
   CPU_set_flag(CARRY_FLAG, (*A < n));
 }
 
@@ -246,9 +245,10 @@ DEC n         - Decrement register n.
                 C - Not affected.
 */
 void instr_dec_n(uint8_t *reg) {
-  uint8_t t = *reg -1;
-  CPU_set_flag(HALF_CARRY_FLAG, ((*reg&0x0F) == 0));
-  *reg = t;
+  CPU_set_flag(HALF_CARRY_FLAG, ((*reg&0x0F) > 0));
+  if(*reg == 0x00) *reg = 0xFF;
+  else *reg -= 1;
+
   CPU_set_flag(ZERO_FLAG, (*reg == 0));
   CPU_set_flag(SUBTRACT_FLAG, 1);
 
@@ -301,10 +301,11 @@ INC n         - Increment register n.
                 C - Not affected.
 */
 void instr_inc_n(uint8_t *reg) {
-  *reg += 1;
+  if(*reg == 0xFF) *reg = 0;
+  else *reg += 1;
   CPU_set_flag(ZERO_FLAG, (*reg == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
-  CPU_set_flag(HALF_CARRY_FLAG, (*reg == 0)); // TODO fix this
+  CPU_set_flag(HALF_CARRY_FLAG, (*reg & 0x10)); // TODO fix this
 }
 
 /*
@@ -366,9 +367,12 @@ void instr_jr(uint8_t n) {
   {
     uint8_t t = ~(n);
     gb_cpu->PC -= t;
+    // gb_cpu->PC += 1;
   }
-  else
-    gb_cpu->PC += n + 1;
+  else {
+    gb_cpu->PC += n;
+    gb_cpu->PC += 1;
+  }
 }
 
 /*
@@ -401,7 +405,9 @@ n = A,B,C,D,E,H,L,(BC,(DE),(HL),(nnnn)
         Flags affected:
                 None
 */
-void instr_load_ab(uint8_t *A, uint8_t n) { *A = n; }
+void instr_load_ab(uint8_t *A, uint8_t n) {
+  *A = n;
+}
 
 
 /*
@@ -433,6 +439,10 @@ OR n          - Logical OR n with register A, result in A.
 void instr_or(uint8_t *A, uint8_t n) {
   uint8_t t = *A;
   *A = t | n;
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(HALF_CARRY_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, 0);
 }
 
 /*

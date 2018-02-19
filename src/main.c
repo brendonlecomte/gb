@@ -15,7 +15,7 @@ int main(int argc, const char * argv[])
   for(;;)
   {
     emu_execute();
-    if(gb_cpu->PC == 0x0038) break;
+    // if(gb_cpu->PC == 0x0038) break;
   }
   emu_end();
   return 0;

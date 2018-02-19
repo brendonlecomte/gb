@@ -159,8 +159,8 @@ void LD_DE_d16(void) {
 
 // 0x12 LD (DE) A
 void LD_DE_A(void) {
+  memory_write8(memory, *gb_cpu->DE, *gb_cpu->A);
   DEBUG_PRINTF(" %s\n", __func__);
-  assert(0);
   gb_cpu->cycles += 8;
 }
 
@@ -518,13 +518,11 @@ void SCF(void) {
 void JR_C_r8(void) {
     if (CPU_check_flag(ZERO_FLAG) != 0) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
-
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump\n", __func__);
-      gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -1867,7 +1865,6 @@ void JP_HLm(void) {
 // LD (a16),A
 // 3  16
 void LD_a16_A(void) {
-
   uint16_t addr = memory_read16(memory, gb_cpu->PC);
   memory_write8(memory, addr, *gb_cpu->A);
   DEBUG_PRINTF(" %s (0x%04X) <- A\n", __func__, addr);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define CART_PATH ("/Users/brendon/research/gb/roms/cpu_instrs.gb")
+#define CART_PATH ("/Users/brendon/workspace/gb/roms/individual/opsphl.gb")
 #define HOME_CART_PATH ("/Users/brendon/workspace/gb/roms/tetris.gb")
 
 void cart_load(uint8_t *mem, uint16_t size) {
