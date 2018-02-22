@@ -367,7 +367,6 @@ void instr_jr(uint8_t n) {
   {
     uint8_t t = ~(n);
     gb_cpu->PC -= t;
-    // gb_cpu->PC += 1;
   }
   else {
     gb_cpu->PC += n;
@@ -689,13 +688,13 @@ SUB n         - Subtract n from A.
 */
 void instr_sub_n(uint8_t *A, uint8_t n) {
   uint16_t t = *A;
-  t = t + ~n;
-  t = t + 1;
-  *A = (uint8_t)t;
-  CPU_set_flag(ZERO_FLAG, (t != 0));
+  CPU_set_flag(CARRY_FLAG, n > *A);
+  CPU_set_flag(HALF_CARRY_FLAG, n&0x0F > *A&0x0F);
+  *A = (uint8_t)*A - n;
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 1);
-  CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (!(t&0x100)));
+
+
 }
 
 /*

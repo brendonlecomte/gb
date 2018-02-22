@@ -220,7 +220,8 @@ void JR_r8(void) {
 // 0x19 ADD HL, DE
 // 1 8
 void ADD_HL_DE(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
+  DEBUG_PRINTF(" %s\n", __func__);
+  instr_add_HL(gb_cpu->HL, *gb_cpu->DE);
   gb_cpu->cycles += 8;
 }
 
@@ -271,8 +272,8 @@ void LD_E_d8(void) {
 // 1 4
 void RRA(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // instr_rr
-  assert(0);
+  instr_rr(gb_cpu->A);
+  // assert(0);
   gb_cpu->cycles += 4;
 }
 
@@ -374,8 +375,9 @@ void JR_Z_r8(void) {
 // ADD HL,HL
 // 1  8
 void ADD_HL_HL(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  instr_add_HL(gb_cpu->HL, *gb_cpu->HL);
+  gb_cpu->cycles += 8;
 }
 
 // LD A,(HL+)
@@ -537,8 +539,11 @@ void ADD_HL_SP(void) {
 // LD A,(HL-)
 // 1  8
 void LD_A_HLs(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  *gb_cpu->HL -= 1;
+  instr_load_ab(gb_cpu->A, val);
+  gb_cpu->cycles += 8;
 }
 
 // DEC SP
@@ -1681,8 +1686,11 @@ void RST_08H(void) {
 // RET NC
 // 1  20/8
 void RET_NC(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  if(CPU_check_flag(CARRY_FLAG) != 1)
+    instr_ret();
+    gb_cpu->cycles += 20;
+  gb_cpu->cycles += 8;
 }
 // POP DE
 // 1  12
@@ -1724,10 +1732,10 @@ void PUSH_DE(void) {
 // 2  8
 void SUB_d8(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  // uint8_t val = memory_read8(memory, gb_cpu->PC);
-  assert(0);
+  uint8_t val = memory_read8(memory, gb_cpu->PC);
+  instr_sub_n(gb_cpu->A, val);
   gb_cpu->PC += 1;
-  gb_cpu->cycles += 4;
+  gb_cpu->cycles += 8;
 }
 // RST 10H
 // 1  16
