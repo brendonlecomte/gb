@@ -1615,8 +1615,14 @@ void RST_00H(void) {
 // RET Z
 // 1  20/8
 void RET_Z(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+  DEBUG_PRINTF(" %s\n", __func__);
+  if(CPU_check_flag(ZERO_FLAG)){
+      instr_ret();
+      gb_cpu->cycles += 20;
+  }
+  else{
+  gb_cpu->cycles += 8;
+  }
 }
 // RET
 // 1  16
