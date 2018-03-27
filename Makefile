@@ -74,7 +74,7 @@ default:
 	- ./$(TARGET1) -v
 
 run:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=1 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DTRACE=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 	- ./$(APP_TARGET) -v
 
 sdl:

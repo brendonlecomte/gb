@@ -5,8 +5,8 @@ CPU_t _cpu;
 CPU_t *gb_cpu = &_cpu;
 
 void CPU_init(CPU_t *cpu) {
-  cpu->PC = 0x0000;
-  cpu->SP = 0xFFFE;
+
+
 
   //set pointers
   cpu->AF = &cpu->registers.AF._16;
@@ -24,10 +24,21 @@ void CPU_init(CPU_t *cpu) {
   cpu->E = (uint8_t*)&cpu->registers.DE._8[0];
   cpu->L = (uint8_t*)&cpu->registers.HL._8[0];
 
+#if BOOT_ROM
+  cpu->PC = 0x0000;
+  cpu->SP = 0xFFFE;
   *cpu->AF = 0x0000;
   *cpu->BC = 0;
   *cpu->DE = 0;
   *cpu->HL = 0;
+#else
+  cpu->PC = 0x0100;
+  cpu->SP = 0xFFFE;
+  *cpu->AF = 0x1180;
+  *cpu->BC = 0;
+  *cpu->DE = 0xFF56;
+  *cpu->HL = 0x000D;
+#endif
 
   cpu->ime = 0;
   cpu->int_flags = (int_reg_t*)&memory->memory[0xFF0F];

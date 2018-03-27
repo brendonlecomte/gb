@@ -35,7 +35,11 @@ void memory_init(memory_t *mem) {
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
   memset(mem->vram, 0x55, 0x2000);
+#if BOOT_ROM
   mem->inBoot = true;
+#else
+  mem->inBoot = false;
+#endif
 }
 
 void memory_load_cart(memory_t *mem) {

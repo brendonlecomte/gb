@@ -129,7 +129,7 @@ CALL n        - Push address of next instruction onto
                 None
 */
 void instr_call_n(uint16_t n) {
-  CPU_stack_push(gb_cpu->PC+1);
+  CPU_stack_push(gb_cpu->PC);
   gb_cpu->PC = n;
 }
 
@@ -480,7 +480,7 @@ RET           - Pop two bytes from stack & jump to that address.
 */
 void instr_ret(void) {
   uint16_t t = CPU_stack_pop();
-  gb_cpu->PC = t-1;
+  gb_cpu->PC = t;
 }
 
 

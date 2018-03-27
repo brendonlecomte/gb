@@ -384,8 +384,8 @@ void ADD_HL_HL(void) {
 // 1  8
 void LD_A_HLp(void) {
   DEBUG_PRINTF(" %s\n", __func__);
-  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   *gb_cpu->HL += 1;
+  uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_load_ab(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
@@ -1563,8 +1563,17 @@ void POP_BC(void) {
 // JP NZ,a16
 // 3  16/12
 void JP_NZ_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+    if(CPU_check_flag(ZERO_FLAG) == 0){
+      gb_cpu->cycles += 16;
+      uint16_t val = memory_read16(memory, gb_cpu->PC);
+      gb_cpu->PC += 2;
+      DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+      instr_jp(val);
+    }
+    else {
+      DEBUG_PRINTF(" No %s\n", __func__);
+      gb_cpu->cycles += 12;
+    }
 }
 // JP a16
 // 3  16
@@ -1634,16 +1643,25 @@ void RET(void) {
 // JP Z,a16
 // 3  16/12
 void JP_Z_a16(void) {
-  DEBUG_PRINTF(" %s\n", __func__);assert(0);
-  gb_cpu->cycles += 4;
+    if(CPU_check_flag(ZERO_FLAG) == 1){
+      gb_cpu->cycles += 16;
+      uint16_t val = memory_read16(memory, gb_cpu->PC);
+      gb_cpu->PC += 2;
+      DEBUG_PRINTF(" %s 0x%04X\n", __func__, val);
+      instr_jp(val);
+    }
+    else {
+      DEBUG_PRINTF(" No %s\n", __func__);
+      gb_cpu->cycles += 12;
+    }
 }
 // PREFIX CB
 // 1  4
 void PREFIX_CB(void) {
   uint8_t op = memory_read8(memory, gb_cpu->PC);
-  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
   DEBUG_PRINTF(" %s::", __func__);
+  gb_cpu->PC += 1;
   prefix_cb[op]();
 }
 // CALL Z,a16
