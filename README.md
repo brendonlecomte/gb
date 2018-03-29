@@ -4,26 +4,22 @@
 To build a clone of the GB/GBC. From C based Emulator right through to custom
 hardware that fits inside the original gameboy case.
 
-## Steps
-### C based emulator
+### C based emulator Todo List
 - [x] Basic CPU
 - [x] Memory (basic no paging)
-- [x] Cartridge
-- [ ] PPU
 - [x] SDL host screen
+- [x] Boot rom w/ swap in/out
+- [ ] Memory Bank controllers
 - [ ] Interrupts
-- [ ] Instruction Unit tests
-- [ ] Boot rom w/ swap in/out
-- [ ] Audio
-- [ ] Host Audio solution
+- [ ] DMA
+- [ ] PPU
 - [ ] Keyboard inputs
+- [ ] GBC upgrade changes
 
-### Port to uC
-- [ ] ?
-
-### Custom HW
-- [ ] ?
-
+### Tests
+- [ ] Instruction Unit tests
+- [ ] Blarggs Tests
+- [ ] Mooneye Tests
 
 ## Building
 To build and run unit tests against the source
