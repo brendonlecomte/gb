@@ -37,6 +37,7 @@ SRC_FILES=src/instructions/instructions.c \
 					src/host/cart.c\
 					src/emulator.c\
 					src/ppu.c\
+					src/timer.c\
 					src/prefix_codes.c
 
 APP_SRC=$(SRC_FILES)\
@@ -54,12 +55,14 @@ TEST_FILES=\
   test/test_cpu.c \
   test/test_memory.c \
   test/test_cart.c \
+  test/test_timer.c\
   test/test_boot.c \
   test/test_runners/testrunner_instructions.c \
   test/test_runners/testrunner_cpu.c \
   test/test_runners/testrunner_cart.c \
   test/test_runners/testrunner_boot.c \
   test/test_runners/testrunner_memory.c \
+  test/test_runners/testrunner_timer.c\
   test/test_runners/all_tests.c
 
 INC_DIRS=-Isrc \
