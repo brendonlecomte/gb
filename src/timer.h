@@ -1,6 +1,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define TIMER_ENABLE    (0x04)
+#define TIMER_DIV_1024  (0x00)
+#define TIMER_DIV_256   (0x03)
+#define TIMER_DIV_64    (0x02)
+#define TIMER_DIV_16    (0x01)
+
 typedef struct {
   uint8_t unused:5;
   bool enable:1;
@@ -9,10 +15,11 @@ typedef struct {
 
 typedef struct {
     uint16_t div;
+    uint16_t prev_div;
     uint8_t key;
-    uint8_t* counter;
-    uint8_t* modulo;
-    timer_control_t* control;
+    uint8_t counter;
+    uint8_t modulo;
+    uint8_t control;
 } timer_t;
 
 void timer_init(timer_t* t);
