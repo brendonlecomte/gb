@@ -9,6 +9,7 @@ hardware that fits inside the original gameboy case.
 - [x] Memory (basic no paging)
 - [x] SDL host screen
 - [x] Boot rom w/ swap in/out
+- [x] Timer
 - [ ] Memory Bank controllers
 - [ ] Interrupts
 - [ ] DMA
@@ -26,4 +27,9 @@ To build and run unit tests against the source
 
 ```
 make
+```
+
+To build and run the emulator. Cart is defined for host in src/host/cart.c
+```
+make run
 ```
