@@ -55,6 +55,7 @@ typedef struct cart_s {
 
 
 void cart_load(void);
-uint8_t cart_read(const uint8_t addr);
+uint8_t cart_read(const uint16_t addr);
+uint8_t* cart_memory(void);
 
 #endif //CART_H
