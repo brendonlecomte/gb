@@ -27,6 +27,7 @@ memory_t *memory = &_memory;
 void memory_init(memory_t *mem) {
   memset(mem->memory, 0x00, FULL_MEMORY);
   mem->cart = &mem->memory[0];
+  cart_load();
   mem->cart_header = &mem->memory[0x100];
   mem->vram = &mem->memory[0x8000];
   mem->eram = &mem->memory[0xA000];
@@ -42,19 +43,18 @@ void memory_init(memory_t *mem) {
 #endif
 }
 
-void memory_load_cart(memory_t *mem) {
-    cart_load();
-}
-
 uint8_t memory_read8(memory_t *mem, uint16_t addr) {
     //Read from the Boot Rom
     if(addr < 0x0100 && mem->inBoot){
         return boot[addr];
     }
+
     // Read from the cart
-    else if(addr < 0x800 && !mem->inBoot)
+    if(addr <= 0x7FFF)
     {
-        cart_read(addr);
+        uint8_t val = cart_read(addr);
+        return val;
+
     }
     return mem->memory[addr];
 }
