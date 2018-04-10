@@ -11,10 +11,12 @@ int main(int argc, const char * argv[])
   uint8_t exit = 1;
   uint8_t old_pc = 0;
   uint16_t step = 0;
+  uint16_t i = 100;
   emu_init();
-  for(;;)
+  while(i)
   {
     emu_execute();
+    // i--;
   }
   emu_end();
   return 0;
