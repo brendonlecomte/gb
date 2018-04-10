@@ -3,12 +3,13 @@
 #include "op_codes.h"
 #include "emulator.h"
 #include "ppu.h"
+#include "timer.h"
 
 void emu_init(void) {
   CPU_init(gb_cpu);
   memory_init(memory);
-  memory_load_cart(memory);
   ppu_init();
+  timer_init(timer);
 }
 
 bool pause = false;
@@ -33,8 +34,11 @@ void emu_execute(void) {
       //execute
       op_codes[op]();
 
-      if(trace_started) TRACE_PRINTF("0x%04X: 0x%02X -> AF:0x%04X BC:0x%04X DE: 0x%04X HL: 0x%04X SP:0x%04X\n", gb_cpu->PC, op, *gb_cpu->AF,*gb_cpu->BC,*gb_cpu->DE,*gb_cpu->HL, gb_cpu->SP);
-
+      if(trace_started) {
+          TRACE_PRINTF("PC:0x%04X OP:0x%02X AF:0x%04X BC:0x%04X DE: 0x%04X HL: 0x%04X SP:0x%04X ", gb_cpu->PC, op, *gb_cpu->AF,*gb_cpu->BC,*gb_cpu->DE,*gb_cpu->HL, gb_cpu->SP);
+          TRACE_PRINTF("IME:0x%d IF:0x%02X IE:0x%02X", gb_cpu->ime, *gb_cpu->int_flags, *gb_cpu->int_enable);
+          TRACE_PRINTF("\n");
+      }
       // if(gb_cpu->PC == 0x100 && !stepping) stepping = true;
       // if(stepping) pause = true;
   }
@@ -42,6 +46,7 @@ void emu_execute(void) {
   CPU_handle_interrupt(gb_cpu);
 
   //timers
+  timer_run(timer);
 
   //sound
 
