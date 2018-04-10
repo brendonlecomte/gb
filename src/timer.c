@@ -6,6 +6,10 @@
 
 static uint16_t tac_masks[4] = {1024, 16, 64, 256};
 
+static timer_t t;
+timer_t * timer = &t;
+
+
 void timer_init(timer_t *t){
     t->div = 0;
     t->control = 0;

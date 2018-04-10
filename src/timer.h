@@ -22,6 +22,8 @@ typedef struct {
     uint8_t control;
 } timer_t;
 
+extern timer_t * timer;
+
 void timer_init(timer_t* t);
 void timer_reset(timer_t* t);
 void timer_run(timer_t* t);
