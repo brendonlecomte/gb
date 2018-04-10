@@ -3,11 +3,11 @@
 #include <assert.h>
 
 #define CART_PATH ("/Users/brendon/research/gb/roms/cpu_instrs.gb")
-#define HOME_CART_PATH ("/Users/brendon/workspace/gb/roms/tetris.gb")
+#define HOME_CART_PATH ("/Users/brendon/research/gb/roms/tetris.gb")
 
 #define MAX_CART_SIZE (0x8000)
 
-uint8_t cart[MAX_CART_SIZE];
+static uint8_t cart[MAX_CART_SIZE];
 
 void cart_load(void) {
     FILE *f;
@@ -22,6 +22,10 @@ void cart_load(void) {
     }
 }
 
-uint8_t cart_read(const uint8_t addr) {
+uint8_t cart_read(const uint16_t addr) {
     return cart[addr];
+}
+
+uint8_t* cart_memory(void) {
+    return &cart[0];
 }
