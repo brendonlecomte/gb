@@ -687,9 +687,8 @@ SUB n         - Subtract n from A.
                 C - Set if no borrow.
 */
 void instr_sub_n(uint8_t *A, uint8_t n) {
-  uint16_t t = *A;
   CPU_set_flag(CARRY_FLAG, n > *A);
-  CPU_set_flag(HALF_CARRY_FLAG, n&0x0F > *A&0x0F);
+  CPU_set_flag(HALF_CARRY_FLAG, (n&0x0F) > (*A&0x0F));
   *A = (uint8_t)*A - n;
   CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 1);
