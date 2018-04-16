@@ -3,13 +3,13 @@
 
 #include <stdio.h>
 
-#ifdef DEBUG
+#if DEBUG
 #define DEBUG_PRINTF(...) printf( __VA_ARGS__)
 #else
 #define DEBUG_PRINTF(...) {}
 #endif
 
-#ifdef TRACE
+#if TRACE
 #define TRACE_PRINTF(...) printf( __VA_ARGS__)
 #else
 #define TRACE_PRINTF(...) {}
