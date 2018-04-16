@@ -17,17 +17,17 @@ TEST_SETUP(processor) {
 TEST_TEAR_DOWN(processor) {}
 
 TEST(processor, init) {
-  TEST_ASSERT_EQUAL(*cpu->A, 0);
-  TEST_ASSERT_EQUAL(*cpu->B, 0);
-  TEST_ASSERT_EQUAL(*cpu->C, 0);
-  TEST_ASSERT_EQUAL(*cpu->D, 0);
-  TEST_ASSERT_EQUAL(*cpu->E, 0);
-  TEST_ASSERT_EQUAL(*cpu->F, 0);
-  TEST_ASSERT_EQUAL(*cpu->H, 0);
-  TEST_ASSERT_EQUAL(*cpu->L, 0);
+  TEST_ASSERT_EQUAL(0, *cpu->A);
+  TEST_ASSERT_EQUAL(0, *cpu->B);
+  TEST_ASSERT_EQUAL(0, *cpu->C);
+  TEST_ASSERT_EQUAL(0, *cpu->D);
+  TEST_ASSERT_EQUAL(0, *cpu->E);
+  TEST_ASSERT_EQUAL(0, *cpu->F);
+  TEST_ASSERT_EQUAL(0, *cpu->H);
+  TEST_ASSERT_EQUAL(0, *cpu->L);
 
-  TEST_ASSERT_EQUAL(cpu->PC, 0x0000);
-  TEST_ASSERT_EQUAL(cpu->SP, 0xFFFE);
+  TEST_ASSERT_EQUAL(0x0000, cpu->PC);
+  TEST_ASSERT_EQUAL(0xFFFE, cpu->SP);
 }
 
 TEST(processor, ptrs)
@@ -85,26 +85,30 @@ TEST(processor, poppush)
 }
 
 TEST(processor, ints) {
+
+  cpu->ime = 1;
+  memory->memory[0xFFFF] = 0xFF; //enable all interrupts
+
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_V_BLANK);
   TEST_ASSERT_EQUAL(0x01, memory->memory[0xFF0F]);
 
-  memory->memory[0xFF0F] =0;
+  memory->memory[0xFF0F] = 0;
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_LCD_STAT);
   TEST_ASSERT_EQUAL(0x02, memory->memory[0xFF0F]);
 
-  memory->memory[0xFF0F] =0;
+  memory->memory[0xFF0F] = 0;
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_TMR);
   TEST_ASSERT_EQUAL(0x04, memory->memory[0xFF0F]);
 
-  memory->memory[0xFF0F] =0;
+  memory->memory[0xFF0F] = 0;
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_SERIAL);
   TEST_ASSERT_EQUAL(0x08, memory->memory[0xFF0F]);
 
-  memory->memory[0xFF0F] =0;
+  memory->memory[0xFF0F] = 0;
   TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
   CPU_set_interrupt(cpu, INT_JOYPAD);
   TEST_ASSERT_EQUAL(0x10, memory->memory[0xFF0F]);
