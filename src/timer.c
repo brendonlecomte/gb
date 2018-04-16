@@ -1,5 +1,5 @@
 #include "timer.h"
-#include "cpu.h"
+#include "CPU.h"
 
 #define DIVIDER_MASK (0b00000011)
 #define ENABLE_MASK  (0b00000100)
