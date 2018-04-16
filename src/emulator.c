@@ -36,7 +36,7 @@ void emu_execute(void) {
 
       if(trace_started) {
           TRACE_PRINTF("PC:0x%04X OP:0x%02X AF:0x%04X BC:0x%04X DE: 0x%04X HL: 0x%04X SP:0x%04X ", gb_cpu->PC, op, *gb_cpu->AF,*gb_cpu->BC,*gb_cpu->DE,*gb_cpu->HL, gb_cpu->SP);
-          TRACE_PRINTF("IME:0x%d IF:0x%02X IE:0x%02X", gb_cpu->ime, *gb_cpu->int_flags, *gb_cpu->int_enable);
+          TRACE_PRINTF("IME:0x%d IF:0x%02X IE:0x%02X", gb_cpu->ime, *(uint8_t *)gb_cpu->int_flags, *(uint8_t *)gb_cpu->int_enable);
           TRACE_PRINTF("\n");
       }
       // if(gb_cpu->PC == 0x100 && !stepping) stepping = true;
