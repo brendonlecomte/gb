@@ -49,9 +49,7 @@ typedef struct {
     */
   uint16_t SP, PC;
 
-  /*
-    8Bit Registers in the CPU
-  */
+  // 8Bit Registers in the CPU
   struct {
        reg_t AF;
        reg_t BC;
@@ -65,9 +63,8 @@ typedef struct {
   bool ime; //master interrupt, cpu controlled
   int_reg_t *int_flags;
   int_reg_t *int_enable;
-  /*
-  Timing
-  */
+
+  //  Timing  
   uint32_t cycles;
 } CPU_t;
 
