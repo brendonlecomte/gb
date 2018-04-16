@@ -428,7 +428,7 @@ TEST(Instructions, load_ab) {
   *gb_cpu->HL = 0x000D;
   gb_cpu->SP = 0xDFFF;
   gb_cpu->PC = 0x0437;
-  instr_load_ab16(gb_cpu->A, 0x00);
+  instr_load_ab(gb_cpu->A, 0x00);
   TEST_ASSERT_EQUAL(0x0080, *gb_cpu->AF);
   TEST_ASSERT_EQUAL(0x0000, *gb_cpu->BC);
   TEST_ASSERT_EQUAL(0xFF56, *gb_cpu->DE);
