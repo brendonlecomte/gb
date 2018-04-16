@@ -45,10 +45,6 @@ void CPU_init(CPU_t *cpu) {
   cpu->int_enable = (int_reg_t*)&memory->memory[0xFFFF];
 }
 
-void CPU_run(CPU_t *cpu) {
-
-}
-
 void CPU_handle_interrupt(CPU_t *cpu) {
     if(cpu->ime) { //if interrupts are enabled, handle them
       // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
