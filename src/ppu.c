@@ -132,8 +132,8 @@ void draw_line(uint8_t line)
             val = (a>>(7-j) &0x01)<<1 | (b>>(7-j) &0x01);
             colour = palette[val]; //get colour value from the palette
 
-            uint8_t x =(i*8) + j;
 #ifndef UNITTEST
+            uint8_t x =(i*8) + j;
             lcd_set_pixel(x+memory->memory[SCX], line, colour);
 #endif
         }
