@@ -93,19 +93,19 @@ void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt) {
 
   switch(interrupt){
     case INT_V_BLANK:
-      if(cpu->int_enable->v_blank) cpu->int_flags->v_blank = 1;
+      if(cpu->int_enable->v_blank == 1) cpu->int_flags->v_blank = 1;
       break;
     case INT_LCD_STAT:
-      if(cpu->int_enable->lcd_stat) cpu->int_flags->lcd_stat = 1;
+      if(cpu->int_enable->lcd_stat == 1) cpu->int_flags->lcd_stat = 1;
       break;
     case INT_TMR:
-      if(cpu->int_enable->tmr) cpu->int_flags->tmr = 1;
+      if(cpu->int_enable->tmr == 1) cpu->int_flags->tmr = 1;
       break;
     case INT_SERIAL:
-      if(cpu->int_enable->serial) cpu->int_flags->serial = 1;
+      if(cpu->int_enable->serial == 1) cpu->int_flags->serial = 1;
       break;
     case INT_JOYPAD:
-      if(cpu->int_enable->joypad) cpu->int_flags->joypad = 1;
+      if(cpu->int_enable->joypad == 1) cpu->int_flags->joypad = 1;
       break;
     default:
       // assert(0); //catch mistakes
