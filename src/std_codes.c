@@ -383,8 +383,8 @@ void ADD_HL_HL(void) {
 // 1  8
 void LD_A_HLp(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  *gb_cpu->HL += 1;
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  *gb_cpu->HL += 1;
   instr_load_ab(gb_cpu->A, val);
   gb_cpu->cycles += 8;
 }
