@@ -245,7 +245,7 @@ DEC n         - Decrement register n.
                 C - Not affected.
 */
 void instr_dec_n(uint8_t *reg) {
-  CPU_set_flag(HALF_CARRY_FLAG, ((*reg&0x0F) > 0));
+  CPU_set_flag(HALF_CARRY_FLAG, ((*reg&0x0F) == 0));
   if(*reg == 0x00) *reg = 0xFF;
   else *reg -= 1;
 
@@ -301,11 +301,12 @@ INC n         - Increment register n.
                 C - Not affected.
 */
 void instr_inc_n(uint8_t *reg) {
+  uint8_t hc = (*reg&0x0F)+1;
   if(*reg == 0xFF) *reg = 0;
   else *reg += 1;
   CPU_set_flag(ZERO_FLAG, (*reg == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
-  CPU_set_flag(HALF_CARRY_FLAG, (*reg & 0x10)); // TODO fix this
+  CPU_set_flag(HALF_CARRY_FLAG, (hc == 0x10)); // TODO fix this
 }
 
 /*
