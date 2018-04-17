@@ -22,7 +22,7 @@ static uint8_t cart[MAX_CART_SIZE];
 
 void cart_load(void) {
     FILE *f;
-    f = fopen(TEST_ALL_PATH, "rb");
+    f = fopen(TEST_07_PATH, "rb");
     if(f){
         fread(cart, 1, MAX_CART_SIZE, f);
         fclose(f);
