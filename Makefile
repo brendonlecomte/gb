@@ -76,15 +76,14 @@ default:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(SRC_FILES) $(TEST_FILES) -o $(TARGET1)
 	- ./$(TARGET1) -v
 
-run:
+host:
 	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
-	- ./$(APP_TARGET) -v
 
 sdl:
 	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)
 	- ./$(HOST_APP)
 
-all: clean default run
+all: clean default host
 
 
 clean:
