@@ -188,7 +188,7 @@ CP n          - Compare A with n.
 void instr_cp(uint8_t *A, uint8_t n) {
   CPU_set_flag(ZERO_FLAG, (*A == n));
   CPU_set_flag(SUBTRACT_FLAG, 1);
-  CPU_set_flag(HALF_CARRY_FLAG, (((*A&0xf) + (n&0xf))&0x10));
+  CPU_set_flag(HALF_CARRY_FLAG, (n&0x0F) > (*A&0x0F));
   CPU_set_flag(CARRY_FLAG, (*A < n));
 }
 
