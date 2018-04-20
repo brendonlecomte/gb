@@ -22,6 +22,17 @@ class gameboy:
     interrupt_state = re.compile(".*IME:(0x[0-9]+) IF:(0x[0-9A-F]+) IE:(0x[0-9A-F]+)")
 
     def __init__(self):
+        self.state = {'AF': 0,
+                    'BC': 0,
+                    'DE':0,
+                    'HL':0,
+                    'PC':0,
+                    'SP':0,
+                    'OP':0,
+                    'IME':0,
+                    'IE':0,
+                    'IF':0}
+
         self.AF = 0
         self.BC = 0
         self.DE = 0
@@ -61,9 +72,15 @@ class gameboy:
                                                                                             self.DE,
                                                                                             self.HL)
 
+
+    def mask(self):
+        
+        return self
+
+
     def __eq__(self , other):
         if isinstance(self, other.__class__):
-            return self.__dict__ == other.__dict__
+            return self.mask().__dict__ == other.mask().__dict__
         return False
 
 if __name__ == '__main__':
@@ -84,7 +101,7 @@ if __name__ == '__main__':
             print(my_emu)
             print("REF:"),
             print(ref_emu)
-            if(input("...") == "x"):
+            if(input(":") == "x"):
                 break
     # print("Emu:")
     # print(gb)
