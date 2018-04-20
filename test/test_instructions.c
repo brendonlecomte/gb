@@ -503,6 +503,21 @@ TEST(Instructions, or){
   TEST_ASSERT_EQUAL(0x0B8F, *gb_cpu->HL);
   TEST_ASSERT_EQUAL(0xDFF3, gb_cpu->SP);
   TEST_ASSERT_EQUAL(0x0393, gb_cpu->PC);
+
+  // AF:0xFB50 BC:0xFBAE DE:0xD000 HL:0xCB8F SP:0xDFF3 IME:0x0 IF:0x00 IE:0x00
+  // PC:0xC736 OP:0xB1 AF:0xFF00 BC:0xFBAE DE:0xD000 HL:0xCB8F SP:0xDFF3 IME:0x0 IF:0x00 IE:0x00
+  *gb_cpu->AF = 0xFB50;
+  *gb_cpu->BC = 0xFBAE;
+  *gb_cpu->DE = 0xD000;
+  *gb_cpu->HL = 0xCB8F;
+  gb_cpu->SP = 0xDFF3;
+    // gb_cpu->PC += 1;
+  instr_or(gb_cpu->A, *gb_cpu->C);
+  TEST_ASSERT_EQUAL(0xFF00, *gb_cpu->AF);
+  TEST_ASSERT_EQUAL(0xFBAE, *gb_cpu->BC);
+  TEST_ASSERT_EQUAL(0xD000, *gb_cpu->DE);
+  TEST_ASSERT_EQUAL(0xCB8F, *gb_cpu->HL);
+  
 }
 
 TEST(Instructions, push) {
