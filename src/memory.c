@@ -1,6 +1,7 @@
 #include "memory.h"
 #include "memory_locations.h"
 #include "cart.h"
+#include "timer.h"
 #include <string.h>
 
 const uint8_t boot[256] = {
@@ -50,7 +51,6 @@ uint8_t memory_read8(memory_t *mem, uint16_t addr) {
     if(addr < 0x0100 && mem->inBoot){
         return boot[addr];
     }
-
     // Read from the cart
     if(addr <= 0x7FFF)
     {
