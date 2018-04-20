@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 typedef struct {
-  uint8_t lcd_enable:1,tile_map_select:1,window_enable:1, bg_win_tile_select:1, bg_tile_select:1, sprite_size:1, bg_win_priority:1;
+  uint8_t enable:1,tile_map_select:1,window_enable:1, bg_win_tile_select:1, bg_tile_select:1, sprite_size:1, bg_win_priority:1;
 } lcd_control_t;
 
 typedef struct {
