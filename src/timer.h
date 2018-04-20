@@ -17,9 +17,9 @@ typedef struct {
     uint16_t div;
     uint16_t prev_div;
     uint8_t key;
-    uint8_t counter;
-    uint8_t modulo;
-    uint8_t control;
+    uint8_t *counter;
+    uint8_t *modulo;
+    uint8_t *control;
 } timer_t;
 
 extern timer_t * timer;
@@ -27,3 +27,4 @@ extern timer_t * timer;
 void timer_init(timer_t* t);
 void timer_reset(timer_t* t);
 void timer_run(timer_t* t);
+void timer_set(timer_t *t, const uint8_t time);
