@@ -1,6 +1,7 @@
 #include "CPU.h"
 #include "memory.h"
 
+
 CPU_t _cpu;
 CPU_t *gb_cpu = &_cpu;
 
@@ -92,23 +93,21 @@ void CPU_enable_interrupt(CPU_t *cpu, interrupts_t interrupt) {
 }
 
 void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt) {
-  if(cpu->ime == 0) return; //ints not enabled
-
   switch(interrupt){
     case INT_V_BLANK:
-      if(cpu->int_enable->v_blank == 1) cpu->int_flags->v_blank = 1;
+      cpu->int_flags->v_blank = 1;
       break;
     case INT_LCD_STAT:
-      if(cpu->int_enable->lcd_stat == 1) cpu->int_flags->lcd_stat = 1;
+      cpu->int_flags->lcd_stat = 1;
       break;
     case INT_TMR:
-      if(cpu->int_enable->tmr == 1) cpu->int_flags->tmr = 1;
+      cpu->int_flags->tmr = 1;
       break;
     case INT_SERIAL:
-      if(cpu->int_enable->serial == 1) cpu->int_flags->serial = 1;
+      cpu->int_flags->serial = 1;
       break;
     case INT_JOYPAD:
-      if(cpu->int_enable->joypad == 1) cpu->int_flags->joypad = 1;
+      cpu->int_flags->joypad = 1;
       break;
     default:
       // assert(0); //catch mistakes
