@@ -64,8 +64,9 @@ typedef struct {
   int_reg_t *int_flags;
   int_reg_t *int_enable;
 
-  //  Timing  
+  //  Timing
   uint32_t cycles;
+  bool halt;
 } CPU_t;
 
 extern CPU_t *gb_cpu;

@@ -34,15 +34,16 @@ void CPU_init(CPU_t *cpu) {
 #else
   cpu->PC = 0x0100;
   cpu->SP = 0xFFFE;
-  *cpu->AF = 0x1180;
-  *cpu->BC = 0;
-  *cpu->DE = 0xFF56;
-  *cpu->HL = 0x000D;
+  *cpu->AF = 0x01B0;
+  *cpu->BC = 0x0013;
+  *cpu->DE = 0x00D8;
+  *cpu->HL = 0x014D;
 #endif
 
   cpu->ime = 0;
   cpu->int_flags = (int_reg_t*)&memory->memory[0xFF0F];
   cpu->int_enable = (int_reg_t*)&memory->memory[0xFFFF];
+  cpu->halt = false;
 }
 
 void CPU_handle_interrupt(CPU_t *cpu) {
@@ -57,7 +58,8 @@ void CPU_handle_interrupt(CPU_t *cpu) {
       if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) rst_vector = 0x0040;
       if(rst_vector != 0xAA55) //interrupt detected
       {
-        cpu->ime=0;
+        cpu->halt = false;
+        // cpu->ime = 0;
         CPU_stack_push(cpu->PC); // push PC, 2cycles
         cpu->PC = rst_vector;
         cpu->cycles += 5;
