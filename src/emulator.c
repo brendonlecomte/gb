@@ -22,7 +22,7 @@ void emu_pause(void) {
 }
 
 void emu_execute(void) {
-  if(gb_cpu->cycles <= 0)  //done enough "clocks"
+  if(gb_cpu->cycles <= 0 && !gb_cpu->halt)  //done enough "clocks"
   {
       if(gb_cpu->PC == 0x100) trace_started = true;
 

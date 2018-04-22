@@ -395,6 +395,7 @@ HALT          - Power down CPU until an interrupt occurs.
 */
 void instr_halt(void) {
   // TODO: someting ?
+  gb_cpu->halt = true;
 }
 
 /*
