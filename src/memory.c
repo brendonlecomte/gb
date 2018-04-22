@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "memory_locations.h"
 #include "cart.h"
 #include <string.h>
 
@@ -40,6 +41,7 @@ void memory_init(memory_t *mem) {
   mem->inBoot = true;
 #else
   mem->inBoot = false;
+  mem->memory[LCDC] = 0x91;
 #endif
 }
 
