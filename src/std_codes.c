@@ -368,10 +368,9 @@ void JR_Z_r8(void) {
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump \n", __func__);
-
       gb_cpu->cycles += 8;
+      gb_cpu->PC += 1;
     }
-    gb_cpu->PC += 1;
 }
 
 // ADD HL,HL
