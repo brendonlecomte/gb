@@ -35,10 +35,10 @@ void CPU_init(CPU_t *cpu) {
 #else
   cpu->PC = 0x0100;
   cpu->SP = 0xFFFE;
-  *cpu->AF = 0x01B0;
-  *cpu->BC = 0x0013;
-  *cpu->DE = 0x00D8;
-  *cpu->HL = 0x014D;
+  *cpu->AF = 0x1180;
+  *cpu->BC = 0x0000;
+  *cpu->DE = 0xff56;
+  *cpu->HL = 0x000d;
 #endif
 
   cpu->ime = 0;
