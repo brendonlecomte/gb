@@ -41,9 +41,10 @@ void CPU_init(CPU_t *cpu) {
 #endif
 
   cpu->ime = 0;
-  cpu->int_flags = (int_reg_t*)&memory->memory[0xFF0F];
-  cpu->int_enable = (int_reg_t*)&memory->memory[0xFFFF];
+  cpu->int_flags = (int_reg_t*)&memory->memory[IF];
+  cpu->int_enable = (int_reg_t*)&memory->memory[IE];
   cpu->halt = false;
+
 }
 
 void CPU_handle_interrupt(CPU_t *cpu) {
@@ -134,13 +135,6 @@ void CPU_set_flag(const uint8_t flg, uint8_t val)
     else f = f & ~flg; //set
     *_cpu.F = f;
 }
-//
-// void CPU_clear_flag(const uint8_t flg) {
-//     static uint8_t f;
-//     f = *_cpu.F;
-//     f  &= ~flg;
-//     *_cpu.F = f;
-// }
 
 bool CPU_check_flag(uint8_t flg) {
     return ((*_cpu.F & flg) == flg);
