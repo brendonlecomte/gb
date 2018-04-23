@@ -463,8 +463,8 @@ void LD_SP_d16(void) {
 // 1  8
 void LD_HLs_A(void) {
   memory_write8(memory, *gb_cpu->HL, *gb_cpu->A);
+  DEBUG_PRINTF(" %s (0x%04X) <- 0x%02X\n", __func__, *gb_cpu->HL, *gb_cpu->A);
   *gb_cpu->HL -= 1;
-  DEBUG_PRINTF(" %s \n", __func__);
   gb_cpu->cycles += 8;
 }
 
@@ -1800,7 +1800,6 @@ void RET_C(void) {
       DEBUG_PRINTF(" %s no RET \n", __func__);
       gb_cpu->cycles += 8;
   }
-
 }
 // RETI
 // 1  16
@@ -1809,7 +1808,7 @@ void RETI(void) {
   DEBUG_PRINTF(" %s SP: 0x%04X \n", __func__, gb_cpu->SP);
   gb_cpu->ime = 1;
   gb_cpu->cycles += 16;
-  assert(0);
+  // assert(0);
 }
 
 // JP C,a16
