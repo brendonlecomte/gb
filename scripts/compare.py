@@ -74,7 +74,7 @@ class gameboy:
 
 
     def mask(self):
-        
+
         return self
 
 
@@ -88,10 +88,6 @@ if __name__ == '__main__':
     emu_path = sys.argv[2]
     my_emu = gameboy()
     ref_emu = gameboy()
-    # gb.parse_debug("PC:0x073F OP:0x03 AF:0x2750 BC:0xFB34 DE:0xFF56 HL:0x0B8F SP:0xDFF3 IME:0x0 IF:0x00 IE:0x00")
-
-    # while(compare(ref.parse_debug(file_handler(ref_path)), gb.parse_debug(gb_path))):
-    #     input("matching gb states")
 
     for ref, emu in zip(file_handler(ref_path), file_handler(emu_path)):
         ref_emu.parse_debug(ref)
@@ -101,8 +97,10 @@ if __name__ == '__main__':
             print(my_emu)
             print("REF:"),
             print(ref_emu)
-            if(input(":") == "x"):
+            if(input(":").strip() == "x"):
                 break
+            else:
+                continue
     # print("Emu:")
     # print(gb)
     #
