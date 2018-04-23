@@ -61,7 +61,7 @@ void CPU_handle_interrupt(CPU_t *cpu) {
       if(rst_vector != 0xAA55) //interrupt detected
       {
         cpu->halt = false;
-        // cpu->ime = 0;
+        cpu->ime = 0;
         CPU_stack_push(cpu->PC); // push PC, 2cycles
         cpu->PC = rst_vector;
         cpu->cycles += 5;
