@@ -9,7 +9,7 @@
 uint8_t p[4] = {0,1,2,3};
 
 uint8_t *palette;
-tile_t *tiles;
+tile_t *bg_tiles[2];
 uint8_t *background;
 
 #define OAM_CLOCKS          (80) //(20)
@@ -42,7 +42,9 @@ void ppu_init(void) {
     lcd_y = &memory->memory[LY];
     lcd_yc = &memory->memory[LYC];
     background = &memory->memory[0x9800];
-    tiles = (tile_t*)&memory->memory[0x8000];
+
+    bg_tiles[0] = (tile_t*)&memory->memory[0x8800];
+    bg_tiles[1] = (tile_t*)&memory->memory[0x8000];
     // palette = &memory->memory[BGP];
     palette = &p[0];
 #ifndef UNITTEST
@@ -90,13 +92,13 @@ void ppu_run(void) {
         *lcd_y += 1; //line completed
         clocks = 0;
       }
-      if(*lcd_y == VBLANK_LINE_END){
+      if(*lcd_y > VBLANK_LINE_END){
           if(control_reg->enable){
 #ifndef UNITTEST
           lcd_refresh();
 #endif
           }
-          clocks =0;
+          clocks = 0;
           *lcd_y = 0; //back to top of screen
           status_reg->mode = PPU_OAM;
           if(status_reg->oam_int) status_reg->oam_int = 1;
@@ -125,7 +127,7 @@ void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx)
     for(int i = 0; i < 32; i++) //each tile
     {
         uint8_t tile_index = background[tile_row*32 + i]; //get tile index from background map
-        tile_t *t = &tiles[tile_index]; //get tile data from tile map
+        tile_t *t = &bg_tiles[control_reg->bg_tile_select][tile_index]; //get tile data from tile map
         // if(tile_index != 0) printf("line %d, tile: 0x%02X\n", line, tile_index);
         for(int j = 0; j < 8; j++) //each pixel in tile row
         {
