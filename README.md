@@ -11,7 +11,7 @@ hardware that fits inside the original gameboy case.
 - [x] Boot rom w/ swap in/out
 - [x] Timer
 - [ ] Memory Bank controllers
-- [ ] Interrupts
+- [x] Interrupts
 - [ ] DMA
 - [ ] PPU
 - [ ] Keyboard inputs
