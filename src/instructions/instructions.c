@@ -223,13 +223,22 @@ DAA           - Decimal adjust register A.
 */
 void instr_daa(uint8_t *A) {
   uint16_t t = *A;
-  if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG))
-    t += 0x06;
-  if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG))
-    t += 0x60;
+  if(!CPU_check_flag(ZERO_FLAG)){
+      if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG))
+        t += 0x06;
+      if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG))
+        t += 0x60;
+  }
+  else {
+       if(CPU_check_flag(HALF_CARRY_FLAG))
+          t = (t - 6) & 0xFF;
+
+        if(CPU_check_flag(CARRY_FLAG))
+          t -= 0x60;
+  }
   CPU_set_flag(HALF_CARRY_FLAG, 0);
   CPU_set_flag(CARRY_FLAG, (t&0x100));
-  *A = t;
+  *A = t&0xFF;
   CPU_set_flag(ZERO_FLAG, (*A == 0));
 }
 
