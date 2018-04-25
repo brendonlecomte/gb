@@ -34,7 +34,12 @@ typedef enum {
 } interrupts_t;
 
 typedef struct {
-  uint8_t v_blank:1, lcd_stat:1, tmr:1, serial:1, joypad:1, unused:3;
+  uint8_t v_blank:1;
+  uint8_t lcd_stat:1;
+  uint8_t tmr:1;
+  uint8_t serial:1;
+  uint8_t joypad:1;
+  uint8_t unused:3;
 } int_reg_t;
 
 typedef union reg_u {
@@ -65,7 +70,7 @@ typedef struct {
   int_reg_t *int_enable;
 
   //  Timing
-  uint32_t cycles;
+  int32_t cycles;
   bool halt;
 } CPU_t;
 
