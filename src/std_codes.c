@@ -1967,6 +1967,7 @@ void LDH_A_a8(void) {
 void POP_AF(void) {
 
   *gb_cpu->AF = CPU_stack_pop();
+  *gb_cpu->F &= 0xF0;
   DEBUG_PRINTF(" %s SP: 0x%04X \n", __func__, gb_cpu->SP);
   gb_cpu->cycles += 12;
 }
