@@ -2014,7 +2014,9 @@ void RST_30H(void) {
 // LD HL,SP+r8
 // 2  12
 void LD_HL_SPr8(void) {
-  uint16_t val = *gb_cpu->DE + memory_read8(memory, gb_cpu->PC);
+  uint16_t val = (gb_cpu->SP & 0x00FF) + memory_read8(memory, gb_cpu->PC);
+  val &= 0x00FF;
+  val += gb_cpu->SP & 0xFF00;
   gb_cpu->PC += 1;
   instr_load_ab16(gb_cpu->HL, val);
   DEBUG_PRINTF(" %s: HL <- 0x%04X \n", __func__, val);
