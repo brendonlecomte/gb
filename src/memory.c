@@ -51,14 +51,21 @@ uint8_t memory_read8(memory_t *mem, uint16_t addr) {
     if(addr < 0x0100 && mem->inBoot){
         return boot[addr];
     }
+    uint8_t val;
     // Read from the cart
-    if(addr <= 0x7FFF)
+    switch(addr)
     {
-        uint8_t val = cart_read(addr);
-        return val;
+        case 0x0000 ... 0x7FFF:
+             val = cart_read(addr);
+             break;
+        default:
+            val = mem->memory[addr];
+            break;
+
 
     }
-    return mem->memory[addr];
+    // return mem->memory[addr];
+    return val;
 }
 
 uint16_t memory_read16(memory_t *mem, uint16_t addr) {
