@@ -53,7 +53,7 @@ void emu_execute(void) {
   //Graphics
   ppu_run();
 
-  if(!pause) gb_cpu->cycles -= 1;
+  if(!pause && gb_cpu->cycles > 0) gb_cpu->cycles -= 1;
 }
 
 void emu_end(void) {
