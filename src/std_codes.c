@@ -2025,9 +2025,8 @@ void LD_HL_SPr8(void) {
 // LD SP,HL
 // 1  8
 void LD_SP_HL(void) {
-  uint16_t val = *gb_cpu->DE;
-  gb_cpu->PC += 1;
-  instr_load_ab16(gb_cpu->HL, val);
+  uint16_t val = *gb_cpu->HL;
+  instr_load_ab16(&gb_cpu->SP, val);
   DEBUG_PRINTF(" %s: HL <- 0x%04X \n", __func__, val);
   gb_cpu->cycles += 8;
 }
