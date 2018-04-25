@@ -6,9 +6,6 @@ CPU_t _cpu;
 CPU_t *gb_cpu = &_cpu;
 
 void CPU_init(CPU_t *cpu) {
-
-
-
   //set pointers
   cpu->AF = &cpu->registers.AF._16;
   cpu->BC = &cpu->registers.BC._16;
@@ -49,6 +46,9 @@ void CPU_init(CPU_t *cpu) {
 }
 
 void CPU_handle_interrupt(CPU_t *cpu) {
+    if(*(uint8_t *)cpu->int_flags != 0x00 && cpu->halt) {
+        cpu->halt = false;
+    }
     if(cpu->ime) { //if interrupts are enabled, handle them
       // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
       uint16_t rst_vector = 0xAA55;
@@ -75,7 +75,6 @@ void CPU_handle_interrupt(CPU_t *cpu) {
       }
       if(rst_vector != 0xAA55) //interrupt detected
       {
-        cpu->halt = false;
         cpu->ime = 0;
         CPU_stack_push(cpu->PC); // push PC, 2cycles
         cpu->PC = rst_vector;
