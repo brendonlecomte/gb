@@ -1920,8 +1920,9 @@ void ADD_SP_r8(void) {
 // JP (HL)
 // 1  4
 void JP_HLm(void) {
-  uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  DEBUG_PRINTF(" %s (0x%04X) PC:0x%02X \n", __func__, *gb_cpu->HL, val);
+  // uint8_t val = memory_read8(memory, *gb_cpu->HL);
+  // DEBUG_PRINTF(" %s (0x%04X) PC:0x%02X \n", __func__, *gb_cpu->HL, val);
+  DEBUG_PRINTF(" %s  PC:0x%04X \n", __func__, *gb_cpu->HL);
   instr_jp(*gb_cpu->HL); //changed from using the memory, to using literal
   gb_cpu->cycles += 4;
 }
