@@ -53,11 +53,26 @@ void CPU_handle_interrupt(CPU_t *cpu) {
       // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
       uint16_t rst_vector = 0xAA55;
       //faux priority
-      if(cpu->int_flags->joypad && cpu->int_enable->joypad) rst_vector = 0x0060;
-      if(cpu->int_flags->serial && cpu->int_enable->serial) rst_vector = 0x0058;
-      if(cpu->int_flags->tmr && cpu->int_enable->tmr) rst_vector = 0x0050;
-      if(cpu->int_flags->lcd_stat && cpu->int_enable->lcd_stat) rst_vector = 0x0048;
-      if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) rst_vector = 0x0040;
+      if(cpu->int_flags->joypad && cpu->int_enable->joypad) {
+          rst_vector = 0x0060;
+          cpu->int_flags->joypad = 0;
+      }
+      if(cpu->int_flags->serial && cpu->int_enable->serial) {
+          rst_vector = 0x0058;
+          cpu->int_flags->serial = 0;
+      }
+      if(cpu->int_flags->tmr && cpu->int_enable->tmr) {
+          rst_vector = 0x0050;
+          cpu->int_flags->tmr = 0;
+      }
+      if(cpu->int_flags->lcd_stat && cpu->int_enable->lcd_stat){
+          rst_vector = 0x0048;
+          cpu->int_flags->lcd_stat = 0;
+      }
+      if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) {
+          rst_vector = 0x0040;
+          cpu->int_flags->v_blank = 0;
+      }
       if(rst_vector != 0xAA55) //interrupt detected
       {
         cpu->halt = false;
