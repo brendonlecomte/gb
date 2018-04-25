@@ -52,7 +52,7 @@ void timer_run(timer_t *t) {
     }
     else if(increment) {
         //increment counter based on div and scaler
-        *t->counter++;
+        *t->counter = *t->counter +1;
 
     }
 

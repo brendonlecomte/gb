@@ -8,9 +8,9 @@
 #define TIMER_DIV_16    (0x01)
 
 typedef struct {
-  uint8_t unused:5;
-  bool enable:1;
   uint8_t divider:2;
+  bool enable:1;
+  uint8_t unused:5;
 } timer_control_t;
 
 typedef struct {
