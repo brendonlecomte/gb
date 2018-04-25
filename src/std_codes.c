@@ -354,7 +354,7 @@ void LD_H_d8(void) {
 // 1  4
 void DAA(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  assert(0);
+  instr_daa(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
