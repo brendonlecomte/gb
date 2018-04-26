@@ -10,7 +10,7 @@
 #define OAM_SIZE (0x100)
 #define WRAM_SIZE (0x2000)
 #define HRAM_SIZE (0x80)
-#define FULL_MEMORY (0xFFFF)
+#define FULL_MEMORY (0x10000)
 
 
 //DISPLAY REGISTERs
