@@ -637,12 +637,13 @@ SLA n         - Shift n left into Carry. LSBit of n set to 0.
                 H - Reset.
                 C - Contains old bit 7 data.
 */
-void instr_sla(uint8_t n) {
-  uint8_t t = n << 1;
+void instr_sla(uint8_t *n) {
+  uint8_t t = *n << 1;
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (n & 0x80));
+  CPU_set_flag(CARRY_FLAG, (*n & 0x80));
+  *n = t;
  }
 
 /*
@@ -654,13 +655,15 @@ SRA n         - Shift n right into Carry. MSBit doesn't change.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
-void instr_sra(uint8_t n) {
-  uint8_t t = n >> 1;
-  t |= (n & 0x80); // ensure MSB is 0
+void instr_sra(uint8_t *n) {
+  uint8_t t = *n >> 1;
+  t |= (*n & 0x80); // ensure MSB is 0
+
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (n & 0x01));
+  CPU_set_flag(CARRY_FLAG, (*n & 0x01));
+  *n = t;
 }
 
 /*
@@ -672,13 +675,15 @@ SRL n         - Shift n right into Carry. MSBit of n set to 0.
                 H - Reset.
                 C - Contains old bit 0 data.
 */
-void instr_srl(uint8_t n) {
-  uint8_t t = n >> 1;
+void instr_srl(uint8_t *n) {
+  uint8_t t = *n >> 1;
   t &= 0x7F; // ensure MSB is 0
+
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (n & 0x01));
+  CPU_set_flag(CARRY_FLAG, (*n & 0x01));
+  *n = t;
 }
 
 /*

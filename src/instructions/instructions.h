@@ -34,9 +34,9 @@ void instr_load_ab(uint8_t *A, uint8_t n);
 void instr_load_ab16(uint16_t *A, uint16_t B);
 void instr_nop(void);
 void instr_scf(void);
-void instr_sla(uint8_t n);
-void instr_sra(uint8_t n);
-void instr_srl(uint8_t n);
+void instr_sla(uint8_t *n);
+void instr_sra(uint8_t *n);
+void instr_srl(uint8_t *n);
 void instr_rst(uint8_t n);
 
 void instr_or(uint8_t *A, uint8_t n);

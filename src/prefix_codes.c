@@ -27,7 +27,7 @@ void RRC_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rrc(gb_cpu->D); gb_cp
 void RRC_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rrc(gb_cpu->E); gb_cpu->cycles += 4;}
 void RRC_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rrc(gb_cpu->H); gb_cpu->cycles += 4;}
 void RRC_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rrc(gb_cpu->L); gb_cpu->cycles += 4;}
-void RRC_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
+void RRC_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
 void RRC_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rrc(gb_cpu->A); gb_cpu->cycles += 4;}
 
 void RL_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->B); gb_cpu->cycles += 4;}
@@ -40,7 +40,7 @@ void RL_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->D); gb_cpu-
 void RL_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->E); gb_cpu->cycles += 4;}
 void RL_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->H); gb_cpu->cycles += 4;}
 void RL_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->L); gb_cpu->cycles += 4;}
-void RL_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
+void RL_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
 void RL_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rl(gb_cpu->A); gb_cpu->cycles += 4;}
 
 void RR_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->B); gb_cpu->cycles += 4;}
@@ -49,26 +49,26 @@ void RR_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->D); gb_cpu-
 void RR_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->E); gb_cpu->cycles += 4;}
 void RR_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->H); gb_cpu->cycles += 4;}
 void RR_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->L); gb_cpu->cycles += 4;}
-void RR_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
+void RR_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
 void RR_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_rr(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SLA_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SLA_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SLA_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SLA_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SLA_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SLA_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SLA_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
-void SLA_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SLA_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->B); gb_cpu->cycles += 4;}
+void SLA_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->C); gb_cpu->cycles += 4;}
+void SLA_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->D); gb_cpu->cycles += 4;}
+void SLA_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->E); gb_cpu->cycles += 4;}
+void SLA_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->H); gb_cpu->cycles += 4;}
+void SLA_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->L); gb_cpu->cycles += 4;}
+void SLA_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
+void SLA_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sla(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SRA_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SRA_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SRA_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SRA_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SRA_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SRA_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SRA_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
-void SRA_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SRA_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->B); gb_cpu->cycles += 4;}
+void SRA_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->C); gb_cpu->cycles += 4;}
+void SRA_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->D); gb_cpu->cycles += 4;}
+void SRA_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->E); gb_cpu->cycles += 4;}
+void SRA_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->H); gb_cpu->cycles += 4;}
+void SRA_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->L); gb_cpu->cycles += 4;}
+void SRA_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
+void SRA_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_sra(gb_cpu->A); gb_cpu->cycles += 4;}
 
 void SWAP_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->B); gb_cpu->cycles += 4;}
 void SWAP_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->C); gb_cpu->cycles += 4;}
@@ -76,17 +76,17 @@ void SWAP_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->D); gb_
 void SWAP_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->E); gb_cpu->cycles += 4;}
 void SWAP_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->H); gb_cpu->cycles += 4;}
 void SWAP_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->L); gb_cpu->cycles += 4;}
-void SWAP_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
+void SWAP_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0);}
 void SWAP_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_swap(gb_cpu->A); gb_cpu->cycles += 4;}
 
-void SRL_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->B); gb_cpu->cycles += 4;}
-void SRL_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->C); gb_cpu->cycles += 4;}
-void SRL_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->D); gb_cpu->cycles += 4;}
-void SRL_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->E); gb_cpu->cycles += 4;}
-void SRL_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->H); gb_cpu->cycles += 4;}
-void SRL_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->L); gb_cpu->cycles += 4;}
-void SRL_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); }
-void SRL_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(*gb_cpu->A); gb_cpu->cycles += 4;}
+void SRL_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->B); gb_cpu->cycles += 4;}
+void SRL_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->C); gb_cpu->cycles += 4;}
+void SRL_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->D); gb_cpu->cycles += 4;}
+void SRL_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->E); gb_cpu->cycles += 4;}
+void SRL_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->H); gb_cpu->cycles += 4;}
+void SRL_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->L); gb_cpu->cycles += 4;}
+void SRL_HLm(void) { DEBUG_PRINTF(": %s\n", __func__); assert(0); }
+void SRL_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_srl(gb_cpu->A); gb_cpu->cycles += 4;}
 
 
 void BIT_0_B(void) {

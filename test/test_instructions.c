@@ -476,11 +476,11 @@ TEST(Instructions, load_ab16) {
 
 TEST(Instructions, srl) {
   *gb_cpu->A = 0x01;
-  instr_srl(*gb_cpu->A);
+  instr_srl(gb_cpu->A);
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
 
   *gb_cpu->A = 0x00;
-  instr_srl(*gb_cpu->A);
+  instr_srl(gb_cpu->A);
   TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
 }
 
@@ -517,7 +517,7 @@ TEST(Instructions, or){
   TEST_ASSERT_EQUAL(0xFBAE, *gb_cpu->BC);
   TEST_ASSERT_EQUAL(0xD000, *gb_cpu->DE);
   TEST_ASSERT_EQUAL(0xCB8F, *gb_cpu->HL);
-  
+
 }
 
 TEST(Instructions, push) {
