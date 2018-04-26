@@ -31,7 +31,6 @@ hardware that fits inside the original gameboy case.
 - [ ] 04 - OP r,imm
 - [ ] 05 - OP rp
 - [x] 06 - OP ld r,r
-- does a weird reset?
 - [ ] 07 - jr, jp, call, ret, rst
 - [ ] 08 - misc instrs
 - [ ] 09 - OP r,r
