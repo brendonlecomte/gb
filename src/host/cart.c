@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #define TEST_ALL_PATH ("/Users/brendon/research/gb/roms/cpu_instrs.gb")
+#define TEST_OPUS_PATH ("/Users/brendon/research/gb/roms/opus5.gb")
 #define TEST_01_PATH ("/Users/brendon/research/gb/roms/individual/01-special.gb")
 #define TEST_02_PATH ("/Users/brendon/research/gb/roms/individual/02-interrupts.gb")
 #define TEST_03_PATH ("/Users/brendon/research/gb/roms/individual/03-op sp,hl.gb")
@@ -22,7 +23,7 @@ static uint8_t cart[MAX_CART_SIZE];
 
 void cart_load(void) {
     FILE *f;
-    f = fopen(TEST_07_PATH, "rb");
+    f = fopen(TEST_03_PATH, "rb");
     if(f){
         fread(cart, 1, MAX_CART_SIZE, f);
         fclose(f);
@@ -37,6 +38,15 @@ uint8_t cart_read(const uint16_t addr) {
     return cart[addr];
 }
 
+void cart_write(const uint16_t addr, uint8_t val)
+{
+
+}
+
 uint8_t* cart_memory(void) {
     return &cart[0];
+}
+
+cart_t* cart_header(void) {
+    return (cart_t *)&cart[0x100];
 }

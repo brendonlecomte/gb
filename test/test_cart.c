@@ -20,7 +20,7 @@ TEST(Cart, load) {
 
 TEST(Cart, header) {
   cart_load();
-  cart_t *cart = (cart_t *)cart_memory();
+  cart_t *cart = cart_header();
   TEST_ASSERT_EQUAL_STRING("TETRIS", cart->title);
   TEST_ASSERT_EQUAL(0x0A, cart->header_checksum);
   TEST_ASSERT_EQUAL(0xBF16, cart->checksum);
