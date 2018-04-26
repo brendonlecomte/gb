@@ -17,10 +17,27 @@ hardware that fits inside the original gameboy case.
 - [ ] Keyboard inputs
 - [ ] GBC upgrade changes
 
-### Tests
+### Unit Tests
 - [ ] Instruction Unit tests
-- [ ] Blarggs Tests
-- [ ] Mooneye Tests
+- [x] Timer
+- [x] Boot Rom
+- [x] Memory
+
+### Blarggs Tests
+- [ ] 01 - special
+- getting locked doing all permutations of DAA
+- [x] 02 - Interrupts
+- [ ] 03 - OP SP,HL
+- [ ] 04 - OP r,imm
+- [ ] 05 - OP rp
+- [x] 06 - OP ld r,r
+- does a weird reset?
+- [ ] 07 - jr, jp, call, ret, rst
+- [ ] 08 - misc instrs
+- [ ] 09 - OP r,r
+- [ ] 10 - bit ops
+- [ ] 11 - OP a, (hl)
+- [ ] cpu_instrs
 
 ## Building
 To build and run unit tests against the source
