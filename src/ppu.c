@@ -47,6 +47,9 @@ void ppu_init(void) {
     bg_tiles[1] = (tile_t*)&memory->memory[0x8000];
     // palette = &memory->memory[BGP];
     palette = &p[0];
+    clocks = 0;
+    *lcd_y = 0;
+    *lcd_yc = 0;
 #ifndef UNITTEST
     lcd_init();
 #endif
