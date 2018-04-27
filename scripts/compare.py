@@ -3,6 +3,10 @@ import re
 import os
 import sys
 
+comp = {'std': lambda a,b: a == b,
+        'pc': lambda a,b: a.PC == b.PC,
+        'step': lambda a,b: False}
+
 def file_handler(path):
     path = os.path.abspath(path)
 
@@ -13,26 +17,17 @@ def file_handler(path):
         for line in f:
             yield line
 
-def compare(ref, gb):
-    return ref == gb
+def compare(ref, gb, mode='std'):
+    return comp[mode](ref, gb)
+
 
 class gameboy:
     registers_state = re.compile(".*AF:(0x[0-9A-F]{4}).+BC:(0x[0-9A-F]{4}).+DE:(0x[0-9A-F]{4}).+HL:(0x[0-9A-F]{4})")
     cpu_state = re.compile("PC:(0x[0-9A-F]{4}).+OP:(0x[0-9A-F]{2}).+SP:(0x[0-9A-F]{4})")
     interrupt_state = re.compile(".*IME:(0x[0-9]+) IF:(0x[0-9A-F]+) IE:(0x[0-9A-F]+)")
 
-    def __init__(self):
-        self.state = {'AF': 0,
-                    'BC': 0,
-                    'DE':0,
-                    'HL':0,
-                    'PC':0,
-                    'SP':0,
-                    'OP':0,
-                    'IME':0,
-                    'IE':0,
-                    'IF':0}
-
+    def __init__(self, iter):
+        self.iter = iter
         self.AF = 0
         self.BC = 0
         self.DE = 0
@@ -45,9 +40,12 @@ class gameboy:
         self.IME = 0
         self.IE  = 0
         self.IF  = 0
+        self.parse_debug()
 
 
-    def parse_debug(self, dbg):
+    def parse_debug(self):
+        dbg = next(self.iter)
+        # print(dbg)
         rs = self.registers_state.match(dbg)
         cs = self.cpu_state.match(dbg)
 
@@ -73,16 +71,12 @@ class gameboy:
                                                                                             self.DE,
                                                                                             self.HL)
 
-    def mask(self):
-        return self
-
-
     def __eq__(self , other):
-        if isinstance(self, other.__class__):
-            return self.mask().__dict__ == other.mask().__dict__
-        return False
+        return {k: v for k,v in self.__dict__.items() if k not in ['iter']} == \
+                {k: v for k,v in other.__dict__.items() if k not in ['iter']}
 
-op_code_lut = ['NOP','LD_BC_d16','LD_mBC_A','INC_BC','INC_B','DEC_B','LD_B_d8','RLCA','LD_a16_SP',
+op_code_lut = [
+'NOP','LD_BC_d16','LD_mBC_A','INC_BC','INC_B','DEC_B','LD_B_d8','RLCA','LD_a16_SP',
 'ADD_HL_BC','LD_A_BC','DEC_BC','INC_C','DEC_C','LD_C_d8','RRCA',
 'STOP','LD_DE_d16','LD_DE_A','INC_DE','INC_D','DEC_D','LD_D_d8','RLA','JR_r8',
 'ADD_HL_DE','LD_A_DE','DEC_DE','INC_E','DEC_E','LD_E_d8','RRA',
@@ -90,13 +84,14 @@ op_code_lut = ['NOP','LD_BC_d16','LD_mBC_A','INC_BC','INC_B','DEC_B','LD_B_d8','
 'ADD_HL_HL','LD_A_HLp','DEC_HL','INC_L','DEC_L','LD_L_d8','CPL',
 'JR_NC_r8','LD_SP_d16','LD_HLs_A','INC_SP','INC_aHL','DEC_aHL','LD_mHL_d8','SCF',
 'JR_C_r8','ADD_HL_SP','LD_A_HLs','DEC_SP','INC_A','DEC_A','LD_A_d8','CCF',
-'LD_B_B','LD_B_C','LD_B_D','LD_B_E','LD_B_H','LD_B_L','LD_B_HLm','LD_B_A','LD_C_B',
-'LD_C_C','LD_C_D','LD_C_E','LD_C_H','LD_C_L','LD_C_HLm','LD_C_A',
-'LD_D_B','LD_D_C','LD_D_D','LD_D_E','LD_D_H','LD_D_L','LD_D_HLm','LD_D_A','LD_E_B',
-'LD_E_C','LD_E_D','LD_E_E','LD_E_H','LD_E_L','LD_E_HLm','LD_E_A',
-'LD_H_B','LD_H_C','LD_H_D','LD_H_E','LD_H_H','LD_H_L','LD_H_HLm','LD_H_A','LD_L_B',
-'LD_L_C','LD_L_D','LD_L_E','LD_L_H','LD_L_L','LD_L_HLm','LD_L_A',
-'LD_A_B','LD_A_C','LD_A_D','LD_A_E','LD_A_H','LD_A_L','LD_A_HLm','LD_A_A',
+'LD_B_B','LD_B_C','LD_B_D','LD_B_E','LD_B_H','LD_B_L','LD_B_HLm','LD_B_A',
+'LD_C_B','LD_C_C','LD_C_D','LD_C_E','LD_C_H','LD_C_L','LD_C_HLm','LD_C_A',
+'LD_D_B','LD_D_C','LD_D_D','LD_D_E','LD_D_H','LD_D_L','LD_D_HLm','LD_D_A',
+'LD_E_B','LD_E_C','LD_E_D','LD_E_E','LD_E_H','LD_E_L','LD_E_HLm','LD_E_A',
+'LD_H_B','LD_H_C','LD_H_D','LD_H_E','LD_H_H','LD_H_L','LD_H_HLm','LD_H_A',
+'LD_L_B','LD_L_C','LD_L_D','LD_L_E','LD_L_H','LD_L_L','LD_L_HLm','LD_L_A',
+'LD_HLm_B','LD_HLm_C','LD_HLm_D','LD_HLm_E','LD_HLm_H','LD_HLm_L','HALT',
+'LD_L_A','LD_A_B','LD_A_C','LD_A_D','LD_A_E','LD_A_H','LD_A_L','LD_A_HLm','LD_A_A',
 'ADD_A_B','ADD_A_C','ADD_A_D','ADD_A_E','ADD_A_H','ADD_A_L','ADD_A_HLm','ADD_A_A',
 'ADC_A_B','ADC_A_C','ADC_A_D','ADC_A_E','ADC_A_H','ADC_A_L','ADC_A_HLm','ADC_A_A',
 'SUB_B','SUB_C','SUB_D','SUB_E','SUB_H','SUB_L','SUB_HLm','SUB_A','SBC_A_B','SBC_A_C',
@@ -111,46 +106,70 @@ op_code_lut = ['NOP','LD_BC_d16','LD_mBC_A','INC_BC','INC_B','DEC_B','LD_B_d8','
 'RET_C','RETI','JP_C_a16','no_op_code','CALL_C_a16','no_op_code','SBC_A_d8','RST_18H',
 'LDH_a8_A','POP_HL','LD_Cm_A','no_op_code','no_op_code','PUSH_HL','AND_d8','RST_20H',
 'ADD_SP_r8','JP_HLm','LD_a16_A','no_op_code','no_op_code','no_op_code','XOR_d8','RST_28H',
-'LDH_A_a8', 'POP_AF', 'LD_A_Cm', 'DI', 'no_op_code', 'PUSH_AF', 'OR_d8', 'RST_30H', 'LD_HL_SPr8',
-'LD_SP_HL', 'LD_A_a16', 'EI', 'no_op_code', 'no_op_code', 'CP_d8', 'RST_38H']
+'LDH_A_a8','POP_AF','LD_A_Cm','DI','no_op_code','PUSH_AF','OR_d8','RST_30H','LD_HL_SPr8',
+'LD_SP_HL','LD_A_a16','EI','no_op_code','no_op_code','CP_d8','RST_38H']
+
+mode_change = re.compile("m:(\w*)")
+goto = re.compile("(\w)>(0x[0-9A-F]{4})")
+ask = re.compile("(\w)?([A-F]{2})")
+
+def parse_ask_command(x):
+    y = ask.match(x)
+    if y:
+        return ask.group(1), ask.group(2)
+    return None, None
+
+def parse_mode_command(x):
+    mode = mode_change.match(x)
+    if(mode):
+        return mode.group(1)
+    return None
+
+def parse_goto_command(x):
+    mode = goto.match(x)
+    if(mode):
+        return mode.group(1), int(mode.group(2), 16)
+    return None, None
 
 if __name__ == '__main__':
     ref_path = sys.argv[1]
     emu_path = sys.argv[2]
-    my_emu = gameboy()
-    ref_emu = gameboy()
-
-
     ref_iter = file_handler(ref_path)
     emu_iter = file_handler(emu_path)
-    for ref, emu in zip(ref_iter, emu_iter):
-        ref_emu.parse_debug(ref)
-        my_emu.parse_debug(emu)
-        if(not compare(ref_emu, my_emu)):
-            print("Emu:"),
-            print(my_emu)
-            print("REF:"),
-            print(ref_emu)
-            inp = input(":").strip()
-            if(inp == "x"):
-                break
-            while(inp):
-                if(inp == "r"):
-                    ref = next(ref_iter)
-                if(inp == "e"):
-                    emu = next(emu_iter)
-                ref_emu.parse_debug(ref)
-                my_emu.parse_debug(emu)
-                print("Emu:"),
-                print(my_emu)
-                print("REF:"),
-                print(ref_emu)
-                inp = input(":").strip()
-            else:
+
+    my_emu = gameboy(emu_iter)
+    ref_emu = gameboy(ref_iter)
+
+
+    # while(True):
+
+
+        # if(not compare(ref_emu, my_emu)):
+    print("Emu:"),
+    print(my_emu)
+    print("REF:"),
+    print(ref_emu)
+
+    compare_mode = 'std'
+
+    while(True):
+        my_emu.parse_debug()
+        ref_emu.parse_debug()
+        print("Emu:"),
+        print(my_emu)
+        print("REF:"),
+        print(ref_emu)
+        if(not compare(ref_emu, my_emu, mode=compare_mode)):
+            inp = input('::')
+            m = parse_mode_command(inp)
+            if m:
+                compare_mode = m
                 continue
-    # print("Emu:")
-    # print(gb)
-    #
-    # print("Ref")
-    # print(ref)
-    # print("test")
+            a, pc = parse_goto_command(inp)
+            if a:
+                if a == 'e':
+                    while not my_emu.PC == pc:
+                        my_emu.parse_debug()
+                if a == 'r':
+                    while not ref_emu.PC == pc:
+                        ref_emu.parse_debug()
