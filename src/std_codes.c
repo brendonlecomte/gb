@@ -146,11 +146,11 @@ void RRCA(void) {
 void STOP(void) {
   DEBUG_PRINTF(" %s \n", __func__);
   instr_stop();
-  gb_cpu->PC += 2;
+  gb_cpu->PC += 1;
   gb_cpu->cycles += 4;
 }
 
-// 0x11 NAME
+// 0x11 LD_DE_d16
 void LD_DE_d16(void) {
   uint16_t val = memory_read16(memory, gb_cpu->PC);
   instr_load_ab16(gb_cpu->DE, val);
@@ -480,7 +480,7 @@ void INC_SP(void) {
 // 1  12
 void INC_aHL(void) {
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  val += 1;
+  instr_inc_n(&val);
   DEBUG_PRINTF(" %s (0x%04X) now 0x%02X\n", __func__, *gb_cpu->HL, val);
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 12;
@@ -490,7 +490,7 @@ void INC_aHL(void) {
 // 1  12
 void DEC_aHL(void) {
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  val -= 1;
+  instr_dec_n(&val);
   DEBUG_PRINTF(" %s (0x%04X) now 0x%02X\n", __func__, *gb_cpu->HL, val);
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 12;
@@ -1544,7 +1544,6 @@ void CP_A(void) {
 // RET NZ
 // 1  20/8
 void RET_NZ(void) {
-
   if(!CPU_check_flag(ZERO_FLAG)){
       instr_ret();
       DEBUG_PRINTF(" %s to 0x%04X \n", __func__, gb_cpu->PC);
@@ -1599,6 +1598,7 @@ void CALL_NZ_a16(void) {
   else {
     DEBUG_PRINTF(" No %s \n", __func__);
     gb_cpu->cycles += 12;
+    gb_cpu->PC += 2;
   }
 }
 // PUSH BC
@@ -1627,7 +1627,6 @@ void RST_00H(void) {
 // RET Z
 // 1  20/8
 void RET_Z(void) {
-
   if(CPU_check_flag(ZERO_FLAG)){
       instr_ret();
       DEBUG_PRINTF(" %s to  0x%04X\n", __func__, gb_cpu->PC);
