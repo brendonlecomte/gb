@@ -18,7 +18,7 @@ void instr_adc(uint8_t* A, uint8_t n) {
   *A = (uint8_t)temp & 0xFF;
   CPU_set_flag(CARRY_FLAG, (temp & 0x100) > 0);
   CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10));
-  CPU_set_flag(ZERO_FLAG, (temp ==0));
+  CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
@@ -37,8 +37,8 @@ void instr_add(uint8_t *A, uint8_t n) {
     uint8_t hc_temp = (*A & 0xF) + (n & 0xF);
     *A = (uint8_t)temp;
     CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x10) > 0);
-    CPU_set_flag(CARRY_FLAG, (temp & 0x100));
-    CPU_set_flag(ZERO_FLAG,(temp == 0));
+    CPU_set_flag(CARRY_FLAG, (temp & 0x100) == 0x100);
+    CPU_set_flag(ZERO_FLAG,(*A == 0));
     CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
