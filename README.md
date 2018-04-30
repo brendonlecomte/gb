@@ -25,7 +25,7 @@ hardware that fits inside the original gameboy case.
 
 ### Blarggs Tests
 - [ ] 01 - special
-- getting locked doing all permutations of DAA
+- fails on DAA
 - [x] 02 - Interrupts
 - [ ] 03 - OP SP,HL
 - [ ] 04 - OP r,imm
@@ -33,6 +33,7 @@ hardware that fits inside the original gameboy case.
 - [x] 06 - OP ld r,r
 - [ ] 07 - jr, jp, call, ret, rst
 - [ ] 08 - misc instrs
+- resets constantly
 - [ ] 09 - OP r,r
 - [ ] 10 - bit ops
 - [ ] 11 - OP a, (hl)

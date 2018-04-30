@@ -517,6 +517,11 @@ void instr_rl(uint8_t *n) {
   *n = x;
 }
 
+void instr_rl_a(uint8_t *n) {
+    instr_rl(n);
+    CPU_set_flag(ZERO_FLAG, 0);
+}
+
 /*
 RLC n         - Rotate n left. Old bit 7 to Carry flag.
         n = A,B,C,D,E,H,L,(HL)
@@ -536,6 +541,10 @@ void instr_rlc(uint8_t *n) {
   CPU_set_flag(CARRY_FLAG, c);
 }
 
+void instr_rlc_a(uint8_t *n) {
+    instr_rlc(n);
+    CPU_set_flag(ZERO_FLAG, 0);
+}
 /*
 RR n          - Rotate n right through Carry flag.
         n = A,B,C,D,E,H,L,(HL)
@@ -548,12 +557,17 @@ RR n          - Rotate n right through Carry flag.
 void instr_rr(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t x = *n >> 1;
-  x = x | CPU_check_flag(CARRY_FLAG)<<7;
+  x = x | (CPU_check_flag(CARRY_FLAG)<<7);
   CPU_set_flag(ZERO_FLAG, (x == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
   CPU_set_flag(CARRY_FLAG, c);
   *n = x;
+}
+
+void instr_rr_a(uint8_t *n) {
+    instr_rr(n);
+    CPU_set_flag(ZERO_FLAG, 0);
 }
 
 /*
@@ -575,6 +589,10 @@ void instr_rrc(uint8_t *n) {
   CPU_set_flag(CARRY_FLAG, c);
 }
 
+void instr_rrc_a(uint8_t *n) {
+    instr_rrc(n);
+    CPU_set_flag(ZERO_FLAG, 0);
+}
 /*
 RST n         - Push present address onto stack.
                 Jump to address $0000 + n.
@@ -639,10 +657,12 @@ SLA n         - Shift n left into Carry. LSBit of n set to 0.
 */
 void instr_sla(uint8_t *n) {
   uint8_t t = *n << 1;
+  uint8_t c = *n & 0x80;
+  t &= 0xFE; //ensure LSB goes to 0
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (*n & 0x80));
+  CPU_set_flag(CARRY_FLAG, c);
   *n = t;
  }
 
@@ -656,13 +676,15 @@ SRA n         - Shift n right into Carry. MSBit doesn't change.
                 C - Contains old bit 0 data.
 */
 void instr_sra(uint8_t *n) {
+  uint8_t c = *n & 0x01;
+  uint8_t msb = *n & 0x80;
   uint8_t t = *n >> 1;
-  t |= (*n & 0x80); // ensure MSB is 0
+  t |= (*n & msb); // ensure MSB is unchanged
 
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (*n & 0x01));
+  CPU_set_flag(CARRY_FLAG, c);
   *n = t;
 }
 
