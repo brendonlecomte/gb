@@ -45,6 +45,10 @@ void instr_push(uint16_t nn);
 void instr_res(uint8_t b, uint8_t *r);
 void instr_ret(void);
 
+void instr_rl_a(uint8_t *n);
+void instr_rrc_a(uint8_t *n);
+void instr_rlc_a(uint8_t *n);
+void instr_rr_a(uint8_t *n);
 void instr_rl(uint8_t *n);
 void instr_rlc(uint8_t *n);
 void instr_rr(uint8_t *n);
