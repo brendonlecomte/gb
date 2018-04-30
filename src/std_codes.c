@@ -69,7 +69,7 @@ void LD_B_d8(void) {
 // 0x07 RLCA
 // 1 4
 void RLCA(void) {
-  instr_rlc(gb_cpu->A);
+  instr_rlc_a(gb_cpu->A);
   DEBUG_PRINTF(" %s now 0x%02X \n", __func__, *gb_cpu->A);
   gb_cpu->cycles += 4;
 }
@@ -138,7 +138,7 @@ void LD_C_d8(void) {
 // 0x0F RRCA
 void RRCA(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  instr_rrc(gb_cpu->A);
+  instr_rrc_a(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
@@ -205,7 +205,7 @@ void LD_D_d8(void) {
 // 1 4
 void RLA(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  instr_rl(gb_cpu->A);
+  instr_rl_a(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
@@ -276,7 +276,7 @@ void LD_E_d8(void) {
 // 1 4
 void RRA(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  instr_rr(gb_cpu->A);
+  instr_rr_a(gb_cpu->A);
   gb_cpu->cycles += 4;
 }
 
@@ -2014,7 +2014,8 @@ void RST_30H(void) {
 // LD HL,SP+r8
 // 2  12
 void LD_HL_SPr8(void) {
-  uint16_t val = (gb_cpu->SP & 0x00FF) + memory_read8(memory, gb_cpu->PC);
+    /* TODO: flags get set for this instruction. 0 0 * *. Need to implement!!!!*/
+    uint16_t val = (gb_cpu->SP & 0x00FF) + memory_read8(memory, gb_cpu->PC);
   val &= 0x00FF;
   val += gb_cpu->SP & 0xFF00;
   gb_cpu->PC += 1;
