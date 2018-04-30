@@ -611,6 +611,13 @@ TEST(Instructions, rr) {
   instr_rr(&x);
   TEST_ASSERT_EQUAL(0xBA, x);
   TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+
+  x = 0x00;
+  CPU_set_flag(CARRY_FLAG, 0);
+  instr_rr(&x);
+  TEST_ASSERT_EQUAL(0x00, x);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(ZERO_FLAG));
 }
 
 TEST(Instructions, rrc) {
