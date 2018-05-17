@@ -643,16 +643,36 @@ TEST(Instructions, rst) {
 }
 
 TEST(Instructions, sbc) {
-  *gb_cpu->A = 0x50;
+  *gb_cpu->A = 80;
   CPU_set_flag(CARRY_FLAG, 1);
-  instr_sbc(gb_cpu->A, 0x10);
-  TEST_ASSERT_EQUAL(0x3F, *gb_cpu->A);
-  TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+  instr_sbc(gb_cpu->A, 16);
+  TEST_ASSERT_EQUAL(63, *gb_cpu->A);
+  // TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
 
-  // *gb_cpu->A = 0x08;
-  // instr_sbc(gb_cpu->A, add);
-  // TEST_ASSERT_EQUAL(gb_cpu->A);
-  // TEST_ASSERT_EQUAL(1, CPU_check_flag(HALF_CARRY_FLAG));
+
+  // REF:
+  // OP:0xc3 JP_a16    // PC:0xdef8 SP:0xdff1 // AF:0x0010 BC:0x1234 DE:0x5678 HL:0xdef4
+  // OP:0xde SBC_A_d8  // PC:0xdefa SP:0xdff1 // AF:0xf070 BC:0x1234 DE:0x5678 HL:0xdef4
+  *gb_cpu->A = 0x00;
+  CPU_set_flag(CARRY_FLAG, 1);
+  instr_sbc(gb_cpu->A, 0x0F);
+  TEST_ASSERT_EQUAL(0xf0, *gb_cpu->A);
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+
+//   AF:0x0F00 BC:0x1234 DE:0x5678 HL:0xDEF4 SP:0xDFF1 IME:0x0 IF:0x01 IE:0x00
+// PC:0xDEFA OP:0xDE AF:0x00C0
+*gb_cpu->A = 0x0F;
+CPU_set_flag(CARRY_FLAG, 0);
+instr_sbc(gb_cpu->A, 0x0F);
+TEST_ASSERT_EQUAL(0x00, *gb_cpu->A);
+TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+TEST_ASSERT_EQUAL(1, CPU_check_flag(ZERO_FLAG));
+TEST_ASSERT_EQUAL(1, CPU_check_flag(SUBTRACT_FLAG));
+TEST_ASSERT_EQUAL(0, CPU_check_flag(CARRY_FLAG));
+
 }
 
 TEST(Instructions, sub) {
