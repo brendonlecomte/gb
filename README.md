@@ -29,11 +29,10 @@ hardware that fits inside the original gameboy case.
 - [x] 02 - Interrupts
 - [ ] 03 - OP SP,HL
 - [ ] 04 - OP r,imm
-- [ ] 05 - OP rp
+- [x] 05 - OP rp
 - [x] 06 - OP ld r,r
 - [ ] 07 - jr, jp, call, ret, rst
-- [ ] 08 - misc instrs
-- resets constantly
+- [x] 08 - misc instrs
 - [ ] 09 - OP r,r
 - [ ] 10 - bit ops
 - [ ] 11 - OP a, (hl)

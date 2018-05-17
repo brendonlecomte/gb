@@ -582,7 +582,7 @@ RRC n         - Rotate n right. Old bit 0 to Carry flag.
 void instr_rrc(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t x = *n >> 1;
-  *n = x | c<<7;
+  *n = x | (c<<7);
   CPU_set_flag(ZERO_FLAG, (x == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
@@ -614,15 +614,8 @@ SBC A,n       - Subtract n + Carry flag from A.
                 C - Set if no borrow.
 */
 void instr_sbc(uint8_t *A, uint8_t n) {
-  uint16_t t = *A;
-  t = t + ~n;
-  t = t + !CPU_check_flag(CARRY_FLAG);
-  CPU_set_flag(ZERO_FLAG,(t != 0));
-  CPU_set_flag(SUBTRACT_FLAG, 1);
-  // if(n + !CPU_check_flag(CARRY_FLAG) > *A)
-    // CPU_set_flag(HALF_CARRY_FLAG); //TODO: HC flag is wrong...
-  CPU_set_flag(CARRY_FLAG, (!(t&0x100)));
-  *A = (uint8_t)t;
+  uint8_t val =  n + CPU_check_flag(CARRY_FLAG);
+  instr_sub_n(A, val);
 }
 
 /*
@@ -679,7 +672,7 @@ void instr_sra(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t msb = *n & 0x80;
   uint8_t t = *n >> 1;
-  t |= (*n & msb); // ensure MSB is unchanged
+  t |= msb; // ensure MSB is unchanged
 
   CPU_set_flag(ZERO_FLAG, (t == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
@@ -726,7 +719,7 @@ SUB n         - Subtract n from A.
 */
 void instr_sub_n(uint8_t *A, uint8_t n) {
   CPU_set_flag(CARRY_FLAG, n > *A);
-  CPU_set_flag(HALF_CARRY_FLAG, (n&0x0F) > (*A&0x0F));
+  CPU_set_flag(HALF_CARRY_FLAG, ((n&0x0F) > (*A&0x0F)));
   *A = (uint8_t)*A - n;
   CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 1);
@@ -745,9 +738,9 @@ SWAP n        - Swap upper & lower bits of n.
 */
 void instr_swap(uint8_t *n) {
   uint8_t low, high;
-  low = *n;
-  high = *n;
-  *n = low<<4 | high>>4;
+  low = *n&0x0F;
+  high = *n&0xF0;
+  *n = (low<<4) | (high>>4);
   CPU_set_flag(ZERO_FLAG, (*n == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
@@ -765,7 +758,7 @@ XOR n         - Logical exclusive OR n with
                 C - Reset.
 */
 void instr_xor(uint8_t *A, uint8_t n) {
-  *A ^= n;
+  *A = *A ^ n;
   CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);

@@ -163,10 +163,11 @@ if __name__ == '__main__':
             inp = input('::')
             m = parse_mode_command(inp)
             if m:
-                compare_mode = m
+                compare_mode = m.lower()
                 continue
             a, pc = parse_goto_command(inp)
             if a:
+                a = a.lower()
                 if a == 'e':
                     while not my_emu.PC == pc:
                         my_emu.parse_debug()

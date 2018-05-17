@@ -77,9 +77,10 @@ void RLCA(void) {
 // 0x08 LD (a16), SP
 // 3 20
 void LD_a16_SP(void) {
-  uint16_t val = memory_read16(memory, gb_cpu->PC);
-  instr_load_ab16(&gb_cpu->SP, val);
-  DEBUG_PRINTF(" %s (0x%04X) <- 0x%04X\n", __func__, val, gb_cpu->SP);
+  uint16_t addr = memory_read16(memory, gb_cpu->PC);
+  // instr_load_ab16(&gb_cpu->SP, val);
+  memory_write16(memory, addr, gb_cpu->SP);
+  DEBUG_PRINTF(" %s (0x%04X) <- 0x%04X\n", __func__, addr, gb_cpu->SP);
   gb_cpu->PC += 2;
   gb_cpu->cycles += 20;
 }
@@ -1581,7 +1582,7 @@ void JP_NZ_a16(void) {
 // 3  16
 void JP_a16(void) {
   uint16_t addr = memory_read16(memory,gb_cpu->PC);
-  gb_cpu->PC = addr;
+  instr_jp(addr);
   DEBUG_PRINTF(" %s PC <- 0x%04X \n", __func__, addr);
   gb_cpu->cycles += 4;
 }
