@@ -1525,13 +1525,12 @@ void CP_L(void) {
   gb_cpu->cycles += 4;
 }
 // CP (HL)
-// 2  8
+// 1  8
 void CP_HLm(void) {
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   DEBUG_PRINTF(" %s A ? 0x%02X\n", __func__, val);
   instr_cp(gb_cpu->A, val);
   gb_cpu->cycles += 8;
-  gb_cpu->PC += 1;
 }
 // CP A
 // 1  4
