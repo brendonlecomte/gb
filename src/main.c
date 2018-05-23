@@ -6,7 +6,7 @@
 #include "memory.h"
 #include "memory_locations.h"
 
-int main(int argc, const char * argv[])
+int main(void)
 {
   uint8_t exit = 1;
   uint8_t old_pc = 0;
