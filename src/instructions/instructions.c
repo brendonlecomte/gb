@@ -112,8 +112,9 @@ BIT b,r  - Test bit b in register r.
                 C - Not affected.
 */
 void instr_bit(uint8_t b, uint8_t *r) {
-  uint8_t set = ((0x01 << b) & *r);
-  CPU_set_flag(ZERO_FLAG, (set == 0));
+  uint8_t set = (*r >> b) & 0x01;
+  // printf("%02X : %d\n", *r, set);
+  CPU_set_flag(ZERO_FLAG, !set);
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG , 1);
 }
