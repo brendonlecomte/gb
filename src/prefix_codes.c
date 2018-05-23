@@ -156,9 +156,9 @@ void BIT_0_L(void) {
   instr_bit(0, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_0_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(0, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_0_A(void) {
@@ -190,9 +190,9 @@ void BIT_1_L(void) {
   instr_bit(1, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_1_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(1, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_1_A(void) {
@@ -224,9 +224,9 @@ void BIT_2_L(void) {
   instr_bit(2, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_2_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(2, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_2_A(void) {
@@ -258,49 +258,52 @@ void BIT_3_L(void) {
   instr_bit(3, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_3_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(3, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_3_A(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   instr_bit(3, gb_cpu->A);gb_cpu->cycles += 8;
 }
-void BIT_8_B(void) {
+
+void BIT_4_B(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->B);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->B);gb_cpu->cycles += 8;
 }
-void BIT_8_C(void) {
+void BIT_4_C(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->C);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->C);gb_cpu->cycles += 8;
 }
-void BIT_8_D(void) {
+void BIT_4_D(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->D);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->D);gb_cpu->cycles += 8;
 }
-void BIT_8_E(void) {
+void BIT_4_E(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->E);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->E);gb_cpu->cycles += 8;
 }
-void BIT_8_H(void) {
+void BIT_4_H(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->H);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->H);gb_cpu->cycles += 8;
 }
-void BIT_8_L(void) {
+void BIT_4_L(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->L);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->L);gb_cpu->cycles += 8;
 }
-void BIT_8_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
+void BIT_4_HLm(void) {
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  instr_bit(8, &val);
+  instr_bit(4, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
-void BIT_8_A(void) {
+void BIT_4_A(void) {
   DEBUG_PRINTF(": %s\n", __func__);
-  instr_bit(8, gb_cpu->A);gb_cpu->cycles += 8;
+  instr_bit(4, gb_cpu->A);gb_cpu->cycles += 8;
 }
+
+
 void BIT_5_B(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   instr_bit(5, gb_cpu->B);gb_cpu->cycles += 8;
@@ -326,9 +329,9 @@ void BIT_5_L(void) {
   instr_bit(5, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_5_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(5, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_5_A(void) {
@@ -360,9 +363,9 @@ void BIT_6_L(void) {
   instr_bit(6, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_6_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(6, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_6_A(void) {
@@ -395,9 +398,9 @@ void BIT_7_L(void) {
   instr_bit(7, gb_cpu->L);gb_cpu->cycles += 8;
 }
 void BIT_7_HLm(void) {
-  DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
   instr_bit(7, &val);
+  DEBUG_PRINTF(": %s: 0x%02X - %d\n", __func__, val, CPU_check_flag(ZERO_FLAG));
   gb_cpu->cycles += 12;
 }
 void BIT_7_A(void) {
@@ -405,12 +408,12 @@ void BIT_7_A(void) {
   instr_bit(7, gb_cpu->A);gb_cpu->cycles += 8;
 }
 
-void RES_0_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->B);}
-void RES_0_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->C);}
-void RES_0_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->D);}
-void RES_0_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->E);}
-void RES_0_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->H);}
-void RES_0_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->L);}
+void RES_0_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->B);}
+void RES_0_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->C);}
+void RES_0_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->D);}
+void RES_0_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->E);}
+void RES_0_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->H);}
+void RES_0_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->L);}
 void RES_0_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -418,14 +421,14 @@ void RES_0_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_0_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->A);}
+void RES_0_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->A);}
 
-void RES_1_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->B);}
-void RES_1_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->C);}
-void RES_1_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->D);}
-void RES_1_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->E);}
-void RES_1_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->H);}
-void RES_1_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->L);}
+void RES_1_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->B);}
+void RES_1_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->C);}
+void RES_1_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->D);}
+void RES_1_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->E);}
+void RES_1_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->H);}
+void RES_1_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->L);}
 void RES_1_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -433,14 +436,14 @@ void RES_1_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_1_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->A);}
+void RES_1_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(1, gb_cpu->A);}
 
-void RES_2_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->B);}
-void RES_2_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->C);}
-void RES_2_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->D);}
-void RES_2_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->E);}
-void RES_2_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->H);}
-void RES_2_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->L);}
+void RES_2_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->B);}
+void RES_2_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->C);}
+void RES_2_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->D);}
+void RES_2_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->E);}
+void RES_2_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->H);}
+void RES_2_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->L);}
 void RES_2_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -448,14 +451,14 @@ void RES_2_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_2_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->A);}
+void RES_2_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(2, gb_cpu->A);}
 
-void RES_3_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->B);}
-void RES_3_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->C);}
-void RES_3_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->D);}
-void RES_3_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->E);}
-void RES_3_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->H);}
-void RES_3_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->L);}
+void RES_3_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->B);}
+void RES_3_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->C);}
+void RES_3_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->D);}
+void RES_3_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->E);}
+void RES_3_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->H);}
+void RES_3_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->L);}
 void RES_3_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -463,29 +466,29 @@ void RES_3_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_3_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->A);}
+void RES_3_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(3, gb_cpu->A);}
 
-void RES_8_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->B);}
-void RES_8_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->C);}
-void RES_8_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->D);}
-void RES_8_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->E);}
-void RES_8_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->H);}
-void RES_8_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->L);}
-void RES_8_HLm(void) {
+void RES_4_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->B);}
+void RES_4_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->C);}
+void RES_4_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->D);}
+void RES_4_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->E);}
+void RES_4_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->H);}
+void RES_4_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->L);}
+void RES_4_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  instr_res(8, &val);
+  instr_res(4, &val);
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_8_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(8, gb_cpu->A);}
+void RES_4_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(4, gb_cpu->A);}
 
-void RES_5_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->B);}
-void RES_5_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->C);}
-void RES_5_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->D);}
-void RES_5_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->E);}
-void RES_5_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->H);}
-void RES_5_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->L);}
+void RES_5_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->B);}
+void RES_5_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->C);}
+void RES_5_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->D);}
+void RES_5_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->E);}
+void RES_5_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->H);}
+void RES_5_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->L);}
 void RES_5_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -493,14 +496,14 @@ void RES_5_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_5_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->A);}
+void RES_5_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->A);}
 
-void RES_6_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(5, gb_cpu->B);}
-void RES_6_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->C);}
-void RES_6_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->D);}
-void RES_6_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->E);}
-void RES_6_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->H);}
-void RES_6_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->L);}
+void RES_6_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->B);}
+void RES_6_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->C);}
+void RES_6_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->D);}
+void RES_6_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->E);}
+void RES_6_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->H);}
+void RES_6_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->L);}
 void RES_6_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -508,14 +511,14 @@ void RES_6_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_6_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->A);}
+void RES_6_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(6, gb_cpu->A);}
 
-void RES_7_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->B);}
-void RES_7_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->C);}
-void RES_7_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->D);}
-void RES_7_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->E);}
-void RES_7_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->H);}
-void RES_7_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->L);}
+void RES_7_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->B);}
+void RES_7_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->C);}
+void RES_7_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->D);}
+void RES_7_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->E);}
+void RES_7_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->H);}
+void RES_7_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->L);}
 void RES_7_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -523,14 +526,14 @@ void RES_7_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void RES_7_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->A);}
+void RES_7_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_res(7, gb_cpu->A);}
 
-void SET_0_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_res(0, gb_cpu->B);}
-void SET_0_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->C);}
-void SET_0_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->D);}
-void SET_0_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->E);}
-void SET_0_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->H);}
-void SET_0_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->L);}
+void SET_0_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->B);}
+void SET_0_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->C);}
+void SET_0_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->D);}
+void SET_0_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->E);}
+void SET_0_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->H);}
+void SET_0_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->L);}
 void SET_0_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -538,14 +541,14 @@ void SET_0_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_0_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->A);}
+void SET_0_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(0, gb_cpu->A);}
 
-void SET_1_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->B);}
-void SET_1_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->C);}
-void SET_1_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->D);}
-void SET_1_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->E);}
-void SET_1_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->H);}
-void SET_1_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->L);}
+void SET_1_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->B);}
+void SET_1_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->C);}
+void SET_1_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->D);}
+void SET_1_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->E);}
+void SET_1_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->H);}
+void SET_1_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->L);}
 void SET_1_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -553,14 +556,14 @@ void SET_1_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_1_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->A);}
+void SET_1_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(1, gb_cpu->A);}
 
-void SET_2_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->B);}
-void SET_2_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->C);}
-void SET_2_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->D);}
-void SET_2_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->E);}
-void SET_2_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->H);}
-void SET_2_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->L);}
+void SET_2_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->B);}
+void SET_2_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->C);}
+void SET_2_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->D);}
+void SET_2_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->E);}
+void SET_2_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->H);}
+void SET_2_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->L);}
 void SET_2_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -568,14 +571,14 @@ void SET_2_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_2_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->A);}
+void SET_2_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(2, gb_cpu->A);}
 
-void SET_3_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->B);}
-void SET_3_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->C);}
-void SET_3_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->D);}
-void SET_3_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->E);}
-void SET_3_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->H);}
-void SET_3_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->L);}
+void SET_3_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->B);}
+void SET_3_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->C);}
+void SET_3_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->D);}
+void SET_3_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->E);}
+void SET_3_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->H);}
+void SET_3_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->L);}
 void SET_3_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -583,29 +586,29 @@ void SET_3_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_3_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->A);}
+void SET_3_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(3, gb_cpu->A);}
 
-void SET_8_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->B);}
-void SET_8_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->C);}
-void SET_8_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->D);}
-void SET_8_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->E);}
-void SET_8_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->H);}
-void SET_8_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->L);}
-void SET_8_HLm(void) {
+void SET_4_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->B);}
+void SET_4_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->C);}
+void SET_4_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->D);}
+void SET_4_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->E);}
+void SET_4_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->H);}
+void SET_4_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->L);}
+void SET_4_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
-  instr_set_b(8, &val);
+  instr_set_b(4, &val);
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_8_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(8, gb_cpu->A);}
+void SET_4_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(4, gb_cpu->A);}
 
-void SET_5_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->B);}
-void SET_5_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->C);}
-void SET_5_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->D);}
-void SET_5_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->E);}
-void SET_5_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->H);}
-void SET_5_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->L);}
+void SET_5_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->B);}
+void SET_5_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->C);}
+void SET_5_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->D);}
+void SET_5_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->E);}
+void SET_5_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->H);}
+void SET_5_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->L);}
 void SET_5_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -613,14 +616,14 @@ void SET_5_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_5_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->A);}
+void SET_5_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(5, gb_cpu->A);}
 
-void SET_6_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->B);}
-void SET_6_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->C);}
-void SET_6_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->D);}
-void SET_6_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->E);}
-void SET_6_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->H);}
-void SET_6_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->L);}
+void SET_6_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->B);}
+void SET_6_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->C);}
+void SET_6_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->D);}
+void SET_6_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->E);}
+void SET_6_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->H);}
+void SET_6_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->L);}
 void SET_6_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -628,14 +631,14 @@ void SET_6_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_6_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->A);}
+void SET_6_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(6, gb_cpu->A);}
 
-void SET_7_B(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->B);}
-void SET_7_C(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->C);}
-void SET_7_D(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->D);}
-void SET_7_E(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->E);}
-void SET_7_H(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->H);}
-void SET_7_L(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->L);}
+void SET_7_B(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->B);}
+void SET_7_C(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->C);}
+void SET_7_D(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->D);}
+void SET_7_E(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->E);}
+void SET_7_H(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->H);}
+void SET_7_L(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->L);}
 void SET_7_HLm(void) {
   DEBUG_PRINTF(": %s\n", __func__);
   uint8_t val = memory_read8(memory, *gb_cpu->HL);
@@ -643,7 +646,7 @@ void SET_7_HLm(void) {
   memory_write8(memory, *gb_cpu->HL, val);
   gb_cpu->cycles += 16;
 }
-void SET_7_A(void) { DEBUG_PRINTF(": %s\n", __func__); DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->A);}
+void SET_7_A(void) { DEBUG_PRINTF(": %s\n", __func__); instr_set_b(7, gb_cpu->A);}
 
 void (*prefix_cb[256])(void) = {
     RLC_B,   RLC_C,   RLC_D,   RLC_E,   RLC_H,   RLC_L,   RLC_HLm,   RLC_A,
@@ -658,7 +661,7 @@ void (*prefix_cb[256])(void) = {
     BIT_1_B, BIT_1_C, BIT_1_D, BIT_1_E, BIT_1_H, BIT_1_L, BIT_1_HLm, BIT_1_A,
     BIT_2_B, BIT_2_C, BIT_2_D, BIT_2_E, BIT_2_H, BIT_2_L, BIT_2_HLm, BIT_2_A,
     BIT_3_B, BIT_3_C, BIT_3_D, BIT_3_E, BIT_3_H, BIT_3_L, BIT_3_HLm, BIT_3_A,
-    BIT_8_B, BIT_8_C, BIT_8_D, BIT_8_E, BIT_8_H, BIT_8_L, BIT_8_HLm, BIT_8_A,
+    BIT_4_B, BIT_4_C, BIT_4_D, BIT_4_E, BIT_4_H, BIT_4_L, BIT_4_HLm, BIT_4_A,
     BIT_5_B, BIT_5_C, BIT_5_D, BIT_5_E, BIT_5_H, BIT_5_L, BIT_5_HLm, BIT_5_A,
     BIT_6_B, BIT_6_C, BIT_6_D, BIT_6_E, BIT_6_H, BIT_6_L, BIT_6_HLm, BIT_6_A,
     BIT_7_B, BIT_7_C, BIT_7_D, BIT_7_E, BIT_7_H, BIT_7_L, BIT_7_HLm, BIT_7_A,
@@ -667,7 +670,7 @@ void (*prefix_cb[256])(void) = {
     RES_1_B, RES_1_C, RES_1_D, RES_1_E, RES_1_H, RES_1_L, RES_1_HLm, RES_1_A,
     RES_2_B, RES_2_C, RES_2_D, RES_2_E, RES_2_H, RES_2_L, RES_2_HLm, RES_2_A,
     RES_3_B, RES_3_C, RES_3_D, RES_3_E, RES_3_H, RES_3_L, RES_3_HLm, RES_3_A,
-    RES_8_B, RES_8_C, RES_8_D, RES_8_E, RES_8_H, RES_8_L, RES_8_HLm, RES_8_A,
+    RES_4_B, RES_4_C, RES_4_D, RES_4_E, RES_4_H, RES_4_L, RES_4_HLm, RES_4_A,
     RES_5_B, RES_5_C, RES_5_D, RES_5_E, RES_5_H, RES_5_L, RES_5_HLm, RES_5_A,
     RES_6_B, RES_6_C, RES_6_D, RES_6_E, RES_6_H, RES_6_L, RES_6_HLm, RES_6_A,
     RES_7_B, RES_7_C, RES_7_D, RES_7_E, RES_7_H, RES_7_L, RES_7_HLm, RES_7_A,
@@ -676,7 +679,7 @@ void (*prefix_cb[256])(void) = {
     SET_1_B, SET_1_C, SET_1_D, SET_1_E, SET_1_H, SET_1_L, SET_1_HLm, SET_1_A,
     SET_2_B, SET_2_C, SET_2_D, SET_2_E, SET_2_H, SET_2_L, SET_2_HLm, SET_2_A,
     SET_3_B, SET_3_C, SET_3_D, SET_3_E, SET_3_H, SET_3_L, SET_3_HLm, SET_3_A,
-    SET_8_B, SET_8_C, SET_8_D, SET_8_E, SET_8_H, SET_8_L, SET_8_HLm, SET_8_A,
+    SET_4_B, SET_4_C, SET_4_D, SET_4_E, SET_4_H, SET_4_L, SET_4_HLm, SET_4_A,
     SET_5_B, SET_5_C, SET_5_D, SET_5_E, SET_5_H, SET_5_L, SET_5_HLm, SET_5_A,
     SET_6_B, SET_6_C, SET_6_D, SET_6_E, SET_6_H, SET_6_L, SET_6_HLm, SET_6_A,
     SET_7_B, SET_7_C, SET_7_D, SET_7_E, SET_7_H, SET_7_L, SET_7_HLm, SET_7_A};
