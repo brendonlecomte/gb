@@ -26,6 +26,11 @@ void emu_execute(void) {
   {
       if(gb_cpu->PC == 0x100) trace_started = true;
 
+      if(gb_cpu->int_to_enable) { //EI was the last instruction
+        gb_cpu->ime = 1;
+        gb_cpu->int_to_enable = 0;
+      }
+
       //fetch
       uint8_t op = memory_read8(memory, gb_cpu->PC);  //read OP code
       // DEBUG_PRINTF("OP: 0x%04X:0x%02X::", gb_cpu->PC, op);
@@ -39,8 +44,6 @@ void emu_execute(void) {
           TRACE_PRINTF("IME:0x%d IF:0x%02X IE:0x%02X", gb_cpu->ime, *(uint8_t *)gb_cpu->int_flags, *(uint8_t *)gb_cpu->int_enable);
           TRACE_PRINTF("\n");
       }
-      // if(gb_cpu->PC == 0x100 && !stepping) stepping = true;
-      // if(stepping) pause = true;
   }
   //interrupts
   CPU_handle_interrupt(gb_cpu);
