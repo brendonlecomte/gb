@@ -2014,12 +2014,16 @@ void RST_30H(void) {
 // LD HL,SP+r8
 // 2  12
 void LD_HL_SPr8(void) {
-    /* TODO: flags get set for this instruction. 0 0 * *. Need to implement!!!!*/
-    uint16_t val = (gb_cpu->SP & 0x00FF) + memory_read8(memory, gb_cpu->PC);
-  val &= 0x00FF;
-  val += gb_cpu->SP & 0xFF00;
+  int8_t val = memory_read8(memory, gb_cpu->PC);
+  uint16_t result = gb_cpu->SP + val;
   gb_cpu->PC += 1;
-  instr_load_ab16(gb_cpu->HL, val);
+
+  CPU_set_flag(ZERO_FLAG, 0);
+  CPU_set_flag(SUBTRACT_FLAG, 0);
+  CPU_set_flag(CARRY_FLAG, (((gb_cpu->SP ^ val ^ result) & 0x100) == 0x100));
+  CPU_set_flag(HALF_CARRY_FLAG, (((gb_cpu->SP ^ val ^ result) & 0x10) == 0x10));
+
+  instr_load_ab16(gb_cpu->HL, result);
   DEBUG_PRINTF(" %s: HL <- 0x%04X \n", __func__, val);
   gb_cpu->cycles += 12;
 }
