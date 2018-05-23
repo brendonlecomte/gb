@@ -72,15 +72,13 @@ ADD SP,n - Add n to Stack Pointer (SP).
                 H - Set or reset according to operation.
                 C - Set or reset according to operation.
 */
-void instr_add_SP(uint16_t *sp, uint8_t n) {
-  uint32_t temp = *sp + n;
+void instr_add_SP(uint16_t *sp, int8_t n) {
+  int32_t temp = *sp + n;
   CPU_set_flag(ZERO_FLAG, 0);
   CPU_set_flag(SUBTRACT_FLAG, 0);
-
-  uint16_t hc_temp = (*sp & 0x0FFF) + (n);
+  CPU_set_flag(HALF_CARRY_FLAG, (((*sp ^ n ^ (temp & 0xFFFF)) & 0x10) == 0x10));
+  CPU_set_flag(CARRY_FLAG, (((*sp ^ n ^ (temp & 0xFFFF)) & 0x100) == 0x100));
   *sp = temp;
-  CPU_set_flag(CARRY_FLAG, (temp & 0x10000) > 0);
-  CPU_set_flag(HALF_CARRY_FLAG, (hc_temp & 0x1000) > 0);
 }
 
 /*
@@ -222,24 +220,29 @@ DAA           - Decimal adjust register A.
                 C - Set of reset according to operation.
 */
 void instr_daa(uint8_t *A) {
-  uint16_t t = *A;
-  if(!CPU_check_flag(ZERO_FLAG)){
-      if((t&0x000F) > 9 || CPU_check_flag(HALF_CARRY_FLAG))
+  int16_t t = *A;
+  if(!CPU_check_flag(SUBTRACT_FLAG)){
+      if(CPU_check_flag(HALF_CARRY_FLAG) || ((t & 0xF) > 9)){
         t += 0x06;
-      if((t>>4) & (0x000F > 9) || CPU_check_flag(CARRY_FLAG))
+      }
+      if(CPU_check_flag(CARRY_FLAG) || (t > 0x9F)){
         t += 0x60;
+      }
   }
   else {
-       if(CPU_check_flag(HALF_CARRY_FLAG))
+       if(CPU_check_flag(HALF_CARRY_FLAG)) {
           t = (t - 6) & 0xFF;
+        }
 
-        if(CPU_check_flag(CARRY_FLAG))
+        if(CPU_check_flag(CARRY_FLAG)){
           t -= 0x60;
+        }
   }
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, (t&0x100));
-  *A = t&0xFF;
-  CPU_set_flag(ZERO_FLAG, (*A == 0));
+  CPU_set_flag(CARRY_FLAG, ((t & 0x100) == 0x100));
+  t &= 0xFF;
+  CPU_set_flag(ZERO_FLAG, (t == 0));
+  *A = t;
 }
 
 /*
@@ -295,7 +298,7 @@ EI            - Enable interrupts.
 void instr_ei(void)
 {
   //TODO: this need to occur an instruction later....
-  gb_cpu->ime = 1;
+  gb_cpu->int_to_enable = 1;
 }
 
 /*
@@ -614,8 +617,13 @@ SBC A,n       - Subtract n + Carry flag from A.
                 C - Set if no borrow.
 */
 void instr_sbc(uint8_t *A, uint8_t n) {
-  uint8_t val =  n + CPU_check_flag(CARRY_FLAG);
-  instr_sub_n(A, val);
+  uint8_t c = CPU_check_flag(CARRY_FLAG);
+  int16_t result = (uint8_t)*A - n - c;
+  CPU_set_flag(HALF_CARRY_FLAG, (((*A&0x0F) - (n&0x0F) - c) < 0));
+  CPU_set_flag(CARRY_FLAG, result < 0);
+  CPU_set_flag(SUBTRACT_FLAG, 1);
+  CPU_set_flag(ZERO_FLAG, ((uint8_t)result == 0));
+  *A = (uint8_t)result;
 }
 
 /*
@@ -637,7 +645,9 @@ SET b,r       - Set bit b in register r.
         b = 0-7, r = A,B,C,D,E,H,L,(HL)
         Flags affected        None
 */
-void instr_set_b(uint8_t b, uint8_t *r) { *r |= 0x01 << b; }
+void instr_set_b(uint8_t b, uint8_t *r) {
+  *r |= (0x01 << b);
+}
 
 /*
 SLA n         - Shift n left into Carry. LSBit of n set to 0.
@@ -719,7 +729,7 @@ SUB n         - Subtract n from A.
 */
 void instr_sub_n(uint8_t *A, uint8_t n) {
   CPU_set_flag(CARRY_FLAG, n > *A);
-  CPU_set_flag(HALF_CARRY_FLAG, ((n&0x0F) > (*A&0x0F)));
+  CPU_set_flag(HALF_CARRY_FLAG, (((*A&0x0F) - (n&0x0F)) < 0));
   *A = (uint8_t)*A - n;
   CPU_set_flag(ZERO_FLAG, (*A == 0));
   CPU_set_flag(SUBTRACT_FLAG, 1);
