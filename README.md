@@ -27,15 +27,15 @@ hardware that fits inside the original gameboy case.
 cpu_instrs
 - [ ] 01 - special // fails on DAA
 - [x] 02 - Interrupts
-- [ ] 03 - OP SP,HL //
-- [ ] 04 - OP r,imm  //DE
+- [x] 03 - OP SP,HL //
+- [x] 04 - OP r,imm  //DE
 - [x] 05 - OP rp
 - [x] 06 - OP ld r,r
 - [ ] 07 - jr, jp, call, ret, rst
 - [x] 08 - misc instrs
 - [ ] 09 - OP r,r //many fails
-- [ ] 10 - bit ops  //lots
-- [ ] 11 - OP a, (hl) //asserts!
+- [x] 10 - bit ops  //2 fails.
+- [ ] 11 - OP a, (hl) //few fails. bit_6 maybe?
 
 
 ## Building
