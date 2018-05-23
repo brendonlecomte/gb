@@ -68,6 +68,7 @@ typedef struct {
   bool ime; //master interrupt, cpu controlled
   int_reg_t *int_flags;
   int_reg_t *int_enable;
+  bool int_to_enable;
 
   //  Timing
   int32_t cycles;

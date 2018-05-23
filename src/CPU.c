@@ -149,6 +149,10 @@ void CPU_set_flag(const uint8_t flg, uint8_t val)
     *_cpu.F = f;
 }
 
+void CPU_clear_all_flags(void) {
+  *_cpu.F = 0;
+}
+
 bool CPU_check_flag(uint8_t flg) {
     return ((*_cpu.F & flg) == flg);
 }
