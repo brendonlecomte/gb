@@ -169,6 +169,8 @@ CCF           - Complement carry flag.
 */
 void instr_ccf(void) {
     CPU_set_flag(CARRY_FLAG, !CPU_check_flag(CARRY_FLAG));
+    CPU_set_flag(HALF_CARRY_FLAG, 0);
+    CPU_set_flag(SUBTRACT_FLAG, 0);
 }
 
 /*
@@ -511,13 +513,12 @@ RL n          - Rotate n left through Carry flag.
                 C - Contains old bit 7 data.
 */
 void instr_rl(uint8_t *n) {
-  uint8_t c = *n>>7;
   uint8_t x = *n << 1;
   x = x + CPU_check_flag(CARRY_FLAG);
-  CPU_set_flag(ZERO_FLAG, (x != 0));
+  CPU_set_flag(ZERO_FLAG, (x == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, c);
+  CPU_set_flag(CARRY_FLAG, (*n>>7));
   *n = x;
 }
 
@@ -536,10 +537,10 @@ RLC n         - Rotate n left. Old bit 7 to Carry flag.
                 C - Contains old bit 7 data.
 */
 void instr_rlc(uint8_t *n) {
-  uint8_t c = *n>>7;
+  uint8_t c = (*n>>7) & 0x01;
   uint8_t x = *n << 1;
-  *n = x + c;
-  CPU_set_flag(ZERO_FLAG, (x == 0));
+  *n = x | c;
+  CPU_set_flag(ZERO_FLAG, (*n == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
   CPU_set_flag(CARRY_FLAG, c);
@@ -587,7 +588,7 @@ void instr_rrc(uint8_t *n) {
   uint8_t c = *n & 0x01;
   uint8_t x = *n >> 1;
   *n = x | (c<<7);
-  CPU_set_flag(ZERO_FLAG, (x == 0));
+  CPU_set_flag(ZERO_FLAG, (*n == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
   CPU_set_flag(CARRY_FLAG, c);
