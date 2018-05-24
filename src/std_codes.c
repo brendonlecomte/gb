@@ -530,6 +530,7 @@ void JR_C_r8(void) {
       gb_cpu->cycles += 12;
     } else {
       DEBUG_PRINTF(" %s: JR, no jump \n", __func__);
+      gb_cpu->PC += 1;
       gb_cpu->cycles += 8;
     }
 }
@@ -1687,6 +1688,7 @@ void CALL_Z_a16(void) {
     else {
       DEBUG_PRINTF(" No %s \n", __func__);
       gb_cpu->cycles += 12;
+      gb_cpu->PC += 2;
     }
 }
 // CALL a16
@@ -1766,6 +1768,7 @@ void CALL_NC_a16(void) {
     else {
       DEBUG_PRINTF(" No %s \n", __func__);
       gb_cpu->cycles += 12;
+      gb_cpu->PC += 2;
     }
 }
 // PUSH DE
@@ -1843,6 +1846,7 @@ void CALL_C_a16(void) {
     }
     else {
       DEBUG_PRINTF(" No %s \n", __func__);
+      gb_cpu->PC += 2;
       gb_cpu->cycles += 12;
     }
 }
@@ -1910,7 +1914,7 @@ void AND_d8(void) {
 // 1  16
 void RST_20H(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  gb_cpu->PC = 0x0020;
+  instr_rst(0x20);
   gb_cpu->cycles += 16;
 }
 // ADD SP,r8
