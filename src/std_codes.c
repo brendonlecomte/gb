@@ -215,6 +215,7 @@ void RLA(void) {
 void JR_r8(void) {
 
   uint8_t val = memory_read8(memory, gb_cpu->PC);
+  gb_cpu->PC += 1;
   DEBUG_PRINTF(" %s + 0x%02X \n", __func__, val);
   instr_jr(val);
     // gb_cpu->PC += 1;
@@ -287,6 +288,7 @@ void RRA(void) {
 void JR_NZ_r8(void) {
   if (CPU_check_flag(ZERO_FLAG) != 1) {
     uint8_t val = memory_read8(memory, gb_cpu->PC);
+    gb_cpu->PC += 1;
     instr_jr(val);
     DEBUG_PRINTF(" %s: JR J 0x%02X to 0x%04X  \n", __func__, val, gb_cpu->PC);
     gb_cpu->cycles += 12;
@@ -364,6 +366,7 @@ void DAA(void) {
 void JR_Z_r8(void) {
     if (CPU_check_flag(ZERO_FLAG) == 1) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
+      gb_cpu->PC += 1;
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X  \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
@@ -440,6 +443,7 @@ void CPL(void) {
 void JR_NC_r8(void) {
     if (CPU_check_flag(CARRY_FLAG) == 0) {
       uint8_t val = memory_read8(memory, gb_cpu->PC);
+      gb_cpu->PC += 1;
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X  \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
@@ -518,8 +522,9 @@ void SCF(void) {
 // JR C,r8
 // 2  12/8
 void JR_C_r8(void) {
-    if (CPU_check_flag(ZERO_FLAG) != 0) {
-      uint8_t val = memory_read8(memory, gb_cpu->PC);
+    if (CPU_check_flag(CARRY_FLAG) == 1) {
+      int8_t val = memory_read8(memory, gb_cpu->PC);
+      gb_cpu->PC += 1;
       instr_jr(val);
       DEBUG_PRINTF(" %s: JR J 0x%04X to 0x%04X  \n", __func__, val, gb_cpu->PC);
       gb_cpu->cycles += 12;
@@ -1420,7 +1425,8 @@ void XOR_HLm(void) {
 // 1  4
 void XOR_A(void) {
   DEBUG_PRINTF(" %s \n", __func__);
-  instr_xor(gb_cpu->A, *gb_cpu->A);
+  uint8_t val = *gb_cpu->A;
+  instr_xor(gb_cpu->A, val);
   gb_cpu->cycles += 4;
 }
 

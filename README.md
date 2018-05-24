@@ -33,9 +33,9 @@ cpu_instrs
 - [x] 06 - OP ld r,r
 - [ ] 07 - jr, jp, call, ret, rst
 - [x] 08 - misc instrs
-- [ ] 09 - OP r,r //many fails
+- [x] 09 - OP r,r //A = A ^ x fails, but no set into A is fine
 - [x] 10 - bit ops  //2 fails.
-- [ ] 11 - OP a, (hl) //few fails. bit_6 maybe?
+- [x] 11 - OP a, (hl) 
 
 
 ## Building

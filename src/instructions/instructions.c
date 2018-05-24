@@ -380,12 +380,12 @@ void instr_jr(uint8_t n) {
   if(n&0x80)
   {
     uint8_t t = ~(n);
-    gb_cpu->PC -= t;
+    gb_cpu->PC -= (t+1);
   }
   else {
     gb_cpu->PC += n;
-    gb_cpu->PC += 1;
   }
+
 }
 
 /*
@@ -769,9 +769,10 @@ XOR n         - Logical exclusive OR n with
                 C - Reset.
 */
 void instr_xor(uint8_t *A, uint8_t n) {
-  *A = *A ^ n;
-  CPU_set_flag(ZERO_FLAG, (*A == 0));
+  uint8_t res = *A ^ n;
+  CPU_set_flag(ZERO_FLAG, (res == 0));
   CPU_set_flag(SUBTRACT_FLAG, 0);
   CPU_set_flag(HALF_CARRY_FLAG, 0);
   CPU_set_flag(CARRY_FLAG, 0);
+  *A = res;
 }
