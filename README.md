@@ -31,11 +31,11 @@ cpu_instrs
 - [x] 04 - OP r,imm  //DE
 - [x] 05 - OP rp
 - [x] 06 - OP ld r,r
-- [ ] 07 - jr, jp, call, ret, rst
+- [x] 07 - jr, jp, call, ret, rst
 - [x] 08 - misc instrs
-- [x] 09 - OP r,r //A = A ^ x fails, but no set into A is fine
-- [x] 10 - bit ops  //2 fails.
-- [x] 11 - OP a, (hl) 
+- [ ] 09 - OP r,r //A = A ^ x fails, but no set into A is fine
+- [x] 10 - bit ops
+- [ ] 11 - OP a, (hl)
 
 
 ## Building
