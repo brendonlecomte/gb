@@ -360,7 +360,26 @@ TEST(Instructions, cpl) {
 }
 
 TEST(Instructions, daa) {
-  TEST_ASSERT_EQUAL(0,1);
+  CPU_init(gb_cpu);
+  *gb_cpu->A = 0x00;
+  CPU_set_flag(CARRY_FLAG, 1);
+  instr_daa(gb_cpu->A);
+  TEST_ASSERT_EQUAL(0x60, *gb_cpu->A);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
+
+  CPU_init(gb_cpu);
+  *gb_cpu->A = 0x01;
+  CPU_set_flag(CARRY_FLAG, 1);
+  instr_daa(gb_cpu->A);
+  TEST_ASSERT_EQUAL(0x61, *gb_cpu->A);
+  TEST_ASSERT_EQUAL(1, CPU_check_flag(CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(HALF_CARRY_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(SUBTRACT_FLAG));
+  TEST_ASSERT_EQUAL(0, CPU_check_flag(ZERO_FLAG));
+
 }
 
 TEST(Instructions, cp) {

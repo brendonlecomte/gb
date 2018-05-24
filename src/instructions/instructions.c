@@ -228,6 +228,7 @@ void instr_daa(uint8_t *A) {
       }
       if(CPU_check_flag(CARRY_FLAG) || (t > 0x9F)){
         t += 0x60;
+        CPU_set_flag(CARRY_FLAG, 1);
       }
   }
   else {
@@ -240,7 +241,6 @@ void instr_daa(uint8_t *A) {
         }
   }
   CPU_set_flag(HALF_CARRY_FLAG, 0);
-  CPU_set_flag(CARRY_FLAG, ((t & 0x100) == 0x100));
   t &= 0xFF;
   CPU_set_flag(ZERO_FLAG, (t == 0));
   *A = t;
