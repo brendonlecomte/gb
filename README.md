@@ -25,7 +25,7 @@ hardware that fits inside the original gameboy case.
 
 ### Blarggs Tests
 cpu_instrs
-- [ ] 01 - special // fails on DAA
+- [x] 01 - special
 - [x] 02 - Interrupts
 - [x] 03 - OP SP,HL //
 - [x] 04 - OP r,imm  //DE
@@ -33,9 +33,9 @@ cpu_instrs
 - [x] 06 - OP ld r,r
 - [x] 07 - jr, jp, call, ret, rst
 - [x] 08 - misc instrs
-- [ ] 09 - OP r,r //A = A ^ x fails, but no set into A is fine
+- [x] 09 - OP r,r
 - [x] 10 - bit ops
-- [ ] 11 - OP a, (hl)
+- [x] 11 - OP a, (hl)
 
 
 ## Building
