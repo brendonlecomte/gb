@@ -48,6 +48,12 @@ class gameboy:
         # print(dbg)
         rs = self.registers_state.match(dbg)
         cs = self.cpu_state.match(dbg)
+        ins = self.interrupt_state.match(dbg)
+
+        if(ins):
+            self.IME = int(ins.group(1), 16)
+            self.IF = int(ins.group(2), 16)
+            self.IE = int(ins.group(3), 16)
 
         if(rs):
             self.AF = int(rs.group(1), 16)
@@ -62,18 +68,22 @@ class gameboy:
         return cs and rs
 
     def __repr__(self):
-        return "OP:{:#x} {} \nPC:{:#x} SP:{:#x}\nAF:{:#x} BC:{:#x} DE:{:#x} HL:{:#x}\n".format(self.OP,
+        return "OP:{:#x} {} \nPC:{:#x} SP:{:#x}\nAF:{:#x} BC:{:#x} DE:{:#x} HL:{:#x}\nIME:{:#x}  IF:{:#x}  IE:{:#x}".format(self.OP,
                                                                                             op_code_lut[self.OP],
                                                                                             self.PC,
                                                                                             self.SP,
                                                                                             self.AF,
                                                                                             self.BC,
                                                                                             self.DE,
-                                                                                            self.HL)
+                                                                                            self.HL,
+                                                                                            self.IME,
+                                                                                            self.IF,
+                                                                                            self.IE)
 
     def __eq__(self , other):
-        return {k: v for k,v in self.__dict__.items() if k not in ['iter']} == \
-                {k: v for k,v in other.__dict__.items() if k not in ['iter']}
+        mask = ['iter','IME','IF','IE']
+        return {k: v for k,v in self.__dict__.items() if k not in mask} == \
+                {k: v for k,v in other.__dict__.items() if k not in mask}
 
 op_code_lut = [
 'NOP','LD_BC_d16','LD_mBC_A','INC_BC','INC_B','DEC_B','LD_B_d8','RLCA','LD_a16_SP',
@@ -159,6 +169,7 @@ if __name__ == '__main__':
         print(my_emu)
         print("REF:"),
         print(ref_emu)
+        print("-----------")
         if(not compare(ref_emu, my_emu, mode=compare_mode)):
             inp = input('::')
             m = parse_mode_command(inp)
