@@ -38,6 +38,7 @@ void memory_init(memory_t *mem) {
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
   memset(mem->vram, 0x55, 0x2000);
+  mem->memory[JOYP] = 0xFF; //make sure the keys are "unpressed" at boot
 #if BOOT_ROM
   mem->inBoot = true;
 #else
@@ -61,10 +62,7 @@ uint8_t memory_read8(memory_t *mem, uint16_t addr) {
         default:
             val = mem->memory[addr];
             break;
-
-
     }
-    // return mem->memory[addr];
     return val;
 }
 
