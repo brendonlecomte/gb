@@ -26,9 +26,9 @@ cleared.
 
 typedef enum {
    INT_UNUSED,
-   INT_JOYPAD=4,
-   INT_SERIAL=3,
-   INT_TMR =2 ,
+   INT_JOYPAD = 4,
+   INT_SERIAL = 3,
+   INT_TMR = 2 ,
    INT_LCD_STAT = 1,
    INT_V_BLANK = 0
 } interrupts_t;
