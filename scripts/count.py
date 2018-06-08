@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+
 import re
 import os
 import sys
+from op_codes import op_code_lut
+
 
 def file_handler(path):
     path = os.path.abspath(path)
@@ -13,12 +16,13 @@ def file_handler(path):
         for line in f:
             yield line
 
+
 op_state = re.compile(".*OP:(0x[0-9A-F]{2}).*")
 
 if __name__ == '__main__':
     ref_path = sys.argv[1]
 
-    ops  = {}
+    ops = {}
     for emu in file_handler(ref_path):
         op_code = op_state.match(emu).group(1)
         try:
@@ -26,4 +30,6 @@ if __name__ == '__main__':
         except KeyError as err:
             ops[op_code] = 1
 
-    print ops
+    for code in ops.keys():
+        # print("{}".format(int(code,16)))
+        print("{}: {}".format(op_code_lut[int(code,16)], ops[code]))
