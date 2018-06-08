@@ -47,18 +47,16 @@ void emu_execute(void) {
       }
   }
 
+  //timers
+  timer_run(timer);
+
+  //Graphics
+  ppu_run();
 
   //interrupts
   CPU_handle_interrupt(gb_cpu);
 
-  //timers
-  timer_run(timer);
-
-  //sound
-
-  //Graphics
-  if(gb_cpu->cycles % 4 == 0 ) ppu_run();
-
+  //cycles run at 4Mhz
   if(!pause && gb_cpu->cycles > 0) gb_cpu->cycles -= 1;
 }
 
