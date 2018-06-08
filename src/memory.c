@@ -38,7 +38,7 @@ void memory_init(memory_t *mem) {
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
   memset(mem->vram, 0x55, 0x2000);
-  mem->memory[JOYP] = 0xFF; //make sure the keys are "unpressed" at boot
+  mem->memory[JOYP] = 0x0F; //make sure the keys are "unpressed" at boot
 #if BOOT_ROM
   mem->inBoot = true;
 #else
@@ -74,7 +74,18 @@ uint16_t memory_read16(memory_t *mem, uint16_t addr) {
 }
 
 void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
-  mem->memory[addr] = val;
+  switch(addr){
+    case JOYP: //boot rom enable register
+      mem->memory[addr] |= val&0xF0;
+      break;
+    case BOOT:
+      mem->memory[addr] = val;
+      mem->inBoot = (val == 0) ? true : false;
+      break;
+    default:
+      mem->memory[addr] = val;
+      break;
+  }
 }
 
 void memory_write16(memory_t *mem, uint16_t addr, uint16_t val) {
