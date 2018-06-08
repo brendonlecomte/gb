@@ -53,32 +53,32 @@ void CPU_handle_interrupt(CPU_t *cpu) {
       // PC = 0x0040, 0x0048, 0x0050, 0x0058, 0x0060;
       uint16_t rst_vector = 0xAA55;
       //faux priority
-      if(cpu->int_flags->joypad && cpu->int_enable->joypad) {
+      if(cpu->int_flags->joypad) {
           rst_vector = 0x0060;
           cpu->int_flags->joypad = 0;
       }
-      if(cpu->int_flags->serial && cpu->int_enable->serial) {
+      else if(cpu->int_flags->serial && cpu->int_enable->serial) {
           rst_vector = 0x0058;
           cpu->int_flags->serial = 0;
       }
-      if(cpu->int_flags->tmr && cpu->int_enable->tmr) {
+      else if(cpu->int_flags->tmr && cpu->int_enable->tmr) {
           rst_vector = 0x0050;
           cpu->int_flags->tmr = 0;
       }
-      if(cpu->int_flags->lcd_stat && cpu->int_enable->lcd_stat){
+      else if(cpu->int_flags->lcd_stat && cpu->int_enable->lcd_stat){
           rst_vector = 0x0048;
           cpu->int_flags->lcd_stat = 0;
       }
-      if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) {
+      else if(cpu->int_flags->v_blank && cpu->int_enable->v_blank) {
           rst_vector = 0x0040;
           cpu->int_flags->v_blank = 0;
       }
       if(rst_vector != 0xAA55) //interrupt detected
       {
         cpu->ime = 0;
-        CPU_stack_push(cpu->PC); // push PC, 2cycles
+        CPU_stack_push(cpu->PC); // push PC, 2 cycles
         cpu->PC = rst_vector;
-        cpu->cycles += 5;
+        cpu->cycles += 20;
       }
     }
 }
@@ -109,19 +109,19 @@ void CPU_enable_interrupt(CPU_t *cpu, interrupts_t interrupt) {
 void CPU_set_interrupt(CPU_t *cpu, interrupts_t interrupt) {
   switch(interrupt){
     case INT_V_BLANK:
-      cpu->int_flags->v_blank = 1;
+      if(cpu->int_enable->v_blank) cpu->int_flags->v_blank = 1;
       break;
     case INT_LCD_STAT:
-      cpu->int_flags->lcd_stat = 1;
+      if(cpu->int_enable->lcd_stat) cpu->int_flags->lcd_stat = 1;
       break;
     case INT_TMR:
-      cpu->int_flags->tmr = 1;
+      if(cpu->int_enable->tmr) cpu->int_flags->tmr = 1;
       break;
     case INT_SERIAL:
-      cpu->int_flags->serial = 1;
+      if(cpu->int_enable->serial) cpu->int_flags->serial = 1;
       break;
     case INT_JOYPAD:
-      cpu->int_flags->joypad = 1;
+      if(cpu->int_enable->joypad) cpu->int_flags->joypad = 1;
       break;
     default:
       // assert(0); //catch mistakes
