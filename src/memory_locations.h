@@ -73,6 +73,9 @@
 //IO REGISTERS
 #define JOYP (0xFF00)
 
+//BOOT
+#define BOOT (0xFF50)
+
 //SERIAL CABLE
 #define SB (0xFF01)
 #define SC (0xFF02)
