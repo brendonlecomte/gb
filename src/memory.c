@@ -2,7 +2,9 @@
 #include "memory_locations.h"
 #include "cart.h"
 #include "timer.h"
+#include "io.h"
 #include <string.h>
+#include <stdint.h>
 
 const uint8_t boot[256] = {
     0x31, 0xFE, 0xFF, 0xAF, 0x21, 0xFF, 0x9F, 0x32, 0xCB, 0x7C, 0x20, 0xFB, 0x21, 0x26, 0xFF, 0x0E,
@@ -38,7 +40,7 @@ void memory_init(memory_t *mem) {
   mem->io = &mem->memory[0xFF00];
   mem->hram = &mem->memory[0xFF80];
   memset(mem->vram, 0x55, 0x2000);
-  mem->memory[JOYP] = 0x0F; //make sure the keys are "unpressed" at boot
+  mem->memory[JOYP] = 0xFF; //make sure the keys are "unpressed" at boot
 #if BOOT_ROM
   mem->inBoot = true;
 #else
@@ -53,12 +55,27 @@ uint8_t memory_read8(memory_t *mem, uint16_t addr) {
         return boot[addr];
     }
     uint8_t val;
+    uint8_t joyp;
+    uint8_t temp;
     // Read from the cart
     switch(addr)
     {
         case 0x0000 ... 0x7FFF:
              val = cart_read(addr);
              break;
+        case JOYP:
+            joyp = mem->memory[addr];
+            if((joyp&0x30) == 0x20){ //directions selected
+              temp = io_get_direction();
+            }
+            else if((joyp&0x30) == 0x10) { //buttons selected
+              temp = io_get_buttons();
+            }
+            else {
+              temp = 0x0F; //nothing pressed
+            }
+            val = (joyp&0xF0) | (temp&0x0F);
+            break;
         default:
             val = mem->memory[addr];
             break;
@@ -76,7 +93,7 @@ uint16_t memory_read16(memory_t *mem, uint16_t addr) {
 void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
   switch(addr){
     case JOYP: //boot rom enable register
-      mem->memory[addr] |= val&0xF0;
+      mem->memory[addr] = val&0xF0;
       break;
     case BOOT:
       mem->memory[addr] = val;

@@ -1,6 +1,7 @@
 #include "lcd.h"
 #include <SDL2/SDL.H>
 #include "emulator.h"
+#include "io.h"
 
 const int SCREEN_WIDTH = 256; //160;
 const int SCREEN_HEIGHT = 256 ;//144;
@@ -12,8 +13,7 @@ SDL_Surface* gScreenSurface = NULL;
 //The image we will load and show on the screen
 SDL_Surface* gXOut = NULL;
 
-void lcd_init(void)
-{
+void lcd_init(void){
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -41,10 +41,10 @@ void lcd_init(void)
                                   0);
         }
     }
+    io_init();
 }
 
-void lcd_test_line(void)
-{
+void lcd_test_line(void){
     uint32_t *p = (uint32_t*)gXOut->pixels;
     for(int i =0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++){
         *p++ = rand(); //pix[i];
@@ -53,14 +53,14 @@ void lcd_test_line(void)
 
 uint32_t cols[4] = {0x00FFFFFF, 0x00FF00, 0x0f0f0f, 0x00};
 
-void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour)
-{
+void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour){
     uint32_t *p = &gXOut->pixels[x*4 + (y*4<<8)];
     *p = cols[colour];
 }
 
-void lcd_refresh(void)
-{
+void lcd_refresh(void){
+    uint8_t buttons = 0x0F;
+    uint8_t d_pad = 0x0F;
     SDL_Event e;
     while( SDL_PollEvent( &e ) != 0 )
     {
@@ -69,9 +69,67 @@ void lcd_refresh(void)
         {
             exit(1);
         }
-        if( e.type == SDL_KEYUP )
+        if( e.type == SDL_KEYUP)
         {
-            emu_pause();
+            switch(e.key.keysym.sym) {
+              case SDLK_LEFT:
+                d_pad |= 0x02;
+                break;
+              case SDLK_RIGHT:
+                d_pad |= 0x01;
+                break;
+              case SDLK_UP:
+                d_pad |= 0x04;
+                break;
+              case SDLK_DOWN:
+                d_pad |= 0x08;
+                break;
+              case SDLK_a:
+                buttons |= 0x01;
+                break;
+              case SDLK_s:
+                buttons |= 0x02;
+                break;
+              case SDLK_RETURN:
+                buttons |= 0x08;
+                break;
+              case SDLK_RSHIFT:
+                buttons |= 0x04;
+                break;
+            }
+            io_set_direction(d_pad);
+            io_set_buttons(buttons);
+        }
+        if( e.type == SDL_KEYDOWN)
+        {
+            switch(e.key.keysym.sym) {
+              case SDLK_LEFT:
+                d_pad &= 0x0D;
+                break;
+              case SDLK_RIGHT:
+                d_pad &= 0x0E;
+                break;
+              case SDLK_UP:
+                d_pad &= 0x0B;
+                break;
+              case SDLK_DOWN:
+                d_pad &= 0x07;
+                break;
+              case SDLK_a:
+                buttons &= 0x0E;
+                break;
+              case SDLK_s:
+                buttons &= 0x0D;
+                break;
+              case SDLK_RETURN:
+                buttons &= 0x07;
+                break;
+              case SDLK_RSHIFT:
+                buttons &= 0x0B;
+                break;
+            }
+            io_set_direction(d_pad);
+            io_set_buttons(buttons);
         }
     }
     //Fill the surface white
@@ -81,8 +139,7 @@ void lcd_refresh(void)
     SDL_UpdateWindowSurface( gWindow );
 }
 
-void lcd_close(void)
-{
+void lcd_close(void){
     //Deallocate surface
     SDL_FreeSurface( gXOut );
     gXOut = NULL;
