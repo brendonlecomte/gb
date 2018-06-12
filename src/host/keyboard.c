@@ -19,11 +19,8 @@ uint8_t io_get_buttons() {
 
 void io_set_direction(uint8_t dir) {
   _dir = dir;
-  printf("D: %02X\n", _dir);
-
 }
 
 void io_set_buttons(uint8_t buttons) {
   _buttons = buttons;
-  printf("B: %02X\n", _buttons);
 }
