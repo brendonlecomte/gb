@@ -37,6 +37,7 @@ SRC_FILES=src/instructions/instructions.c \
             src/host/cart.c\
             src/emulator.c\
             src/ppu/ppu.c\
+						src/ppu/tiles.c\
             src/timer.c\
             src/prefix_codes.c\
 

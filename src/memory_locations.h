@@ -22,6 +22,7 @@
 #define LYC (0xFF45) //Compare against LY
 #define WY (0xFF4A)
 #define WX (0xFF4B)
+#define SPRITES (0xFE00)
 
 #define BGP (0xFF47) //background palette
 #define OBP0 (0xFF48) //alt palette

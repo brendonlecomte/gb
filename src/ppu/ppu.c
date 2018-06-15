@@ -4,6 +4,7 @@
 #include "memory_locations.h"
 #include "debug.h"
 #include "lcd.h"
+#include "tiles.h"
 #include <assert.h>
 
 typedef struct {
@@ -37,9 +38,7 @@ typedef struct {
   uint8_t bg_oam_priority:1;
 } bg_map_t;
 
-typedef struct {
-    uint8_t map[16]; //16 byte map
-} tile_t;
+
 
 #define OAM_CLOCKS          (80)
 #define TRANSFER_CLOCKS     (172)
@@ -170,28 +169,25 @@ void draw_screen_line(const uint8_t line, const uint8_t scy, const uint8_t scx) 
 }
 
 //BGP is palette
-void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx)
-{
+void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
     uint8_t y = line + scy;
     uint8_t tile_row = y>>3; //get line of tile map
-    uint8_t line_in_tile = (y % 8) << 1;
+    uint8_t tile_x = (y % 8) << 1;
     for(int i = 0; i < 32; i++) //each tile
     {
         /* Not sure BG tile map display select is used in DMG*/
         uint8_t tile = background[0][tile_row*32 + i]; //get tile index from background map
         /* CGB uses both bg tile chunks bg_tiles[control_reg->tile_data][tile]*/
         tile_t *t = &bg_tiles[1][tile]; //get tile data from tile map
-        for(int j = 0; j < 8; j++) //each pixel in tile row
+        for(int tile_y = 0; tile_y < 8; tile_y++) //each pixel in tile row
         {
-            uint8_t colour=0, a, b, val;
-            a = t->map[line_in_tile];
-            b = t->map[line_in_tile+1];
-            val = (a>>(7-j) &0x01)<<1 | (b>>(7-j) &0x01);
+            uint8_t colour=0, val;
+            val = tiles_get_palette_index(t, tile_x, tile_y);
             //TODO: fix this to use memory palette
             colour = palette[val]; //get colour value from the palette
 
 #ifndef UNITTEST
-            uint8_t x =(i*8) + j;
+            uint8_t x =(i*8) + tile_y;
             lcd_set_pixel(x+scx, line, colour);
 #endif
         }
