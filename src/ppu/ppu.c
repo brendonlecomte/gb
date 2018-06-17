@@ -5,6 +5,7 @@
 #include "debug.h"
 #include "lcd.h"
 #include "tiles.h"
+#include "sprites.h"
 #include <assert.h>
 
 typedef struct {
@@ -55,17 +56,17 @@ typedef struct {
 
 void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx);
 
-uint8_t p[4] = {0,1,2,3};
-uint8_t *palette;
-tile_t *bg_tiles[2];
-uint8_t *background[2];
-lcd_control_t *control_reg;
-lcd_status_register_t *status_reg;
-uint8_t *lcd_y;
-uint8_t *lcd_yc;
+static uint8_t p[4] = {0,1,2,3};
+static uint8_t *palette;
 
-int_reg_t *interrupts;
-uint16_t clocks;
+static uint8_t *background[2];
+static lcd_control_t *control_reg;
+static lcd_status_register_t *status_reg;
+static uint8_t *lcd_y;
+static uint8_t *lcd_yc;
+
+static int_reg_t *interrupts;
+static uint16_t clocks;
 
 void ppu_init(void) {
     status_reg = (lcd_status_register_t*)&memory->memory[STAT];
@@ -75,9 +76,8 @@ void ppu_init(void) {
     background[0] = &memory->memory[0x9800];
     background[1] = &memory->memory[0x9C00];
 
-    bg_tiles[0] = (tile_t*)&memory->memory[0x8800];
-    bg_tiles[1] = (tile_t*)&memory->memory[0x8000];
-    // palette = &memory->memory[BGP];
+    tiles_init();
+
     palette = &p[0];
     clocks = 0;
     *lcd_y = 0;
@@ -95,6 +95,7 @@ void ppu_run(void) {
     case PPU_OAM:
       if(clocks > OAM_CLOCKS) {
           clocks = 0;
+          sprites_search(*lcd_y); //do the OAM search for sprites
           status_reg->mode = PPU_TRANSFER;
       }
       break;
@@ -160,39 +161,27 @@ void ppu_close(void) {
 }
 
 
-void draw_screen_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
-  //draw bg
-
-  //draw window
-
-  //draw sprites
-}
-
 //BGP is palette
 void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
     uint8_t y = line + scy;
-    uint8_t tile_row = y>>3; //get line of tile map
+    uint8_t tile_row = y>>3; //get line of tile map, turns 256 -> 32.. mapping
     uint8_t tile_x = (y % 8) << 1;
-    for(int i = 0; i < 32; i++) //each tile
+    for(int tile_index = 0; tile_index < TILE_ROW_WIDTH; tile_index++) //each tile in the bg map
     {
-        /* Not sure BG tile map display select is used in DMG*/
-        uint8_t tile = background[0][tile_row*32 + i]; //get tile index from background map
-        /* CGB uses both bg tile chunks bg_tiles[control_reg->tile_data][tile]*/
-        tile_t *t = &bg_tiles[1][tile]; //get tile data from tile map
-        for(int tile_y = 0; tile_y < 8; tile_y++) //each pixel in tile row
+        uint8_t index = background[0][(tile_row*TILE_ROW_WIDTH) + tile_index];
+        tile_t* current_tile = tiles_get_tile(index);
+        for(uint8_t tile_y = 0; tile_y < TILE_WIDTH; tile_y++) //each pixel in tile row
         {
-            uint8_t colour=0, val;
-            val = tiles_get_palette_index(t, tile_x, tile_y);
+            uint8_t colour = 0, pal_index;
+            pal_index = tiles_get_palette_index(current_tile, tile_x, tile_y);
             //TODO: fix this to use memory palette
-            colour = palette[val]; //get colour value from the palette
-
+            colour = palette[pal_index]; //get colour value from the palette
 #ifndef UNITTEST
-            uint8_t x =(i*8) + tile_y;
+            uint8_t x = (tile_index*8) + tile_y;
             lcd_set_pixel(x+scx, line, colour);
 #endif
         }
     }
-
 }
 
 //

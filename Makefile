@@ -32,11 +32,13 @@ HOST_APP=gpu.o
 
 SRC_FILES=src/instructions/instructions.c \
             src/cpu.c\
-            src/memory.c\
+            src/memory/memory.c\
+						src/memory/dma.c\
             src/std_codes.c\
             src/host/cart.c\
             src/emulator.c\
             src/ppu/ppu.c\
+						src/ppu/sprites.c\
 						src/ppu/tiles.c\
             src/timer.c\
             src/prefix_codes.c\
@@ -48,6 +50,7 @@ APP_SRC=$(SRC_FILES)\
 
 
 APP_INC=-Isrc \
+	   -Isrc/memory \
      -Isrc/instructions \
 		 -Isrc/ppu/
 
@@ -68,8 +71,7 @@ TEST_FILES=\
   test/test_runners/testrunner_timer.c\
   test/test_runners/all_tests.c
 
-INC_DIRS=-Isrc \
-         -Isrc/instructions \
+INC_DIRS=-$(APP_INC) \
          -I$(UNITY_ROOT)/src \
          -I$(UNITY_ROOT)/extras/fixture/src
 
@@ -80,7 +82,7 @@ default:
 	- ./$(TARGET1) -v
 
 host:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=1 -DBOOT_ROM=1 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 
 sdl:
 	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)

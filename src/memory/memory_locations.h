@@ -3,13 +3,14 @@
 
 
 //MEMORY CHUNKS
-#define CART_SIZE (0x8000)
-#define SRAM_SIZE (0x2000)
-#define IO_SIZE (0x100)
-#define VRAM_SIZE (0x2000)
-#define OAM_SIZE (0x100)
-#define WRAM_SIZE (0x2000)
-#define HRAM_SIZE (0x80)
+#define ROM_16      (0x4000)
+#define CART_SIZE   (0x8000)
+#define SRAM_SIZE   (0x2000)
+#define IO_SIZE     (0x100)
+#define VRAM_SIZE   (0x2000)
+#define OAM_SIZE    (0x100)
+#define WRAM_SIZE   (0x2000)
+#define HRAM_SIZE   (0x80)
 #define FULL_MEMORY (0x10000)
 
 
@@ -40,6 +41,7 @@
 #define HDMA5 (0xFF51)
 
 #define DMA (0xFF46)
+#define DMA_TARGET (0xFE00)
 
 //SOUND REGISTERS
 //sound channel 1 tone and sweep
