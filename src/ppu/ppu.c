@@ -113,6 +113,7 @@ void ppu_run(void) {
         //if the screen is enabled, draw a line to the display
         if(control_reg->enable) {
           draw_bg_line(*lcd_y, memory->memory[SCY], memory->memory[SCX]);
+          sprites_draw_line(*lcd_y);
         }
         //increment line counter, reset clock count
         *lcd_y += 1;

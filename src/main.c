@@ -8,9 +8,6 @@
 
 int main(void)
 {
-  uint8_t exit = 1;
-  uint8_t old_pc = 0;
-  uint16_t step = 0;
   uint16_t i = 100;
   emu_init();
   while(i)

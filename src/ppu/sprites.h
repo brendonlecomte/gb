@@ -18,7 +18,7 @@ typedef struct {
   uint8_t pos_y;
   uint8_t pos_x;
   uint8_t tile;
-  sprite_flags_t flags;
+  uint8_t flags;
 } sprite_t;
 
 void sprites_search(uint8_t line);
