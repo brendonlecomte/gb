@@ -35,7 +35,7 @@ void timer_run(timer_t *t) {
 
     //todo Safe wrapping of DIV
     t->div++; //DIV is always incremented
-
+    memory->memory[DIV] = t->div;
     if((*t->control & ENABLE_MASK) != ENABLE_MASK) return; //timer not enabled
 
     //timer control check if counter should increment
