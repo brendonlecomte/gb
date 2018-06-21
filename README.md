@@ -12,9 +12,9 @@ hardware that fits inside the original gameboy case.
 - [x] Timer
 - [ ] Memory Bank controllers
 - [x] Interrupts
-- [ ] DMA
+- [x] DMA
 - [ ] PPU
-- [ ] Keyboard inputs
+- [x] Keyboard inputs
 - [ ] GBC upgrade changes
 
 ### Unit Tests
@@ -47,5 +47,5 @@ make
 
 To build and run the emulator. Cart is defined for host in src/host/cart.c
 ```
-make run
+make host && ./gb.out
 ```
