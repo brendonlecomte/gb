@@ -8,7 +8,7 @@
 static uint16_t tac_masks[4] = {1024, 16, 64, 256};
 
 static gb_timer_t t;
-gb_timer_t * timer = &t;
+gb_timer_t * gb_timer = &t;
 
 
 void gb_timer_init(gb_timer_t *t){
