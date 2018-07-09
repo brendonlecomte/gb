@@ -3,5 +3,8 @@
 .DS_Store
 /roms/*
 /trace/*
-/stm32_generated/*
+/stm32_generated/Drivers/*
+/stm32_generated/Inc/*
+/stm32_generated/Src/*
+/stm32_generated/Middlewares/*
 /src/physical_cart.c
