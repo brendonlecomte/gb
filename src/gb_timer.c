@@ -7,11 +7,11 @@
 
 static uint16_t tac_masks[4] = {1024, 16, 64, 256};
 
-static timer_t t;
-timer_t * timer = &t;
+static gb_timer_t t;
+gb_timer_t * timer = &t;
 
 
-void timer_init(timer_t *t){
+void gb_timer_init(gb_timer_t *t){
     t->div = 0;
     t->control = &memory->memory[TAC];
     t->counter = &memory->memory[TIMA];
@@ -19,16 +19,16 @@ void timer_init(timer_t *t){
     t->prev_div = 0;
 }
 
-void timer_reset(timer_t *t) {
+void gb_timer_reset(gb_timer_t *t) {
     t->div = 0;
     t->prev_div =0;
 }
 
-void timer_set(timer_t *t, const uint8_t time) {
+void gb_timer_set(gb_timer_t *t, const uint8_t time) {
     *t->counter = time;
 }
 
-void timer_run(timer_t *t) {
+void gb_timer_run(gb_timer_t *t) {
     uint8_t increment = 0;
     uint8_t divider = *t->control & DIVIDER_MASK;
     uint16_t timer_mask = tac_masks[divider];

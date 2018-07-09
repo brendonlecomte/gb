@@ -40,7 +40,7 @@ SRC_FILES=src/instructions/instructions.c \
             src/ppu/ppu.c\
 						src/ppu/sprites.c\
 						src/ppu/tiles.c\
-            src/timer.c\
+            src/gb_timer.c\
             src/prefix_codes.c\
 						src/physical_cart.c
 
