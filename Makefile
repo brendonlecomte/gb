@@ -42,6 +42,7 @@ SRC_FILES=src/instructions/instructions.c \
 						src/ppu/tiles.c\
             src/gb_timer.c\
             src/prefix_codes.c\
+						src/host/keyboard.c\
 						src/physical_cart.c
 
 APP_SRC=$(SRC_FILES)\
@@ -50,12 +51,12 @@ APP_SRC=$(SRC_FILES)\
 				src/host/keyboard.c
 
 
-APP_INC=-Isrc \
+APP_INC=-Isrc\
 	   -Isrc/memory \
      -Isrc/instructions \
 		 -Isrc/ppu/
 
-TEST_FILES=\
+TEST_FILES=$(SRC_FILES)\
   $(UNITY_ROOT)/src/unity.c \
   $(UNITY_ROOT)/extras/fixture/src/unity_fixture.c \
   test/test_instructions.c \
@@ -72,14 +73,14 @@ TEST_FILES=\
   test/test_runners/testrunner_timer.c\
   test/test_runners/all_tests.c
 
-INC_DIRS=-$(APP_INC) \
+INC_DIRS=$(APP_INC)\
          -I$(UNITY_ROOT)/src \
          -I$(UNITY_ROOT)/extras/fixture/src
 
 SYMBOLS=
 
 default:
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(SRC_FILES) $(TEST_FILES) -o $(TARGET1)
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(TEST_FILES) -o $(TARGET1)
 	- ./$(TARGET1) -v
 
 host:
