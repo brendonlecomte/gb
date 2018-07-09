@@ -1,10 +1,7 @@
 #include "memory.h"
 #include "memory_locations.h"
-#include "cart.h"
-#include "timer.h"
 #include "io.h"
 #include "dma.h"
-#include "sprites.h"
 #include <string.h>
 #include <stdint.h>
 
@@ -94,6 +91,8 @@ uint16_t memory_read16(memory_t *mem, uint16_t addr) {
 
 void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
   switch(addr){
+    case 0x0000 ... 0x7FFF:
+      break;
     case JOYP: //boot rom enable register
       mem->memory[addr] = val&0xF0;
       break;
@@ -114,7 +113,7 @@ void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
         dma_transfer(dma_addr);
       }
     default:
-      if(addr > ROM_16)
+      if(addr >= ROM_16)
         mem->memory[addr] = val;
       break;
   }
