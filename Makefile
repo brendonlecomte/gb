@@ -42,6 +42,7 @@ SRC_FILES=src/instructions/instructions.c \
 						src/ppu/tiles.c\
             src/timer.c\
             src/prefix_codes.c\
+						src/physical_cart.c
 
 APP_SRC=$(SRC_FILES)\
         src/main.c\
