@@ -100,12 +100,6 @@ void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
       mem->memory[addr] = val;
       mem->inBoot = (val == 0) ? true : false;
       break;
-    // case 0xC000 ... 0xC004: //debugging for table writes
-    //   mem->memory[addr] = val;
-    //   printf("Writing to the SPRITE table\n");
-    //   uint8_t* s = &mem->memory[0xC000];
-    //   printf("T:%02X @ x:%02X, y:%02X\n", s[2], s[0], s[1]);
-    //   break;
     case DMA:
       {
         uint16_t dma_addr;
