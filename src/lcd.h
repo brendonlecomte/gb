@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define SCREEN_WIDTH  (256) //160;
+#define SCREEN_HEIGHT (256) //144;
+
 
 void lcd_init(void);
 void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour);
