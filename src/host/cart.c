@@ -17,7 +17,6 @@
 #define TEST_11_PATH ("/Users/brendon/research/gb/roms/individual/11-op a,(hl).gb")
 #define HOME_CART_PATH ("/Users/brendon/research/gb/roms/tetris.gb")
 
-#define MAX_CART_SIZE (0x8000)
 
 static uint8_t cart[MAX_CART_SIZE];
 

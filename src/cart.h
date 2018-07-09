@@ -2,6 +2,8 @@
 #define CART_H
 #include <stdint.h>
 
+#define MAX_CART_SIZE (0x8000)
+
 enum {
     ROM_ONLY,
     MBC1,
