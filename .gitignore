@@ -3,4 +3,5 @@
 .DS_Store
 /roms/*
 /trace/*
+/stm32_generated/*
 /src/physical_cart.c
