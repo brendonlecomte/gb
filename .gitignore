@@ -3,3 +3,4 @@
 .DS_Store
 /roms/*
 /trace/*
+/src/physical_cart.c
