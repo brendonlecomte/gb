@@ -3,8 +3,13 @@
 .DS_Store
 /roms/*
 /trace/*
+/src/physical_cart.c
+
 /stm32_generated/Drivers/*
 /stm32_generated/Inc/*
 /stm32_generated/Src/*
 /stm32_generated/Middlewares/*
-/src/physical_cart.c
+/stm32_generated/.mxproject
+/stm32_generated/Makefile
+/stm32_generated/STM32F407VGTx_FLASH.ld
+/stm32_generated/startup_stm32f407xx.s
