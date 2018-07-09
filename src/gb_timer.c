@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "gb_timer.h"
 #include "CPU.h"
 #include "memory.h"
 
