@@ -28,7 +28,7 @@ void sprites_search(uint8_t line) {
   for(uint8_t i = 0; i < MAX_SPRITES; i++) {
     uint8_t* s = sprites_get_sprite(i);
     if(s[POS_X] != 0 || s[POS_X] != 168 || s[POS_Y] != 0 || s[POS_Y] != 160){
-      if(s[POS_Y] != 0 && line >= s[POS_Y]-16 && line <= s[POS_Y]-8) {
+      if(s[POS_Y] != 0 && line >= s[POS_Y]-16 && line < s[POS_Y]-8) {
         _sprites[_index] = s;
         _index++;
       }

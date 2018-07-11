@@ -104,28 +104,28 @@ void lcd_refresh(void){
         {
             switch(e.key.keysym.sym) {
               case SDLK_LEFT:
-                d_pad &= 0x0D;
+                d_pad &= DPAD_LEFT;
                 break;
               case SDLK_RIGHT:
-                d_pad &= 0x0E;
+                d_pad &= DPAD_RIGHT;
                 break;
               case SDLK_UP:
-                d_pad &= 0x0B;
+                d_pad &= DPAD_UP;
                 break;
               case SDLK_DOWN:
-                d_pad &= 0x07;
+                d_pad &= DPAD_DOWN;
                 break;
               case SDLK_a:
-                buttons &= 0x0E;
+                buttons &= BUTTON_A;
                 break;
               case SDLK_s:
-                buttons &= 0x0D;
+                buttons &= BUTTON_B;
                 break;
               case SDLK_RETURN:
-                buttons &= 0x07;
+                buttons &= BUTTON_START;
                 break;
               case SDLK_RSHIFT:
-                buttons &= 0x0B;
+                buttons &= BUTTON_SELECT;
                 break;
             }
             io_set_direction(d_pad);
