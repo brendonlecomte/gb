@@ -90,10 +90,11 @@ sdl:
 	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)
 	- ./$(HOST_APP)
 
-all: clean default host
+target:
+	$(MAKE) -f Makefile_target
 
-
-clean:
+host_clean:
+	clean
 	rm -f $(TARGET1)
 	rm -f $(APP_TARGET)
 
