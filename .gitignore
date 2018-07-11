@@ -4,7 +4,7 @@
 /roms/*
 /trace/*
 /src/physical_cart.c
-
+/build/*
 /stm32_generated/Drivers/*
 /stm32_generated/Inc/*
 /stm32_generated/Src/*
