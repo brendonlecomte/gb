@@ -38,9 +38,8 @@ BUILD_DIR = build
 ######################################
 # source
 ######################################
-# C sources
-C_SOURCES =  \
-$(GEN_FOLDER)/Src/main.c \
+# C sources from generated code
+GEN_C_SOURCE = \
 $(GEN_FOLDER)/Src/stm32f4xx_it.c \
 $(GEN_FOLDER)/Src/stm32f4xx_hal_msp.c \
 $(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
@@ -69,6 +68,11 @@ $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
+
+C_SOURCES =  \
+src/stm/main.c \
+src/stm/hardware_init.c\
+$(GEN_C_SOURCE)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -124,7 +128,7 @@ C_DEFS =  \
 AS_INCLUDES =
 
 # C includes
-C_INCLUDES =  \
+GEN_C_INCLUDES= \
 -I$(GEN_FOLDER)/Inc \
 -I$(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Inc \
 -I$(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy \
@@ -132,6 +136,14 @@ C_INCLUDES =  \
 -I$(GEN_FOLDER)/Drivers/CMSIS/Include \
 -I$(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -I$(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
+
+
+C_INCLUDES = \
+-Isrc/stm\
+$(GEN_C_INCLUDES)
+
+
+
 
 
 # compile gcc flags
