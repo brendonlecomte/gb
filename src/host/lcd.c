@@ -3,9 +3,6 @@
 #include "emulator.h"
 #include "io.h"
 
-const int SCREEN_WIDTH = 256; //160;
-const int SCREEN_HEIGHT = 256 ;//144;
-
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 //The surface contained by the window

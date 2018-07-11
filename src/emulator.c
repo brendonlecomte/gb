@@ -4,13 +4,13 @@
 #include "op_codes.h"
 #include "emulator.h"
 #include "ppu.h"
-#include "timer.h"
+#include "gb_timer.h"
 
 void emu_init(void) {
   CPU_init(gb_cpu);
   memory_init(memory);
   ppu_init();
-  timer_init(timer);
+  gb_timer_init(gb_timer);
 }
 
 bool pause = false;
@@ -48,7 +48,7 @@ void emu_execute(void) {
   }
 
   //timers
-  timer_run(timer);
+  gb_timer_run(gb_timer);
 
   //Graphics
   ppu_run();

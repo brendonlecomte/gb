@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+
 #define TEST_ALL_PATH ("/Users/brendon/research/gb/roms/cpu_instrs.gb")
 #define TEST_OPUS_PATH ("/Users/brendon/research/gb/roms/opus5.gb")
 #define TEST_01_PATH ("/Users/brendon/research/gb/roms/individual/01-special.gb")
@@ -17,25 +18,16 @@
 #define TEST_11_PATH ("/Users/brendon/research/gb/roms/individual/11-op a,(hl).gb")
 #define HOME_CART_PATH ("/Users/brendon/research/gb/roms/tetris.gb")
 
-#define MAX_CART_SIZE (0x8000)
 
-static uint8_t cart[MAX_CART_SIZE];
+extern uint8_t* game_cart;
+
 
 void cart_load(void) {
-    FILE *f;
-    f = fopen(HOME_CART_PATH, "rb");
-    if(f){
-        fread(cart, 1, MAX_CART_SIZE, f);
-        fclose(f);
-    }
-    else{
-        printf("Failed to open file\n");
-        assert(0);
-    }
+  // does nothing handled by script...
 }
 
 uint8_t cart_read(const uint16_t addr) {
-    return cart[addr];
+    return game_cart[addr];
 }
 
 void cart_write(const uint16_t addr, uint8_t val)
@@ -44,9 +36,9 @@ void cart_write(const uint16_t addr, uint8_t val)
 }
 
 uint8_t* cart_memory(void) {
-    return &cart[0];
+    return &game_cart[0];
 }
 
 cart_t* cart_header(void) {
-    return (cart_t *)&cart[0x100];
+    return (cart_t *)&game_cart[0x100];
 }
