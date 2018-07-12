@@ -42,13 +42,13 @@ SRC_FILES=src/instructions/instructions.c \
 						src/ppu/tiles.c\
             src/gb_timer.c\
             src/prefix_codes.c\
-						src/host/keyboard.c\
 						src/physical_cart.c
 
 APP_SRC=$(SRC_FILES)\
         src/main.c\
         src/host/lcd.c\
-				src/host/keyboard.c
+				src/host/keyboard.c\
+				src/host/serial.c
 
 
 APP_INC=-Isrc\
@@ -57,6 +57,8 @@ APP_INC=-Isrc\
 		 -Isrc/ppu/
 
 TEST_FILES=$(SRC_FILES)\
+	src/host/keyboard.c\
+	src/host/serial.c\
   $(UNITY_ROOT)/src/unity.c \
   $(UNITY_ROOT)/extras/fixture/src/unity_fixture.c \
   test/test_instructions.c \
@@ -84,7 +86,7 @@ default:
 	- ./$(TARGET1) -v
 
 host:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
+	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=0 -DSERIAL=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
 
 sdl:
 	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)
