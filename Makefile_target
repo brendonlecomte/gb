@@ -72,6 +72,7 @@ $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
 C_SOURCES =  \
 src/stm/main.c \
 src/stm/hardware_init.c\
+src/stm/serial.c\
 $(GEN_C_SOURCE)
 
 # ASM sources
@@ -140,6 +141,7 @@ GEN_C_INCLUDES= \
 
 C_INCLUDES = \
 -Isrc/stm\
+-Isrc\
 $(GEN_C_INCLUDES)
 
 

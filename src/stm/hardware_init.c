@@ -1,5 +1,4 @@
-#include "usb_device.h"
-#include "stm32f4xx_hal.h"
+#include "hardware_init.h"
 
 
 static void SystemClock_Config(void);
