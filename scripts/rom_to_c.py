@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 
-default_file = """#include "physical_cart.h"
+default_file = """#include <stdint.h>
+#include "cart.h"
 
 uint8_t game_cart[MAX_CART_SIZE] =
 /*START OF CART*/
