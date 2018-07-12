@@ -34,7 +34,7 @@ OPT = -Og
 # Build path
 BUILD_DIR = build
 
-
+-include ./make_sources
 ######################################
 # source
 ######################################
@@ -73,6 +73,7 @@ C_SOURCES =  \
 src/stm/main.c \
 src/stm/hardware_init.c\
 src/stm/serial.c\
+$(SRC_FILES)\
 $(GEN_C_SOURCE)
 
 # ASM sources
@@ -124,7 +125,6 @@ C_DEFS =  \
 -DUSE_HAL_DRIVER \
 -DSTM32F407xx
 
-
 # AS includes
 AS_INCLUDES =
 
@@ -142,6 +142,7 @@ GEN_C_INCLUDES= \
 C_INCLUDES = \
 -Isrc/stm\
 -Isrc\
+$(INC_FILES)\
 $(GEN_C_INCLUDES)
 
 

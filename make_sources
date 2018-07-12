@@ -1,0 +1,18 @@
+SRC_FILES=src/instructions/instructions.c \
+            src/CPU.c\
+            src/memory/memory.c\
+						src/memory/dma.c\
+            src/std_codes.c\
+            src/host/cart.c\
+            src/emulator.c\
+            src/ppu/ppu.c\
+						src/ppu/sprites.c\
+						src/ppu/tiles.c\
+            src/gb_timer.c\
+            src/prefix_codes.c\
+						src/physical_cart.c
+
+INC_FILES=-Isrc\
+	   -Isrc/memory \
+     -Isrc/instructions \
+		 -Isrc/ppu/

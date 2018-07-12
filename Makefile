@@ -25,38 +25,21 @@ CFLAGS += -Wold-style-definition
 TARGET_BASE1=all_tests
 TARGET1 = $(TARGET_BASE1).out
 
-APP_TARGET=gb.out
 
-HOST_SRC=src/gpu/test.c
-HOST_APP=gpu.o
+-include ./make_sources
 
-SRC_FILES=src/instructions/instructions.c \
-            src/cpu.c\
-            src/memory/memory.c\
-						src/memory/dma.c\
-            src/std_codes.c\
-            src/host/cart.c\
-            src/emulator.c\
-            src/ppu/ppu.c\
-						src/ppu/sprites.c\
-						src/ppu/tiles.c\
-            src/gb_timer.c\
-            src/prefix_codes.c\
-						src/physical_cart.c
-
-APP_SRC=$(SRC_FILES)\
+HOST_OUTPUT=gb.out
+HOST_SRC=$(SRC_FILES)\
         src/main.c\
         src/host/lcd.c\
 				src/host/keyboard.c\
 				src/host/serial.c
 
 
-APP_INC=-Isrc\
-	   -Isrc/memory \
-     -Isrc/instructions \
-		 -Isrc/ppu/
+HOST_INC=$(INC_FILES)
 
-TEST_FILES=$(SRC_FILES)\
+TEST_OUTPUT=unit_test.out
+TEST_SRC=$(SRC_FILES)\
 	src/host/keyboard.c\
 	src/host/serial.c\
   $(UNITY_ROOT)/src/unity.c \
@@ -75,22 +58,18 @@ TEST_FILES=$(SRC_FILES)\
   test/test_runners/testrunner_timer.c\
   test/test_runners/all_tests.c
 
-INC_DIRS=$(APP_INC)\
+TEST_INC=$(INC_FILES)\
          -I$(UNITY_ROOT)/src \
          -I$(UNITY_ROOT)/extras/fixture/src
 
 SYMBOLS=
 
 default:
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(TEST_FILES) -o $(TARGET1)
+	$(C_COMPILER) $(CFLAGS) $(TEST_INC) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(TEST_SRC) -o $(TEST_OUTPUT)
 	- ./$(TARGET1) -v
 
 host:
-	$(C_COMPILER) $(CFLAGS) $(APP_INC) -DDEBUG=0 -DTRACE=0 -DSERIAL=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(APP_SRC) -o $(APP_TARGET)
-
-sdl:
-	$(C_COMPILER) $(HOST_SRC) -lSDL2 -o $(HOST_APP)
-	- ./$(HOST_APP)
+	$(C_COMPILER) $(CFLAGS) $(HOST_INC) -DDEBUG=0 -DTRACE=0 -DSERIAL=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(HOST_SRC) -o $(HOST_OUTPUT)
 
 target:
 	$(MAKE) -f Makefile_target
@@ -98,7 +77,7 @@ target:
 host_clean:
 	clean
 	rm -f $(TARGET1)
-	rm -f $(APP_TARGET)
+	rm -f $(HOST_OUTPUT)
 
 ci: CFLAGS += -Werror
 ci: default
