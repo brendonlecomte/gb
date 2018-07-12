@@ -33,7 +33,8 @@ HOST_SRC=$(SRC_FILES)\
         src/main.c\
         src/host/lcd.c\
 				src/host/keyboard.c\
-				src/host/serial.c
+				src/host/serial.c\
+				src/host/cart.c
 
 
 HOST_INC=$(INC_FILES)
@@ -42,6 +43,7 @@ TEST_OUTPUT=unit_test.out
 TEST_SRC=$(SRC_FILES)\
 	src/host/keyboard.c\
 	src/host/serial.c\
+	src/host/cart.c\
   $(UNITY_ROOT)/src/unity.c \
   $(UNITY_ROOT)/extras/fixture/src/unity_fixture.c \
   test/test_instructions.c \
@@ -66,7 +68,7 @@ SYMBOLS=
 
 default:
 	$(C_COMPILER) $(CFLAGS) $(TEST_INC) -DDEBUG=0 -DTRACE=0 -DBOOT_ROM=1 -DUNITTEST=1 $(SYMBOLS) $(TEST_SRC) -o $(TEST_OUTPUT)
-	- ./$(TARGET1) -v
+	- ./$(TEST_OUTPUT) -v
 
 host:
 	$(C_COMPILER) $(CFLAGS) $(HOST_INC) -DDEBUG=0 -DTRACE=0 -DSERIAL=1 -DBOOT_ROM=0 -lSDL2 $(SYMBOLS) $(HOST_SRC) -o $(HOST_OUTPUT)
