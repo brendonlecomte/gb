@@ -30,7 +30,7 @@ TARGET1 = $(TARGET_BASE1).out
 
 HOST_OUTPUT=gb.out
 HOST_SRC=$(SRC_FILES)\
-        src/main.c\
+        src/host/main.c\
         src/host/lcd.c\
 				src/host/keyboard.c\
 				src/host/serial.c\
@@ -75,6 +75,9 @@ host:
 
 target:
 	$(MAKE) -f Makefile_target
+
+download:
+	$(MAKE) -f Makefile_target download
 
 host_clean:
 	clean

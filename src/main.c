@@ -1,19 +1,19 @@
+#include "main.h"
+#include "hardware_init.h"
+#include "serial.h"
 #include "emulator.h"
-#include <stdio.h>
-#include <stdint.h>
-#include <assert.h>
-#include "CPU.h"
-#include "memory.h"
-#include "memory_locations.h"
+
 
 int main(void)
 {
-  uint16_t i = 100;
+  hardware_init();
   emu_init();
-  while(i)
+  // uint8_t buff[12] = "hello world\n";
+  while (1)
   {
+    // HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+    // HAL_Delay(50);
     emu_execute();
-    // i--;
   }
   emu_end();
   return 0;

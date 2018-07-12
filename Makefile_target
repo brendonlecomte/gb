@@ -16,7 +16,7 @@
 TARGET = stm32_generated
 GEN_FOLDER = stm32_generated
 AC6 = /Applications/Ac6/SystemWorkbench.app/Contents/Eclipse/plugins
-OCD = $(AC6)/fr.ac6.mcu.externaltools.openocd.macos64_1.17.0.201801121207/tools/openocd/bin
+OCD = $(AC6)/fr.ac6.mcu.externaltools.openocd.macos64_1.17.0.201801121207/tools/openocd/bin/
 GCC_PATH = $(AC6)/fr.ac6.mcu.externaltools.arm-none.macos64_1.15.0.201708311556/tools/compiler/bin
 
 ######################################
@@ -42,6 +42,7 @@ BUILD_DIR = build
 GEN_C_SOURCE = \
 $(GEN_FOLDER)/Src/stm32f4xx_it.c \
 $(GEN_FOLDER)/Src/stm32f4xx_hal_msp.c \
+$(GEN_FOLDER)/Src/gpio.c \
 $(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 $(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 $(GEN_FOLDER)/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
@@ -73,6 +74,9 @@ C_SOURCES =  \
 src/stm/main.c \
 src/stm/hardware_init.c\
 src/stm/serial.c\
+src/stm/lcd.c\
+src/stm/cart.c\
+src/stm/keyboard.c\
 $(SRC_FILES)\
 $(GEN_C_SOURCE)
 
@@ -203,13 +207,14 @@ $(BUILD_DIR):
 	mkdir $@
 
 # default action: build all
-all: compile download
+all: compile
 
 compile:
 	$(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 download:
-	echo 'hello'
+	openocd -f board/stm32f4discovery.cfg \
+		-c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
 
 
 #######################################
