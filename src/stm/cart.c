@@ -1,9 +1,8 @@
 #include "cart.h"
 #include <stdio.h>
 #include <assert.h>
-#include "physical_cart.h"
 
-extern uint8_t* game_cart;
+extern uint8_t game_cart[MAX_CART_SIZE];
 
 void cart_load(void) {
   // does nothing handled by script...

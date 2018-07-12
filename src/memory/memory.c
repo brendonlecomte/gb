@@ -2,6 +2,7 @@
 #include "memory_locations.h"
 #include "io.h"
 #include "dma.h"
+#include "serial.h"
 #include <string.h>
 #include <stdint.h>
 
@@ -99,6 +100,10 @@ void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
     case BOOT:
       mem->memory[addr] = val;
       mem->inBoot = (val == 0) ? true : false;
+      break;
+    case SB:
+      serial_write_byte(val);
+      mem->memory[addr] = val;
       break;
     case DMA:
       {
