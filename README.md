@@ -37,6 +37,11 @@ cpu_instrs
 - [x] 10 - bit ops
 - [x] 11 - OP a, (hl)
 
+### PPU Issues
+ - H flip
+ - V flip
+ - BG palette index unsigned vs signed
+ - Windows
 
 ## Building
 To build and run unit tests against the source
