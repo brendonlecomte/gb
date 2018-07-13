@@ -79,10 +79,9 @@ target:
 download:
 	$(MAKE) -f Makefile_target download
 
-host_clean:
-	clean
+clean:
 	rm -f $(TARGET1)
 	rm -f $(HOST_OUTPUT)
-
+	$(MAKE) -f Makefile_target clean
 ci: CFLAGS += -Werror
 ci: default

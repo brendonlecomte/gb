@@ -71,7 +71,7 @@ $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 $(GEN_FOLDER)/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
 
 C_SOURCES =  \
-src/stm/main.c \
+src/main.c\
 src/stm/hardware_init.c\
 src/stm/serial.c\
 src/stm/lcd.c\
