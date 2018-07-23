@@ -3,6 +3,7 @@
 #include "io.h"
 #include "dma.h"
 #include "serial.h"
+#include "cart.h"
 #include <string.h>
 #include <stdint.h>
 
