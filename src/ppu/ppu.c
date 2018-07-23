@@ -176,7 +176,7 @@ void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
             uint8_t colour = 0, pal_index;
             pal_index = tiles_get_palette_index(current_tile, tile_x, tile_y);
             //TODO: fix this to use memory palette
-            colour = palette[pal_index]; //get colour value from the palette
+            colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
 #ifndef UNITTEST
             uint8_t x = (tile_index*8) + tile_y;
             lcd_set_pixel(x+scx, line, colour);

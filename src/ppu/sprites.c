@@ -21,8 +21,6 @@ static uint8_t _index = 0;
 #define FLAGS (3)
 #define SPRITE_LENGTH (4)
 
-static uint8_t p[4] = {0,1,2,3};
-
 void sprites_search(uint8_t line) {
   _index = 0; //reset count
   for(uint8_t i = 0; i < MAX_SPRITES; i++) {
@@ -46,6 +44,7 @@ uint8_t* sprites_get_sprite(uint8_t index) {
   return sprite;
 }
 
+
 void sprites_draw_line(uint8_t line) {
   for(int8_t i = _index; i > 0; i--) {
     uint8_t* s = _sprites[i-1];
@@ -55,10 +54,16 @@ void sprites_draw_line(uint8_t line) {
       uint8_t colour = 0, pal_index;
       pal_index = tiles_get_palette_index(t, y, x);
     #ifndef UNITTEST
-      if(pal_index != 0 || !BG_PRIORITY(s[FLAGS])){
-        colour = p[pal_index];
-        lcd_set_pixel(x+(s[POS_X]-8), line, colour);
+      if(pal_index == 0) {// && !BG_PRIORITY(s[FLAGS])){
+        continue;
       }
+      if(PALETTE_DMG(*s)){
+        colour = (memory->memory[OBP1] >> (pal_index<<1)) & 0x03;
+      }
+      else {
+        colour = (memory->memory[OBP0] >> (pal_index<<1)) & 0x03;
+      }
+      lcd_set_pixel(x+(s[POS_X]-8), line, colour);
     #endif
     }
   }

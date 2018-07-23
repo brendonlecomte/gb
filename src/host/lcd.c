@@ -48,7 +48,7 @@ void lcd_test_line(void){
     }
 }
 
-uint32_t cols[4] = {0x00FFFFFF, 0x00FF00, 0x0f0f0f, 0x00};
+uint32_t cols[4] = {0x00FFFFFF, 0x00696969, 0x00a9a9a9, 0x00};
 
 void lcd_set_pixel(uint8_t x, uint8_t y, uint8_t colour){
     uint32_t *p = &gXOut->pixels[x*4 + (y*4<<8)];
