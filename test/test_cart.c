@@ -8,7 +8,7 @@
 TEST_GROUP(Cart);
 
 TEST_SETUP(Cart) {
-
+  cart_load();
 }
 
 TEST_TEAR_DOWN(Cart) {}

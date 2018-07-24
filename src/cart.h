@@ -37,6 +37,7 @@ enum {
 } cart_type_e;
 
 
+
 typedef struct cart_s {
     uint8_t entry[0x04]; // 0x100-103
     uint8_t logo[0x30];  //0x104 - 0x133
@@ -61,5 +62,6 @@ uint8_t cart_read(const uint16_t addr);
 void cart_write(const uint16_t addr, uint8_t val);
 uint8_t* cart_memory(void);
 cart_t* cart_header(void);
+uint8_t* cart_pointer(uint16_t addr);
 
 #endif //CART_H
