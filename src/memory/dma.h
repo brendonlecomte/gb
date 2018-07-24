@@ -1,3 +1,3 @@
 #include <stdint.h>
 
-void dma_transfer(uint16_t start);
+void dma_transfer(uint8_t* start);

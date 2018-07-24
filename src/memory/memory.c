@@ -110,11 +110,10 @@ void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
       {
         uint16_t dma_addr;
         dma_addr = val<<8;
-        dma_transfer(dma_addr);
+        dma_transfer(&memory->memory[dma_addr]);
       }
     default:
-      if(addr >= ROM_16)
-        mem->memory[addr] = val;
+      mem->memory[addr] = val;
       break;
   }
 }
