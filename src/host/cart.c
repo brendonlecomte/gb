@@ -31,7 +31,7 @@ static uint8_t cart_type = ROM_ONLY;
 static uint8_t* ram;
 
 /*private func prototypes*/
-uint16_t convert_rom_address(uint16_t addr);
+uint32_t convert_rom_address(uint16_t addr);
 uint8_t rom_read(const uint16_t addr);
 uint8_t mbc5_read(const uint16_t addr);
 
@@ -85,8 +85,8 @@ uint8_t* cart_pointer(uint16_t addr) {
 }
 
 /*PRIVATE*/
-uint16_t convert_rom_address(uint16_t addr) {
-  return (addr - 0x4000) + mbc.rom_bank_sel*0x4000;
+uint32_t convert_rom_address(uint16_t addr) {
+  return ((addr - 0x4000) + mbc.rom_bank_sel*0x4000);
 }
 
 uint8_t rom_read(const uint16_t addr){
@@ -108,7 +108,7 @@ uint8_t mbc5_read(const uint16_t addr){
       return game_cart[convert_rom_address(addr)];
       break;
     default:
-       break;
+      break;
   }
   return 0;
 }
@@ -135,10 +135,20 @@ void mbc5_write(const uint16_t addr, uint8_t val){
       }
       mbc.rom_bank_sel = (mbc.rom_bank_sel & 0b11100000) | (val & 0b00011111);
       break;
-    case 0x4000:
-    case 0x5000:
-       break;
+    case 0xA000:
+    case 0xB000:
+    case 0xC000:
+      if(mbc.ram_bank_sel <= 0x03) {
+            ram[(addr - 0xA000) + mbc.ram_bank_sel*RAM_2K] = val;
+      }
+      else if(0x08 <= mbc.ram_bank_sel && mbc.ram_bank_sel <= 0x0C) {
+          //set the clock
+      }
+      else {
+          assert("Invalid RAM Bank selected");
+      }
+      break;
     default:
-       break;
+      break;
   }
 }
