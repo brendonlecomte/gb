@@ -45,10 +45,15 @@ uint8_t* sprites_get_sprite(uint8_t index) {
 }
 
 
+uint8_t sprites_draw_pixel(uint8_t x, uint8_t y) {
+
+}
+
+
 void sprites_draw_line(uint8_t line) {
   for(int8_t i = _index; i > 0; i--) {
     uint8_t* s = _sprites[i-1];
-    tile_t* t = tiles_get_tile(s[TILE]);
+    tile_t* t = tiles_get_tile(1, s[TILE]);
     uint8_t y = (line % 8) << 1;
     for(uint8_t x = 0; x < 8; x++) {
       uint8_t colour = 0, pal_index;
@@ -63,7 +68,9 @@ void sprites_draw_line(uint8_t line) {
       else {
         colour = (memory->memory[OBP0] >> (pal_index<<1)) & 0x03;
       }
-      lcd_set_pixel(x+(s[POS_X]-8), line, colour);
+
+      uint8_t x_draw = x+(s[POS_X]-8);
+      lcd_set_pixel(x_draw, line, colour);
     #endif
     }
   }

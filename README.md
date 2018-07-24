@@ -10,7 +10,7 @@ hardware that fits inside the original gameboy case.
 - [x] SDL host screen
 - [x] Boot rom w/ swap in/out
 - [x] Timer
-- [ ] Memory Bank controllers
+- [ ] Memory Bank controllers (ROM, MBC5 done)
 - [x] Interrupts
 - [x] DMA
 - [ ] PPU
@@ -24,7 +24,7 @@ hardware that fits inside the original gameboy case.
 - [x] Memory
 
 ### Blarggs Tests
-cpu_instrs
+- [ ] cpu_instrs (needs MBC1)
 - [x] 01 - special
 - [x] 02 - Interrupts
 - [x] 03 - OP SP,HL //
@@ -42,6 +42,7 @@ cpu_instrs
  - V flip
  - BG palette index unsigned vs signed
  - Windows
+ - Generally the structure of draw_line...
 
 ## Building
 To build and run unit tests against the source
