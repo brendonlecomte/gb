@@ -56,26 +56,27 @@ uint8_t memory_read8(memory_t *mem, uint16_t addr) {
         return boot[addr];
     }
     uint8_t val;
-    uint8_t joyp;
-    uint8_t temp;
     // Read from the cart
     switch(addr)
     {
         case 0x0000 ... 0x7FFF:
              val = cart_read(addr);
              break;
-        case JOYP:
-            joyp = mem->memory[addr];
-            if((joyp&0x30) == 0x20){ //directions selected
-              temp = io_get_direction();
+        case JOYP: {
+              uint8_t joyp;
+              uint8_t temp;
+              joyp = mem->memory[addr];
+              if((joyp&0x30) == 0x20){ //directions selected
+                temp = io_get_direction();
+              }
+              else if((joyp&0x30) == 0x10) { //buttons selected
+                temp = io_get_buttons();
+              }
+              else {
+                temp = 0x0F; //nothing pressed
+              }
+              val = (joyp&0xF0) | (temp&0x0F);
             }
-            else if((joyp&0x30) == 0x10) { //buttons selected
-              temp = io_get_buttons();
-            }
-            else {
-              temp = 0x0F; //nothing pressed
-            }
-            val = (joyp&0xF0) | (temp&0x0F);
             break;
         default:
             val = mem->memory[addr];
