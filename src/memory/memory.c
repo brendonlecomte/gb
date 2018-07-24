@@ -94,6 +94,7 @@ uint16_t memory_read16(memory_t *mem, uint16_t addr) {
 void memory_write8(memory_t *mem, uint16_t addr, uint8_t val) {
   switch(addr){
     case 0x0000 ... 0x7FFF:
+      cart_write(addr, val);
       break;
     case JOYP: //boot rom enable register
       mem->memory[addr] = val&0xF0;
