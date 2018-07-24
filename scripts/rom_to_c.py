@@ -4,10 +4,11 @@
 default_file = """#include <stdint.h>
 #include "cart.h"
 
-uint8_t game_cart[MAX_CART_SIZE] =
+uint8_t _game_cart[{}] =
 /*START OF CART*/
 """
 
+extern_pointer = """uint8_t* game_cart = &_game_cart[0];"""
 
 def bin_to_array(path):
     with open(path, "rb") as f:
@@ -25,11 +26,11 @@ def data_to_c_array_format(data):
     return arr
 
 
-def populate_c_file(c_file_path, arr_str):
+def populate_c_file(c_file_path, arr_str, data_len):
     with open(c_file_path, "w") as f:
-        f.write(default_file)
+        f.write(default_file.format(data_len))
         f.write(arr_str)
-
+        f.write(extern_pointer)
 
 
 if __name__ == "__main__":
@@ -37,4 +38,4 @@ if __name__ == "__main__":
     c_path = "../src/physical_cart.c"
     bin = bin_to_array(sys.argv[1])
     arr = data_to_c_array_format(bin)
-    populate_c_file(c_path, arr)
+    populate_c_file(c_path, arr, len(bin))
