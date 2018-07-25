@@ -8,7 +8,8 @@ void hardware_init(void) {
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
-  MX_USB_DEVICE_Init();
+  // MX_USB_DEVICE_Init();
+  MX_UART4_Init();
 }
 
 /**
