@@ -8,7 +8,6 @@
 
 extern uint8_t* game_cart;
 
-
 typedef struct {
   uint8_t ram_bank_enabled;
   uint8_t ram_write_protect; //reg 0
@@ -51,6 +50,8 @@ void cart_load(void) {
       read_cart = rom_read;
       write_cart = rom_write;
       break;
+    case MBC1:
+    case MBC3:
     case MBC5:
       read_cart = mbc5_read;
       write_cart = mbc5_write;
