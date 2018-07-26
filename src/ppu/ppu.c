@@ -41,7 +41,7 @@ typedef struct {
   uint8_t bg_oam_priority:1;
 } bg_map_t;
 
-
+uint8_t scanline[160];
 
 #define OAM_CLOCKS          (80)
 #define TRANSFER_CLOCKS     (172)
@@ -57,7 +57,7 @@ typedef struct {
 #define PPU_V_BLANK     (1)
 
 void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx);
-void draw_window_line(const uint8_t line);
+void draw_win_line(const uint8_t line, const uint8_t scy, const uint8_t scx);
 
 static uint8_t *map[2]; //bg tile map
 static lcd_control_t *control_reg;
@@ -113,9 +113,8 @@ void ppu_run(void) {
         if(control_reg->enable && line_to_draw) {
           line_to_draw = 0;
           draw_bg_line(*lcd_y, memory->memory[SCY], memory->memory[SCX]);
-          draw_window_line(*lcd_y);
-          sprites_draw_line(*lcd_y);
-
+          draw_win_line(*lcd_y, memory->memory[WY], memory->memory[WX]-7);
+          // sprites_draw_line(*lcd_y);
         }
         //increment line counter, reset clock count
         *lcd_y += 1;
@@ -123,7 +122,7 @@ void ppu_run(void) {
         //LY = LYC, trigger interrupt
         if(*lcd_y == *lcd_yc && status_reg->coincidence_int) CPU_set_interrupt(gb_cpu, INT_LCD_STAT);
         //Reached the end of the visible display. Go to VBLANK
-        if(*lcd_y > SCREEN_LINE_END) {
+        if(*lcd_y >= SCREEN_LINE_END) {
             CPU_set_interrupt(gb_cpu, INT_V_BLANK); //Trigger VBLANK int
             status_reg->mode = PPU_V_BLANK;
             if(status_reg->v_blank_int) CPU_set_interrupt(gb_cpu, INT_LCD_STAT);
@@ -142,6 +141,7 @@ void ppu_run(void) {
       }
       if(*lcd_y > VBLANK_LINE_END){
 #ifndef UNITTEST
+          // draw_bg();
           lcd_refresh();
 #endif
           clocks = 0;
@@ -163,64 +163,95 @@ void ppu_close(void) {
 #endif
 }
 
-
 //BGP is palette
 void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
-    uint8_t y = line + scy;
-    uint8_t tile_row = y>>3; //get line of tile map, turns 256 -> 32.. mapping
-    uint8_t tile_x = (y % 8) << 1;
-    for(int tile_index = 0; tile_index < TILE_ROW_WIDTH; tile_index++) //each tile in the bg map
+    //calc position in bg map
+    uint8_t bg_y = (line + scy) % 256;
+    uint8_t bg_x = scx;
+
+    //calc data for the tile row and y
+    uint8_t tile_col = bg_x>>3;
+    uint8_t tile_row = bg_y>>3; //get line of tile map, turns 256 -> 32.. mapping
+    uint8_t tile_y = (bg_y % 8) << 1; // get the y of the tile data
+
+    //store position on display
+    uint8_t screen_x = 0, screen_y = line;
+
+    if(line >= 144) return; //stop drawing after 144
+
+    for(int tile_pos = 0; tile_pos < 20; tile_pos++) //20tiles width is 160pixels
     {
-        uint8_t index = map[control_reg->bg_map_select][(tile_row*TILE_ROW_WIDTH) + tile_index];
-        tile_t* current_tile = tiles_get_tile(control_reg->bg_win_tile_select, index);
-        for(uint8_t tile_y = 0; tile_y < TILE_WIDTH; tile_y++) //each pixel in tile row
-        {
-            uint8_t colour = 0, pal_index;
-            pal_index = tiles_get_palette_index(current_tile, tile_x, tile_y);
-            //TODO: fix this to use memory palette
-            colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
-#ifndef UNITTEST
-            uint8_t x = (tile_index*8) + tile_y;
-            lcd_set_pixel(x+scx, line, colour);
-#endif
-        }
-    }
-}
-
-void draw_window_line(const uint8_t line) {
-    uint8_t y = line;
-    uint8_t tile_row = y>>3; //get line of tile map, turns 256 -> 32.. mapping
-    uint8_t tile_y = (y % 8) << 1;
-
-    //window enabled? -> return
-    if(control_reg->window_enable == 0) {
-      return;
-    }
-
-    //x > 159 -> return
-
-    //y > 143 -> return
-    if(line > 143) {
-      return;
-    }
-
-    for(int tile_index = 0; tile_index < 20; tile_index++) //each tile in the bg map
-    {
-        uint8_t index = map[control_reg->win_map_select][(tile_row*TILE_ROW_WIDTH) + tile_index];
-        tile_t* current_tile = tiles_get_tile(control_reg->bg_win_tile_select, index);
+        //Calculate where on the BG map the tile is
+        uint16_t tile_offset = tile_row*32 + ((tile_col + tile_pos)%32);
+        //Get the number from memory
+        uint8_t tile_number = map[control_reg->bg_map_select][tile_offset];
+        //Use the number to get the tile data
+        tile_ptr current_tile = tiles_get_tile(control_reg->bg_win_tile_select, tile_number); //0 means signed , 1 means unsigned
+        //Use tile data to draw the tile.
         for(uint8_t tile_x = 0; tile_x < TILE_WIDTH; tile_x++) //each pixel in tile row
         {
             uint8_t colour = 0, pal_index;
-            pal_index = tiles_get_palette_index(current_tile, tile_x, tile_y);
-            //TODO: fix this to use memory palette
+            uint8_t _x, _y;
+            _x = tile_x; //(*current_tile&0x10) ? (7 - tile_x) : tile_x;
+            _y = tile_y; //(*current_tile&0x20) ? (7 - tile_y) : tile_y;
+            //get the index for the palette from the tile data
+            pal_index = tiles_get_palette_index(current_tile, _x, _y);
             colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
 #ifndef UNITTEST
-            uint8_t x = (tile_index*8) + tile_x;
-            lcd_set_pixel(x, line, colour);
+            scanline[screen_x] = colour;
+            lcd_set_pixel(screen_x, screen_y, colour);
+            screen_x++;
 #endif
         }
     }
 }
+
+void draw_win_line(const uint8_t line, const uint8_t wy, const uint8_t wx) {
+    uint8_t bg_y = line;
+    uint8_t bg_x = wx;
+
+    //calc data for the tile row and y
+    uint8_t tile_col = bg_x>>3;
+    uint8_t tile_row = bg_y>>3; //get line of tile map, turns 256 -> 32.. mapping
+    uint8_t tile_y = (bg_y % 8) << 1; // get the y of the tile data
+
+    if(!control_reg->window_enable) return;
+
+    if(line < wy) return; //not in the window yet
+
+    //store position on display
+    uint8_t screen_x = wx, screen_y = line;
+
+    if(line >= 144) return; //stop drawing after 144
+
+    for(int tile_pos = (wx>>3); tile_pos < 20; tile_pos++) //20tiles width is 160pixels
+    {
+        //Calculate where on the BG map the tile is
+        uint16_t tile_offset = tile_row*32 + ((tile_col + tile_pos)%32);
+        //Get the number from memory
+        uint8_t tile_number = map[control_reg->win_map_select][tile_offset];
+        //Use the number to get the tile data
+        tile_ptr current_tile = tiles_get_tile(control_reg->bg_win_tile_select, tile_number);
+        //Use tile data to draw the tile.
+        for(uint8_t tile_x = 0; tile_x < TILE_WIDTH; tile_x++) //each pixel in tile row
+        {
+            uint8_t colour = 0, pal_index;
+            uint8_t _x, _y;
+            _x = tile_x;
+            _y = tile_y;
+            //get the index for the palette from the tile data
+            pal_index = tiles_get_palette_index(current_tile, _x, _y);
+            colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
+#ifndef UNITTEST
+
+            lcd_set_pixel(screen_x, screen_y, colour);
+            scanline[screen_x] = colour;
+            screen_x++;
+#endif
+        }
+    }
+}
+
 //
 // draw background
 // draw window

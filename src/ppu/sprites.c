@@ -53,22 +53,22 @@ uint8_t sprites_draw_pixel(uint8_t x, uint8_t y) {
 void sprites_draw_line(uint8_t line) {
   for(int8_t i = _index; i > 0; i--) {
     uint8_t* s = _sprites[i-1];
-    tile_t* t = tiles_get_tile(1, s[TILE]);
+    tile_ptr t = tiles_get_tile(1, s[TILE]);
     uint8_t y = (line % 8) << 1;
     for(uint8_t x = 0; x < 8; x++) {
       uint8_t colour = 0, pal_index;
-      pal_index = tiles_get_palette_index(t, y, x);
-    #ifndef UNITTEST
+      pal_index = tiles_get_palette_index(t, x, y);
       if(pal_index == 0) {// && !BG_PRIORITY(s[FLAGS])){
         continue;
       }
-      if(PALETTE_DMG(*s)){
+      if(PALETTE_DMG(s[FLAGS])){
         colour = (memory->memory[OBP1] >> (pal_index<<1)) & 0x03;
       }
       else {
         colour = (memory->memory[OBP0] >> (pal_index<<1)) & 0x03;
       }
 
+    #ifndef UNITTEST
       uint8_t x_draw = x+(s[POS_X]-8);
       lcd_set_pixel(x_draw, line, colour);
     #endif
