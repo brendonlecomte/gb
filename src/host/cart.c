@@ -13,6 +13,7 @@ typedef struct {
   uint8_t ram_write_protect; //reg 0
   uint8_t rom_bank_sel; //reg 1
   uint8_t ram_bank_sel;
+  uint8_t rom_ram_mode_sel;
   uint8_t latch_clock;
   uint8_t seconds;
   uint8_t minutes;
@@ -22,12 +23,13 @@ typedef struct {
 } mbc3_t;
 
 /*private vars*/
-// static const uint8_t rom_sizes[9] = {0, 4, 8, 16, 32, 64, 128, 256, 512};
+static const uint8_t rom_sizes[9] = {0, 4, 8, 16, 32, 64, 128, 256, 512};
 static const uint32_t ram_sizes[6] = {0, RAM_2K, RAM_8K, 4*RAM_8K, 16*RAM_8K, 8*RAM_8K};
 
 static mbc3_t mbc;
 static uint8_t cart_type = ROM_ONLY;
 static uint8_t* ram;
+static uint8_t max_rom;
 
 /*private func prototypes*/
 uint32_t convert_rom_address(uint16_t addr);
@@ -44,6 +46,7 @@ void cart_load(void) {
   // does nothing handled by script...
   cart_t* c = cart_header();
   cart_type = c->cart_type;
+  max_rom = rom_sizes[c->rom_size];
   ram = malloc(ram_sizes[c->ram_size]);
   switch(cart_type) {
     case ROM_ONLY:
@@ -52,6 +55,7 @@ void cart_load(void) {
       break;
     case MBC1:
     case MBC3:
+    case MBC3_RAM_BATTERY:
     case MBC5:
       read_cart = mbc5_read;
       write_cart = mbc5_write;
@@ -108,6 +112,19 @@ uint8_t mbc5_read(const uint16_t addr){
     case 0x7000:
       return game_cart[convert_rom_address(addr)];
       break;
+    case 0xA000:
+    case 0xB000:
+    case 0xC000:
+      if(mbc.ram_bank_sel <= 0x03) {
+            return ram[(addr - 0xA000) + mbc.ram_bank_sel*RAM_2K];
+      }
+      else if(0x08 <= mbc.ram_bank_sel && mbc.ram_bank_sel <= 0x0C) {
+          return 0;//set the clock
+      }
+      else {
+          assert("Invalid RAM Bank selected");
+      }
+      break;
     default:
       break;
   }
@@ -135,6 +152,19 @@ void mbc5_write(const uint16_t addr, uint8_t val){
         val = 1;
       }
       mbc.rom_bank_sel = (mbc.rom_bank_sel & 0b11100000) | (val & 0b00011111);
+      break;
+    case 0x4000:
+    case 0x5000:
+      if(mbc.rom_ram_mode_sel){
+        mbc.ram_bank_sel = val;
+      }
+      else {
+        mbc.rom_bank_sel = (mbc.rom_bank_sel & 0b00011111) | (val<<5);
+      }
+      break;
+    case 0x6000:
+    case 0x7000:
+      mbc.rom_ram_mode_sel = val;
       break;
     case 0xA000:
     case 0xB000:

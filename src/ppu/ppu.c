@@ -114,7 +114,7 @@ void ppu_run(void) {
           line_to_draw = 0;
           draw_bg_line(*lcd_y, memory->memory[SCY], memory->memory[SCX]);
           draw_win_line(*lcd_y, memory->memory[WY], memory->memory[WX]-7);
-          sprites_draw_line(*lcd_y);
+          // sprites_draw_line(*lcd_y);
         }
         //increment line counter, reset clock count
         *lcd_y += 1;
