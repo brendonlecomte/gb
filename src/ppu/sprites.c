@@ -14,6 +14,7 @@
 
 static uint8_t* _sprites[10];
 static uint8_t _index = 0;
+static lcd_control_t *control_reg = (lcd_control_t*)&memory->memory[LCDC];
 
 #define POS_Y (0)
 #define POS_X (1)
@@ -57,7 +58,11 @@ void sprites_draw_line(uint8_t line) {
     uint8_t y = (line % 8) << 1;
     for(uint8_t x = 0; x < 8; x++) {
       uint8_t colour = 0, pal_index;
-      pal_index = tiles_get_palette_index(t, x, y);
+
+      // uint8_t _x = (s[FLAGS] & 0x20) == 0x20 ? 7-x : x;
+      // uint8_t _y = (s[FLAGS] & 0x40) == 0x20 ? 7-y : y;
+      //
+      pal_index = tiles_get_palette_index(t, _x, _y);
       if(pal_index == 0) {// && !BG_PRIORITY(s[FLAGS])){
         continue;
       }
