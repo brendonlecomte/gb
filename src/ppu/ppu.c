@@ -114,7 +114,7 @@ void ppu_run(void) {
           line_to_draw = 0;
           draw_bg_line(*lcd_y, memory->memory[SCY], memory->memory[SCX]);
           draw_win_line(*lcd_y, memory->memory[WY], memory->memory[WX]-7);
-          // sprites_draw_line(*lcd_y);
+          sprites_draw_line(*lcd_y);
         }
         //increment line counter, reset clock count
         *lcd_y += 1;
@@ -166,7 +166,7 @@ void ppu_close(void) {
 //BGP is palette
 void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
     //calc position in bg map
-    uint8_t bg_y = (line + scy) % 256;
+    uint8_t bg_y = ((line + scy) % 256);
     uint8_t bg_x = scx;
 
     //calc data for the tile row and y
@@ -215,7 +215,7 @@ void draw_win_line(const uint8_t line, const uint8_t wy, const uint8_t wx) {
     uint8_t tile_row = bg_y>>3; //get line of tile map, turns 256 -> 32.. mapping
     uint8_t tile_y = (bg_y % 8) << 1; // get the y of the tile data
 
-    if(!control_reg->window_enable) return;
+    if(control_reg->window_enable == 0) return;
 
     if(line < wy) return; //not in the window yet
 
@@ -224,7 +224,7 @@ void draw_win_line(const uint8_t line, const uint8_t wy, const uint8_t wx) {
 
     if(line >= 144) return; //stop drawing after 144
 
-    for(int tile_pos = (wx>>3); tile_pos < 20; tile_pos++) //20tiles width is 160pixels
+    for(int tile_pos = tile_col; tile_pos < 20; tile_pos++) //20tiles width is 160pixels
     {
         //Calculate where on the BG map the tile is
         uint16_t tile_offset = tile_row*32 + ((tile_col + tile_pos)%32);

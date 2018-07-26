@@ -20,7 +20,7 @@ tile_ptr tiles_get_tile(uint8_t tile_data, uint8_t index) {
   // control_reg->bg_win_tile_select if this is 0 then signed tile_number
   if(tile_data == 0) {
     if(index&0x80){
-      tile_number = 0x8000 + (((~index))<<4);
+      tile_number = 0x8800 + (((index&0x7F))<<4);
     }
     else{
       tile_number = 0x9000 + (index<<4);
