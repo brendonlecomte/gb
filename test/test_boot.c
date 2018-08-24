@@ -19,7 +19,7 @@ TEST_TEAR_DOWN(Boot) {}
 
 TEST(Boot, zero_vram) {
     memset(&memory->memory[0x8000], 0xFF, 0x2000); //set memory to known state
-    TEST_ASSERT_EQUAL(0xFF, memory->memory[0x9000]); //test new state
+    TEST_ASSERT_EQUAL(0xFF, memory_read8(memory, 0x9000)); //test new state
     for(;;){
         //fetch
         emu_execute();
@@ -30,7 +30,7 @@ TEST(Boot, zero_vram) {
     }
     for(uint16_t i = 0x9FFF; i >= 0x8000; i--)
     {
-     TEST_ASSERT_EQUAL(0, memory->memory[0x9FFF]); //check we cleared it which
+     TEST_ASSERT_EQUAL(0, memory_read8(memory, 0x9FFF)); //check we cleared it which
     }
 }
 
@@ -45,11 +45,11 @@ TEST(Boot, audio) {
             break;
         }
     }
-    TEST_ASSERT_EQUAL(0x80, memory->memory[0xff26]); //check we cleared it which
-    TEST_ASSERT_EQUAL(0xf3, memory->memory[0xff25]); //check we cleared it which
-    TEST_ASSERT_EQUAL(0x80, memory->memory[0xff11]); //check we cleared it which
-    TEST_ASSERT_EQUAL(0xf3, memory->memory[0xff12]); //check we cleared it which
-    TEST_ASSERT_EQUAL(0x77, memory->memory[0xff24]); //check we cleared it which
+    TEST_ASSERT_EQUAL(0x80, memory_read8(memory, 0xff26)); //check we cleared it which
+    TEST_ASSERT_EQUAL(0xf3, memory_read8(memory, 0xff25)); //check we cleared it which
+    TEST_ASSERT_EQUAL(0x80, memory_read8(memory, 0xff11)); //check we cleared it which
+    TEST_ASSERT_EQUAL(0xf3, memory_read8(memory, 0xff12)); //check we cleared it which
+    TEST_ASSERT_EQUAL(0x77, memory_read8(memory, 0xff24)); //check we cleared it which
 }
 
 

@@ -87,31 +87,31 @@ TEST(processor, poppush)
 TEST(processor, ints) {
 
   cpu->ime = 1;
-  memory->memory[0xFFFF] = 0xFF; //enable all interrupts
+  memory_write8(0xFFFF, 0xFF); //enable all interrupts
 
-  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x00, memory_read8(memory, 0xFF0F));
   CPU_set_interrupt(cpu, INT_V_BLANK);
-  TEST_ASSERT_EQUAL(0x01, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x01, memory_read8(memory, 0xFF0F));
 
-  memory->memory[0xFF0F] = 0;
-  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  memory_write8(0xFF0F, 0);
+  TEST_ASSERT_EQUAL(0x00, memory_read8(memory, 0xFF0F));
   CPU_set_interrupt(cpu, INT_LCD_STAT);
-  TEST_ASSERT_EQUAL(0x02, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x02, memory_read8(memory, 0xFF0F));
 
-  memory->memory[0xFF0F] = 0;
-  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  memory_write8(0xFF0F, 0);
+  TEST_ASSERT_EQUAL(0x00, memory_read8(memory, 0xFF0F));
   CPU_set_interrupt(cpu, INT_TMR);
-  TEST_ASSERT_EQUAL(0x04, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x04, memory_read8(memory, 0xFF0F));
 
-  memory->memory[0xFF0F] = 0;
-  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  memory_write8(0xFF0F, 0);
+  TEST_ASSERT_EQUAL(0x00, memory_read8(memory, 0xFF0F));
   CPU_set_interrupt(cpu, INT_SERIAL);
-  TEST_ASSERT_EQUAL(0x08, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x08, memory_read8(memory, 0xFF0F));
 
-  memory->memory[0xFF0F] = 0;
-  TEST_ASSERT_EQUAL(0x00, memory->memory[0xFF0F]);
+  memory_write8(0xFF0F, 0);
+  TEST_ASSERT_EQUAL(0x00, memory_read8(memory, 0xFF0F));
   CPU_set_interrupt(cpu, INT_JOYPAD);
-  TEST_ASSERT_EQUAL(0x10, memory->memory[0xFF0F]);
+  TEST_ASSERT_EQUAL(0x10, memory_read8(memory, 0xFF0F));
 }
 
 TEST(processor, handle_int) {

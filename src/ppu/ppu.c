@@ -112,8 +112,8 @@ void ppu_run(void) {
         //if the screen is enabled, draw a line to the display
         if(control_reg->enable && line_to_draw) {
           line_to_draw = 0;
-          draw_bg_line(*lcd_y, memory->memory[SCY], memory->memory[SCX]);
-          draw_win_line(*lcd_y, memory->memory[WY], memory->memory[WX]-7);
+          draw_bg_line(*lcd_y, memory_read8(memory, SCY), memory_read8(memory, SCX));
+          draw_win_line(*lcd_y, memory_read8(memory, WY), memory_read8(memory, WX)-7);
           // sprites_draw_line(*lcd_y);
         }
         //increment line counter, reset clock count
@@ -196,7 +196,7 @@ void draw_bg_line(const uint8_t line, const uint8_t scy, const uint8_t scx) {
             _y = tile_y; //(*current_tile&0x20) ? (7 - tile_y) : tile_y;
             //get the index for the palette from the tile data
             pal_index = tiles_get_palette_index(current_tile, _x, _y);
-            colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
+            colour = (memory_read8(memory, BGP) >> (pal_index<<1)) & 0x03; //get colour value from the palette
 #ifndef UNITTEST
             scanline[screen_x] = colour;
             lcd_set_pixel(screen_x, screen_y, colour);
@@ -224,14 +224,16 @@ void draw_win_line(const uint8_t line, const uint8_t wy, const uint8_t wx) {
 
     if(line >= 144) return; //stop drawing after 144
 
-    for(int tile_pos = tile_col; tile_pos < 20; tile_pos++) //20tiles width is 160pixels
+    for(int tile_pos = 0; tile_pos < 20; tile_pos++) //20tiles width is 160pixels
     {
         //Calculate where on the BG map the tile is
-        uint16_t tile_offset = tile_row*32 + ((tile_col + tile_pos)%32);
+        uint16_t tile_offset = tile_row*32 + tile_pos;
         //Get the number from memory
         uint8_t tile_number = map[control_reg->win_map_select][tile_offset];
+
         //Use the number to get the tile data
         tile_ptr current_tile = tiles_get_tile(control_reg->bg_win_tile_select, tile_number);
+
         //Use tile data to draw the tile.
         for(uint8_t tile_x = 0; tile_x < TILE_WIDTH; tile_x++) //each pixel in tile row
         {
@@ -241,7 +243,7 @@ void draw_win_line(const uint8_t line, const uint8_t wy, const uint8_t wx) {
             _y = tile_y;
             //get the index for the palette from the tile data
             pal_index = tiles_get_palette_index(current_tile, _x, _y);
-            colour = (memory->memory[BGP] >> (pal_index<<1)) & 0x03; //get colour value from the palette
+            colour = (memory_read8(memory, BGP) >> (pal_index<<1)) & 0x03; //get colour value from the palette
 #ifndef UNITTEST
 
             lcd_set_pixel(screen_x, screen_y, colour);

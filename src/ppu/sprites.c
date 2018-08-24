@@ -67,10 +67,10 @@ void sprites_draw_line(uint8_t line) {
         continue;
       }
       if(PALETTE_DMG(s[FLAGS])){
-        colour = (memory->memory[OBP1] >> (pal_index<<1)) & 0x03;
+        colour = (memory_read8(memory, OBP1) >> (pal_index<<1)) & 0x03;
       }
       else {
-        colour = (memory->memory[OBP0] >> (pal_index<<1)) & 0x03;
+        colour = (memory_read8(memory, OBP0) >> (pal_index<<1)) & 0x03;
       }
 
     #ifndef UNITTEST

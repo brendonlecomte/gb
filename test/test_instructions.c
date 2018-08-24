@@ -491,7 +491,7 @@ TEST(Instructions, jp) {
 }
 
 TEST(Instructions, jp_hl) {
-  memory->memory[0xAA55] = 0xBB;
+  memory_write8(0xAA55, 0xBB);
   *gb_cpu->HL = 0xAA55;
   gb_cpu->PC = 0;
   instr_jp_hl();
